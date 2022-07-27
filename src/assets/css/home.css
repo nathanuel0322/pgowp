@@ -1,0 +1,426 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Teko&display=swap');
+
+/* :root{
+  --font: 'Comfortaa', cursive;
+  font-family: 'Comfortaa', cursive !important; */
+/* } */
+
+
+body {
+  overflow-x: hidden;
+  overflow-y: scroll;
+  /* font-family: var(--font) !important; */
+}
+
+.Rectangle {
+  opacity: 0.2;
+  z-index: -1;
+}
+
+.bckgrnd {
+  position: absolute;
+  width: 100%;
+  top: 9.7%;
+  left: 0%;
+}
+
+.a2{
+  font-family: 'Teko', sans-serif; 
+  font-weight: bold; 
+  text-align: center;
+}
+
+.blinkingblue{
+  animation:blinkingBlue 1.2s infinite;
+  font-size: 130%;
+}
+
+.blinkinggreen{
+  animation:blinkingGreen 1.2s infinite;
+  font-size: 130%;
+}
+
+@keyframes blinkingBlue{
+  0%{     color: blue;    }
+  49%{    color:blue; }
+  60%{    color: transparent; }
+  99%{    color:transparent;  }
+  100%{   color: blue;    }
+}
+
+@keyframes blinkingGreen{
+  0%{     color: green;    }
+  49%{    color:green; }
+  60%{    color: transparent; }
+  99%{    color:transparent;  }
+  100%{   color: green;    }
+}
+
+.pgowp{
+  color: #ff8c00 !important;
+  text-align: center;
+}
+
+.wp {
+  position: absolute;
+  top: 47%;
+  width: 100%;
+  left: 0%;
+}
+
+/* .wp p {
+  font-size: 250%;
+  z-index: -1;
+  font-family: 'Ubuntu', sans-serif;
+  text-shadow: 0 1px 0 #ccc,
+                 0 2px 0 #c9c9c9,
+                 0 3px 0 #bbb,
+                 0 4px 0 #b9b9b9,
+                 0 5px 0 #aaa,
+                 0 6px 1px rgba(0,0,0,.1),
+                 0 0 5px rgba(0,0,0,.1),
+                 0 1px 3px rgba(0,0,0,.3),
+                 0 3px 5px rgba(0,0,0,.2),929
+                 0 5px 10px rgba(0,0,0,.25),
+                 0 10px 10px rgba(0,0,0,.2),
+                 0 20px 20px rgba(0,0,0,.15);
+  color: blue;
+} */
+
+.wp a1 {
+  position: absolute;
+  width: 100%;
+  top: 70%;
+  text-align: center;
+  font-size: 250%;
+  color: blue;
+  font-family: var(--font) 'Yeon Sung';
+  font-weight: bold;
+}
+
+.wp a2 {
+  position: absolute;
+  top: 75%;
+  width: 100%;
+  text-align: center;
+  font-size: 200%;
+  color: blue;
+  font-family: var(--font) 'Yeon Sung';
+  font-weight: bold;
+}
+
+.wp a3 {
+  position: absolute;
+  top: 80%;
+}
+
+#youtube {
+  position: absolute;
+  top: 78%;
+  left: 0%;
+}
+
+#quote {
+  left: 0%;
+  position: absolute;
+  top: 140%;
+  font-family: var(--font) 'Yeon Sung';
+  text-align: center;
+  font-size: 40px;
+  color: #0000FF;
+}
+
+#announce{
+  left: 0%;
+  position: absolute;
+  top: 168%;
+  font-family: var(--font) 'Yeon Sung';
+  text-align: center;
+  font-size: 40px;
+}
+.quo {
+  font-size: 50px;
+}
+
+#yuh {
+  color: rgb(212,175,55)
+}
+
+#cold {
+  color: rgb(7, 242, 241);
+}
+
+#Hot {
+  color: rgb(236, 0, 2)
+}
+
+.rain {
+  color: rgb(3, 74, 236);
+}
+
+.shine {
+  color: rgb(212,175,55);
+}
+
+#locations {
+  left: 0%;
+  position: absolute;
+  top: 185%;
+  width: 100%;
+  text-align: center;
+  font-size: 200%;
+}
+
+#brooklyn {
+  color: rgb(193, 106, 12);
+}
+
+#queens {
+  color: rgb(128,128,128);
+}
+
+#longisland {
+  color: rgb(1,68,33);
+}
+
+#manhattan {
+  color: #ec983c;
+}
+
+#occasions {
+  left: 0%;
+  position: absolute;
+  font-size: 175%;
+  top: 208%;
+  text-align: center;
+  width: 100%;
+}
+
+#parties 
+{
+  color: rgb(0,0,205)
+}
+
+#church {
+  color: rgb(139,69,19)
+}
+
+#schools {
+  color: #FDB600
+}
+
+#fundraiser {
+  color: #216C2A
+}
+
+.reviews{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: column;
+  height: 75%;
+  
+  
+  position: absolute;
+  top: 238%;
+  text-align: center;
+  width:100%;
+}
+
+.elfsight-app-47a53823-5494-48af-8205-f358d166dfb8{
+  position: absolute !important;
+  top: 320% !important;
+  font: 400 normal 15px/1.3 -apple-system,BlinkMacSystemFont,Roboto,Open Sans,Helvetica Neue,sans-serif;
+  width: 100%;
+}
+
+div.eapps-widget{
+  position: absolute !important;
+  top: 230%;
+  width: 100%;
+  font-family: 'Ubuntu';
+}
+
+@media only screen
+and (min-width : 0px) and (max-width : 319px) {
+  .wp {
+    top: 5%;
+  }
+  .wp p, .wp a1, .wp a2 {
+    font-size: 125%;
+  }
+  
+  #youtube {
+    position: absolute;
+    top: 40%;
+  }
+
+  #quote {
+    top: 70%;
+    font-size: 115%;
+  }
+
+  #announce{
+    top: 70%;
+    font-size: 115%;
+  }
+
+  .quo {
+    font-size: 156.25%;
+  }
+
+  #locations {
+    top: 67%;
+    font-size: 125%;
+  }
+
+  #occasions {
+    font-size: 125%;
+    top: 92%;
+  }
+
+  .reviews{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: column;
+    height: 75%;
+    
+    
+    position: absolute;
+    top: 238%;
+    text-align: center;
+    width:100%;
+  }
+
+  .elfsight-app-47a53823-5494-48af-8205-f358d166dfb8{
+    position: absolute !important;
+    top: 320% !important;
+    font: 400 normal 15px/1.3 -apple-system,BlinkMacSystemFont,Roboto,Open Sans,Helvetica Neue,sans-serif;
+    width: 100%;
+  }
+}
+
+/* Styling for Mobile Devices */
+
+@media only screen
+and (min-width : 320px) and (max-width : 767px) {
+
+  /* Invisible Prestigious Poster  */
+  img {
+    opacity: 0;
+  }
+
+  .navbar {
+      display: none;
+  }
+
+  .active{
+    background-color: blue;
+    color: white;
+  }
+
+  .topnav{
+    display: block;
+    overflow: hidden;
+    font-family: 'Teko', sans-serif;
+    font-size: 100%;
+    background-color: blue;
+    width: 100%;
+    left: 0%;
+    top: 0%;
+    position: fixed;
+    z-index: 10;
+  }
+
+  .topnav #myPages{
+    display: none;
+  }
+
+  .topnav a{
+    color: white;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 150%;
+    display: block;
+  }
+
+  .topnav a.icon {
+    background: blue;
+    display: block;
+    position: fixed;
+    right: 0%;
+    top: 0%;
+  }
+  
+  .topnav a:hover {
+    background-color: orange;
+    color: black;
+  }
+
+  /* END */
+
+  .wp {
+    top: 9%;
+  }
+
+  .wp p, .wp a1, .wp a2 {
+    font-size: 125%;
+  }
+  
+  #youtube {
+      position: absolute;
+      top: 40%;
+    }
+
+  #quote {
+        top: 97%;
+        font-size: 125%;
+    }
+
+  #announce{
+        top: 117%;
+        font-size: 125%;
+    }
+
+  .quo {
+    font-size: 169.25%;
+  }
+
+  #locations {
+        top: 132%;
+        font-size: 125%;
+    }
+
+  #occasions {
+        font-size: 125%;
+        top: 157%;
+    }
+
+  .elfsight-app-d5ac28dd-88e7-4c65-9d47-1f34b169a72a{
+        position: absolute !important;
+        top: 175% !important;
+        font: 400 normal 15px/1.3 -apple-system,BlinkMacSystemFont,Roboto,Open Sans,Helvetica Neue,sans-serif;
+        left: 0%;
+    }
+
+  /* .tento8-ratings-widget {
+    top: 239% !important;
+  } */
+}
+
+
+/* Media Query for Laptop or small-size screen */
+@media only screen
+and (min-width : 768px) and (max-width : 1024px) {
+
+  .wp{
+    top: 40%;
+  }
+
+}
+
+
