@@ -2,6 +2,7 @@ import React from 'react';
 import '../assets/css/about.css';
 import BackgroundImage from '../assets/images/Rectangle.jpg';
 import Stylesheet from "reactjs-stylesheet";
+import GamingContract from '../assets/files/GamingContract.pdf';
 
 export default function About() {
   return (
@@ -40,7 +41,7 @@ export default function About() {
           <br />
           <br />
           <p5>
-            <a href="Files/GamingContract.pdf">Click here to download and view our terms and conditions!</a>
+            <a href={GamingContract} download="Contract">Click here to download and view our terms and conditions!</a>
           </p5>
         </strong>
       </div>
@@ -54,6 +55,7 @@ const aboutstyles = Stylesheet.create({
   },
 
   aboutsection: {
+    position: 'absolute',
     marginTop: '-75%',
     color: 'white',
     fontFamily: "'Playfair Display', serif",
