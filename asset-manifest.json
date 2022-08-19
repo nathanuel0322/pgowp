@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/www.prestigiousgamingonwheelsplus.com/static/css/main.9b44ef1b.css",
-    "main.js": "/www.prestigiousgamingonwheelsplus.com/static/js/main.3ceca399.js",
+    "main.js": "/www.prestigiousgamingonwheelsplus.com/static/js/main.90adfb94.js",
     "static/media/PrestigiousPoster.jpg": "/www.prestigiousgamingonwheelsplus.com/static/media/PrestigiousPoster.527b03711e91f951842c.jpg",
     "static/media/Rectangle.jpg": "/www.prestigiousgamingonwheelsplus.com/static/media/Rectangle.988889785b9e858a3720.jpg",
     "static/media/infinitygame.jpeg": "/www.prestigiousgamingonwheelsplus.com/static/media/infinitygame.412dc5ad7aec92507ab3.jpeg",
@@ -15,10 +15,10 @@
     "static/media/ps5.jpg": "/www.prestigiousgamingonwheelsplus.com/static/media/ps5.250228bfa48f0f418ea9.jpg",
     "index.html": "/www.prestigiousgamingonwheelsplus.com/index.html",
     "main.9b44ef1b.css.map": "/www.prestigiousgamingonwheelsplus.com/static/css/main.9b44ef1b.css.map",
-    "main.3ceca399.js.map": "/www.prestigiousgamingonwheelsplus.com/static/js/main.3ceca399.js.map"
+    "main.90adfb94.js.map": "/www.prestigiousgamingonwheelsplus.com/static/js/main.90adfb94.js.map"
   },
   "entrypoints": [
     "static/css/main.9b44ef1b.css",
-    "static/js/main.3ceca399.js"
+    "static/js/main.90adfb94.js"
   ]
 }
