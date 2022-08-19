@@ -16,14 +16,19 @@ function App() {
   return (
     <BrowserRouter basename={process.env.PUBLIC_URL}>
       {hamburgerdetector ? <HamburgerNav /> : <Navbar />}
-      <Routes>
-        <Route exact path='' element={<Home />} />
-        <Route exact path='/servicespage' element={<Services />}/>
-        <Route exact path='/packagespage' element={<Packages />} />
-        <Route exact path='/gamelistpage' element={<Gamelist />} />
-        <Route exact path='/contactpage' element={<Contact />} />
-        <Route exact path='/aboutpage' element={<About />} />
-      </Routes>
+      <div>
+        Am i coming or going
+      </div>
+      <div>
+        <Routes>
+          <Route exact path='' element={<Home />} />
+          <Route exact path='/servicespage' element={<Services />}/>
+          <Route exact path='/packagespage' element={<Packages />} />
+          <Route exact path='/gamelistpage' element={<Gamelist />} />
+          <Route exact path='/contactpage' element={<Contact />} />
+          <Route exact path='/aboutpage' element={<About />} />
+        </Routes>
+      </div>
     </BrowserRouter>
   )
 }
