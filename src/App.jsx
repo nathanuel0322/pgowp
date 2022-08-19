@@ -14,15 +14,15 @@ import { useMediaQuery } from 'react-responsive';
 function App() {
   const hamburgerdetector = useMediaQuery({query: '(max-width: 767px)'});
   return (
-    <Router basename={`/${process.env.PUBLIC_URL}`}>
+    <Router basename={`${process.env.PUBLIC_URL}`}>
       {hamburgerdetector ? <HamburgerNav /> : <Navbar />}
       <Routes>
-        <Route path='' element={<Home />} />
-        <Route path='/servicespage' element={<Services />}/>
-        <Route path='/packagespage' element={<Packages />} />
-        <Route path='/gamelistpage' element={<Gamelist />} />
-        <Route path='/contactpage' element={<Contact />} />
-        <Route path='/aboutpage' element={<About />} />
+        <Route exact path='' element={<Home />} />
+        <Route exact path='/servicespage' element={<Services />}/>
+        <Route exact path='/packagespage' element={<Packages />} />
+        <Route exact path='/gamelistpage' element={<Gamelist />} />
+        <Route exact path='/contactpage' element={<Contact />} />
+        <Route exact path='/aboutpage' element={<About />} />
       </Routes>
     </Router>
   )
