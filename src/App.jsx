@@ -14,22 +14,22 @@ import { useMediaQuery } from 'react-responsive';
 function App() {
   const hamburgerdetector = useMediaQuery({query: '(max-width: 767px)'});
   return (
-    <BrowserRouter basename={"/" + process.env.PUBLIC_URL}>
-      {hamburgerdetector ? <HamburgerNav /> : <Navbar />}
-      <div>
-        Am i coming or going
-      </div>
-      <div>
-        <Routes>
-          <Route exact path='' element={<Home />} />
-          <Route exact path='/servicespage' element={<Services />}/>
-          <Route exact path='/packagespage' element={<Packages />} />
-          <Route exact path='/gamelistpage' element={<Gamelist />} />
-          <Route exact path='/contactpage' element={<Contact />} />
-          <Route exact path='/aboutpage' element={<About />} />
-        </Routes>
-      </div>
-    </BrowserRouter>
+    // <BrowserRouter basename={"/" + process.env.PUBLIC_URL}>
+    //   {hamburgerdetector ? <HamburgerNav /> : <Navbar />}
+    //   <div>
+    //     <Routes>
+    //       <Route exact path='' element={<Home />} />
+    //       <Route exact path='/servicespage' element={<Services />}/>
+    //       <Route exact path='/packagespage' element={<Packages />} />
+    //       <Route exact path='/gamelistpage' element={<Gamelist />} />
+    //       <Route exact path='/contactpage' element={<Contact />} />
+    //       <Route exact path='/aboutpage' element={<About />} />
+    //     </Routes>
+    //   </div>
+    // </BrowserRouter>
+    <div>
+      YES APP IS WORKING 
+    </div>
   )
 }
 
