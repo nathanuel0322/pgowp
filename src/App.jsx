@@ -14,7 +14,7 @@ import { useMediaQuery } from 'react-responsive';
 function App() {
   const hamburgerdetector = useMediaQuery({query: '(max-width: 767px)'});
   return (
-    <BrowserRouter basename={process.env.PUBLIC_URL}>
+    <BrowserRouter basename={"/" + process.env.PUBLIC_URL}>
       {hamburgerdetector ? <HamburgerNav /> : <Navbar />}
       <div>
         Am i coming or going
