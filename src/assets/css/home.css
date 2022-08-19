@@ -3,16 +3,9 @@
 @tailwind utilities;
 @import url('https://fonts.googleapis.com/css2?family=Teko&display=swap');
 
-/* :root{
-  --font: 'Comfortaa', cursive;
-  font-family: 'Comfortaa', cursive !important; */
-/* } */
-
-
 body {
   overflow-x: hidden;
-  overflow-y: scroll;
-  /* font-family: var(--font) !important; */
+  overflow-y: hidden;
 }
 
 .Rectangle {
@@ -21,15 +14,12 @@ body {
 }
 
 .bckgrnd {
-  position: absolute;
   width: 100%;
-  top: 9.7%;
   left: 0%;
 }
 
 .a2{
   font-family: 'Teko', sans-serif; 
-  font-weight: bold; 
   text-align: center;
 }
 
@@ -44,11 +34,11 @@ body {
 }
 
 @keyframes blinkingBlue{
-  0%{     color: blue;    }
-  49%{    color:blue; }
+  0%{     color: rgb(7, 242, 241);    }
+  49%{    color:rgb(7, 242, 241); }
   60%{    color: transparent; }
   99%{    color:transparent;  }
-  100%{   color: blue;    }
+  100%{   color: rgb(7, 242, 241);    }
 }
 
 @keyframes blinkingGreen{
@@ -64,32 +54,6 @@ body {
   text-align: center;
 }
 
-.wp {
-  position: absolute;
-  top: 47%;
-  width: 100%;
-  left: 0%;
-}
-
-/* .wp p {
-  font-size: 250%;
-  z-index: -1;
-  font-family: 'Ubuntu', sans-serif;
-  text-shadow: 0 1px 0 #ccc,
-                 0 2px 0 #c9c9c9,
-                 0 3px 0 #bbb,
-                 0 4px 0 #b9b9b9,
-                 0 5px 0 #aaa,
-                 0 6px 1px rgba(0,0,0,.1),
-                 0 0 5px rgba(0,0,0,.1),
-                 0 1px 3px rgba(0,0,0,.3),
-                 0 3px 5px rgba(0,0,0,.2),929
-                 0 5px 10px rgba(0,0,0,.25),
-                 0 10px 10px rgba(0,0,0,.2),
-                 0 20px 20px rgba(0,0,0,.15);
-  color: blue;
-} */
-
 .wp a1 {
   position: absolute;
   width: 100%;
@@ -97,7 +61,6 @@ body {
   text-align: center;
   font-size: 250%;
   color: blue;
-  font-family: var(--font) 'Yeon Sung';
   font-weight: bold;
 }
 
@@ -108,7 +71,6 @@ body {
   text-align: center;
   font-size: 200%;
   color: blue;
-  font-family: var(--font) 'Yeon Sung';
   font-weight: bold;
 }
 
@@ -117,29 +79,18 @@ body {
   top: 80%;
 }
 
-#youtube {
-  position: absolute;
-  top: 78%;
-  left: 0%;
-}
-
 #quote {
-  left: 0%;
-  position: absolute;
-  top: 140%;
-  font-family: var(--font) 'Yeon Sung';
+  margin-top: -30%;
   text-align: center;
   font-size: 40px;
-  color: #0000FF;
 }
 
 #announce{
-  left: 0%;
-  position: absolute;
-  top: 168%;
-  font-family: var(--font) 'Yeon Sung';
   text-align: center;
   font-size: 40px;
+  text-align: center; 
+  font-family: 'Teko', sans-serif;
+  color: white;
 }
 .quo {
   font-size: 50px;
@@ -166,12 +117,10 @@ body {
 }
 
 #locations {
-  left: 0%;
-  position: absolute;
-  top: 185%;
-  width: 100%;
   text-align: center;
   font-size: 200%;
+  font-family: 'Teko', sans-serif;
+  color: white;
 }
 
 #brooklyn {
@@ -179,11 +128,11 @@ body {
 }
 
 #queens {
-  color: rgb(128,128,128);
+  color: #9575CD;
 }
 
 #longisland {
-  color: rgb(1,68,33);
+  color: #009688;
 }
 
 #manhattan {
@@ -191,17 +140,15 @@ body {
 }
 
 #occasions {
-  left: 0%;
-  position: absolute;
   font-size: 175%;
-  top: 208%;
   text-align: center;
-  width: 100%;
+  font-family: 'Teko', sans-serif;
+  color: white;
 }
 
 #parties 
 {
-  color: rgb(0,0,205)
+  color: #00BCD4;
 }
 
 #church {
@@ -213,7 +160,7 @@ body {
 }
 
 #fundraiser {
-  color: #216C2A
+  color: #4CAF50;
 }
 
 .reviews{
@@ -246,16 +193,8 @@ div.eapps-widget{
 
 @media only screen
 and (min-width : 0px) and (max-width : 319px) {
-  .wp {
-    top: 5%;
-  }
   .wp p, .wp a1, .wp a2 {
     font-size: 125%;
-  }
-  
-  #youtube {
-    position: absolute;
-    top: 40%;
   }
 
   #quote {
@@ -363,18 +302,9 @@ and (min-width : 320px) and (max-width : 767px) {
 
   /* END */
 
-  .wp {
-    top: 9%;
-  }
-
   .wp p, .wp a1, .wp a2 {
     font-size: 125%;
   }
-  
-  #youtube {
-      position: absolute;
-      top: 40%;
-    }
 
   #quote {
         top: 97%;

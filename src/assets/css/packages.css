@@ -1,89 +1,26 @@
-/* Styling for Navbar */
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa&display=swap');
 
-/* START */
-.navbar {
-    position: fixed;
-    width: 100%;
-    display: flex;
-    justify-content: space-evenly;
-    border-bottom-left-radius: 25px;
-    border-bottom-right-radius: 25px;
-    top: 0px;
-    left: 0px;
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    background-color: #0000CD;
-    z-index: 10;
-    font-family: 'Teko', sans-serif;
-    font-size: 150%;
-    overflow-x: hidden;
-    overflow-y: scroll;
-}
-
-li {
-  float: left;
-}
-
-li a {  
-  display: block;
-  color: white;
-  text-align: center;
-  padding: 14px 16px;
-  text-decoration: none;
-}
-
-li a:hover {
-  background-color:green;
-}
-li a:hover:not(.active) {
-  background-color: blue;
-}
-
-.active {
-  background-color: orange;
-}
-
-.topnav{
-  display: none;
-}
-/* END */
-
-/* STYLING FOR BACKGROUND IMAGE */
-img {
-  position: absolute;
-  top: 10%;
-  left: 0%;
-  z-index: -1;
-  opacity: 0.15;
-  width: 100%;
-  height: auto;
-}
-
-.prices  {
-    position: absolute;
-    top: 15%;
-    text-align:center;
-    /* width: 100%; */
-    font-size: 200%;
-    text-decoration: none;
-    font-family: 'Comfortaa', cursive;
+.prices {
+  margin-top: -77%;
+  font-size: 200%;
+  font-family: 'Comfortaa', cursive;
 }
 
 ul.HoursList {
-    list-style: none;
-    float: right;
-    margin: 0;
+  flex-direction: column;
+  list-style: none;
+  float: right;
+  margin: 0;
 }
 
 ul.HoursList li {
     float: left;
     width: 100%;
-    line-height: 80px;
-    vertical-align: middle;
     text-align: center;
     margin: 0;
+  color: white;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
 .PLUS {
@@ -93,53 +30,6 @@ ul.HoursList li {
 
 @media only screen
 and (min-width : 320px) and (max-width : 828px) {
-
-    .navbar {
-        display: none;
-    }
-  
-    .active{
-      background-color: blue;
-      color: white;
-    }
-  
-    .topnav{
-      display: block;
-      overflow: hidden;
-      font-family: 'Teko', sans-serif;
-      font-size: 100%;
-      background-color: blue;
-      width: 100%;
-      left: 0%;
-      top: 0%;
-      position: fixed;
-      z-index: 10;
-    }
-  
-    .topnav #myPages{
-      display: none;
-    }
-  
-    .topnav a{
-      color: white;
-      padding: 14px 16px;
-      text-decoration: none;
-      font-size: 150%;
-      display: block;
-    }
-  
-    .topnav a.icon {
-      background: blue;
-      display: block;
-      position: fixed;
-      right: 0%;
-      top: 0%;
-    }
-    
-    .topnav a:hover {
-      background-color: orange;
-      color: black;
-    }
     
     img{
       top: 8%;
