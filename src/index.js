@@ -9,6 +9,6 @@ root.render(
     <div>
       Hello
     </div>
-      <App />
+      {/* <App /> */}
   </React.StrictMode>
 );
