@@ -1,6 +1,6 @@
 import React from 'react';
 import './assets/css/home.css';
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route, HashRouter } from "react-router-dom";
 import Navbar from './components/global/Navbar';
 import Home from './screens/Home';
 import Services from './screens/Services';
@@ -14,22 +14,19 @@ import { useMediaQuery } from 'react-responsive';
 function App() {
   const hamburgerdetector = useMediaQuery({query: '(max-width: 767px)'});
   return (
-    // <BrowserRouter basename={"/" + process.env.PUBLIC_URL}>
-    //   {hamburgerdetector ? <HamburgerNav /> : <Navbar />}
-    //   <div>
-    //     <Routes>
-    //       <Route exact path='' element={<Home />} />
-    //       <Route exact path='/servicespage' element={<Services />}/>
-    //       <Route exact path='/packagespage' element={<Packages />} />
-    //       <Route exact path='/gamelistpage' element={<Gamelist />} />
-    //       <Route exact path='/contactpage' element={<Contact />} />
-    //       <Route exact path='/aboutpage' element={<About />} />
-    //     </Routes>
-    //   </div>
-    // </BrowserRouter>
-    <div>
-      YES APP IS WORKING 
-    </div>
+    <HashRouter basename={"/" + process.env.PUBLIC_URL}>
+      {hamburgerdetector ? <HamburgerNav /> : <Navbar />}
+      <div>
+        <Routes>
+          <Route exact path='' element={<Home />} />
+          <Route exact path='/servicespage' element={<Services />}/>
+          <Route exact path='/packagespage' element={<Packages />} />
+          <Route exact path='/gamelistpage' element={<Gamelist />} />
+          <Route exact path='/contactpage' element={<Contact />} />
+          <Route exact path='/aboutpage' element={<About />} />
+        </Routes>
+      </div>
+    </HashRouter>
   )
 }
 
