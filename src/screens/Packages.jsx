@@ -29,7 +29,7 @@ export default function Packages(){
                         <li style={Object.assign({}, packagesstyles.HoursListlists, {color: '#FF5722'})}>Extra Large Connect 4! - $60</li>
                         <li style={Object.assign({}, packagesstyles.HoursListlists, {color: '#FF5722'})}> Extra Large Yard Jenga! - $60</li>
                         <li style={Object.assign({}, packagesstyles.HoursListlists, {color: '#FF7E00'})}>Popcorn Machine! - $145</li>
-                        <li style={Object.assign({}, packagesstyles.HoursListlists, {color: '#1808ff'})}>Cotton Candy Machine! - $200</li>
+                        <li style={Object.assign({}, packagesstyles.HoursListlists, {color: '#FF007F'})}>Cotton Candy Machine! - $200</li>
                         <li style={Object.assign({}, packagesstyles.HoursListlists, {marginTop: 20, textDecoration: 'underline'})} >For a More Fun and Exciting Party, You can also add:</li>
                         <li style={Object.assign({}, packagesstyles.HoursListlists, {color: '#FF5722'})}>Laser Tag with Live Scoring!</li>
                         <li style={Object.assign({}, packagesstyles.HoursListlists, {color: '#FF5722'})}>Additional $20 per person for two 15-minute sessions!</li>
