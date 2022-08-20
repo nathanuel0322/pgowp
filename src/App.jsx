@@ -14,9 +14,8 @@ import { useMediaQuery } from 'react-responsive';
 function App() {
   const hamburgerdetector = useMediaQuery({query: '(max-width: 767px)'});
   return (
-    <HashRouter basename={"/" + process.env.PUBLIC_URL}>
-      {hamburgerdetector ? <HamburgerNav /> : <Navbar />}
-      <div>
+    <HashRouter basename={process.env.PUBLIC_URL}>
+        {hamburgerdetector ? <HamburgerNav /> : <Navbar />}
         <Routes>
           <Route exact path='' element={<Home />} />
           <Route exact path='/servicespage' element={<Services />}/>
@@ -25,7 +24,6 @@ function App() {
           <Route exact path='/contactpage' element={<Contact />} />
           <Route exact path='/aboutpage' element={<About />} />
         </Routes>
-      </div>
     </HashRouter>
   )
 }
