@@ -25,7 +25,7 @@ export default function Home(){
         >
           PRESTIGIOUS GAMING ON WHEELS PLUS!
         </p>
-        <p style={{color: '#FF5722', textAlign: 'center',fontFamily: "Teko, sans-serif", fontSize: '225%'}}>
+        <p className='blinkingorange' style={{color: '#FF5722', textAlign: 'center',fontFamily: "Teko, sans-serif", fontSize: '225%'}}>
           Voted Best Game Truck in NY!
         </p>
         <p className='a2 text-2xl mt-1 text-white'>

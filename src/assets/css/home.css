@@ -23,6 +23,10 @@ body {
   text-align: center;
 }
 
+.blinkingorange {
+  animation: blinkingOrange 1.2s infinite;
+}
+
 .blinkingblue{
   animation:blinkingBlue 1.2s infinite;
   font-size: 130%;
@@ -47,6 +51,14 @@ body {
   60%{    color: transparent; }
   99%{    color:transparent;  }
   100%{   color: green;    }
+}
+
+@keyframes blinkingOrange{
+  0%{     color: rgb(255, 87, 34)}
+  49%{    color:rgb(255, 87, 34)}
+  60%{    color: transparent; }
+  99%{    color:transparent;  }
+  100%{   color: rgb(255, 87, 34)}
 }
 
 .pgowp{

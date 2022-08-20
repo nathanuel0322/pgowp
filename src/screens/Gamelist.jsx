@@ -21,9 +21,6 @@ export default function Gamelist(){
                     <p style={gameliststyles.text}>
                         Our game truck carries all the latest game systems & games, and we're always updating.
                         <br />
-                        Our game truck also includes <span class="blinking"><strong> FORTNITE </strong></span> via an ethernet cable 
-                        connection to your home Wi-Fi.
-                        <br />
                         Even better, we have <span style={{color: 'blueviolet'}} class="blinking"><strong> JUST DANCE </strong></span> 
                         for the dancers!
                     </p>
