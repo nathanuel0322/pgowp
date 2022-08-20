@@ -3,6 +3,7 @@ import '../assets/css/home.css';
 import PrestigiousPoster from '../assets/images/PrestigiousPoster.jpg';
 import { GetRequest } from '../components/home/reviewwidget';
 import { useMediaQuery } from 'react-responsive';
+import Stylesheet from 'reactjs-stylesheet';
 
 export default function Home(){
 
@@ -24,7 +25,10 @@ export default function Home(){
         >
           PRESTIGIOUS GAMING ON WHEELS PLUS!
         </p>
-        <p className='a2 text-3xl mt-5 text-white'>
+        <p style={{color: '#FF5722', textAlign: 'center',fontFamily: "Teko, sans-serif", fontSize: '225%'}}>
+          Voted Best Game Truck in NY!
+        </p>
+        <p className='a2 text-2xl mt-1 text-white'>
           Hey! Hi There! You found us!
           <br />
           We are the best gaming/movie trailer experience you will ever encounter from luxurious quality to the best
@@ -40,7 +44,7 @@ export default function Home(){
           </div>
         </div> 
       </div>
-        <div id="quote" style={{fontFamily: "'Teko', sans-serif", color: 'white'}}>
+        <div id="quote" style={Object.assign({}, homestyles.text, {fontFamily: "'Teko', sans-serif", color: 'white'})}>
           This is one game trailer you won’t forget. Up to 28 players at once. Don’t worry, we bring the party to <span className="quo"> you! </span>
           Party in any weather, <span className="rain"> rain </span> or <span class="shine"> shine </span>
         ,<span id="Hot"> Hot </span>
@@ -52,7 +56,7 @@ export default function Home(){
          trailer. 
       </div>
       <br />
-    <p id="announce">
+    <p id="announce" style={homestyles.text}>
       We now have the new <span class="blinkingblue"><strong> Playstation 5 </strong></span>
         and the 
       <span class="blinkinggreen">
@@ -61,7 +65,7 @@ export default function Home(){
       !!!
     </p>
     <br />
-    <div id="locations">
+    <div id="locations" style={homestyles.text}>
       We're available to come to you in 
       <span id="brooklyn"> Brooklyn! </span>
       <span id="queens"> Queens!</span>
@@ -88,10 +92,15 @@ export default function Home(){
       <br />
       <a class="Call" href="tel:7186738529">Call for events!</a>
     </div>
-        {/* <div className='mt-20 text-center w-100'>
-          <GetRequest />
-        </div> */}
-  </div> 
-    )
+    {/* <div className='mt-20 text-center w-100'>
+      <GetRequest />
+    </div> */}
+    </div> 
+  )
 }
 
+const homestyles = Stylesheet.create({
+  text: {
+    fontSize: '5vw',
+  }
+})
