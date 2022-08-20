@@ -1,6 +1,7 @@
 import React from 'react';
 import './assets/css/home.css';
-import { Routes, Route, HashRouter } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
+import { HashRouter as Router } from 'react-router-dom';
 import Navbar from './components/global/Navbar';
 import Home from './screens/Home';
 import Services from './screens/Services';
@@ -14,7 +15,7 @@ import { useMediaQuery } from 'react-responsive';
 function App() {
   const hamburgerdetector = useMediaQuery({query: '(max-width: 767px)'});
   return (
-    <HashRouter basename={process.env.PUBLIC_URL}>
+    <Router>
         {hamburgerdetector ? <HamburgerNav /> : <Navbar />}
         <Routes>
           <Route exact path='' element={<Home />} />
@@ -24,7 +25,7 @@ function App() {
           <Route exact path='/contactpage' element={<Contact />} />
           <Route exact path='/aboutpage' element={<About />} />
         </Routes>
-    </HashRouter>
+    </Router>
   )
 }
 
