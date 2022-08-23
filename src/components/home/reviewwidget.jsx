@@ -32,8 +32,7 @@ class GetRequest extends React.Component {
   //     'https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/prestigious-gaming-on-wheels-plus-queens/reviews',
   //     {
   //       headers: {
-  //         // Authorization: `Bearer ${process.env.REACT_APP_API_KEY}`,
-  //         Authorization: `Bearer 9nMJtmh8uaNXNr3ADeXFq6bG7lT0R0GrRy49yMP95euhhxAold64X4g9rUwygp7k6jyPN5z0FyuwT5KQgYX1tIg5xGyHabUDHsfTxnxhamQi6xSX58BNmmZ89qLbYnYx`,
+  //          Authorization: `Bearer ${process.env.REACT_APP_API_KEY}`,
   //       },
   //     },
   //   )
