@@ -44,57 +44,57 @@ export default function Home(){
           </div>
         </div> 
       </div>
-        <div id="quote" style={Object.assign({}, homestyles.text, {fontFamily: "'Teko', sans-serif", color: 'white'})}>
-          This is one game trailer you won’t forget. Up to 28 players at once. Don’t worry, we bring the party to <span className="quo"> you! </span>
-          Party in any weather, <span className="rain"> rain </span> or <span class="shine"> shine </span>
-        ,<span id="Hot"> Hot </span>
-         or 
-        <span id="cold"> Cold </span>
-        . Come and enjoy your party in our 
-            
-        <span class="quo" id="yuh"> luxury class </span>
-         trailer. 
+      <div id="quote" style={Object.assign({}, homestyles.text, {fontFamily: "'Teko', sans-serif", color: 'white'})}>
+        This is one game trailer you won’t forget. Up to 28 players at once. Don’t worry, we bring the party to <span className="quo"> you! </span>
+        Party in any weather, <span className="rain"> rain </span> or <span class="shine"> shine </span>
+      ,<span id="Hot"> Hot </span>
+        or 
+      <span id="cold"> Cold </span>
+      . Come and enjoy your party in our 
+          
+      <span class="quo" id="yuh"> luxury class </span>
+        trailer. 
       </div>
       <br />
-    <p id="announce" style={homestyles.text}>
-      We now have the new <span class="blinkingblue"><strong> Playstation 5 </strong></span>
-        and the 
-      <span class="blinkinggreen">
-          <strong> Xbox Series X </strong>
-      </span>
-      !!!
-    </p>
-    <br />
-    <div id="locations" style={homestyles.text}>
-      We're available to come to you in 
-      <span id="brooklyn"> Brooklyn! </span>
-      <span id="queens"> Queens!</span>
-      <span id="longisland"> Long Island! (Extra $125 if in Suffolk County)</span>
-      <span id="manhattan"> Manhattan! (Extra $100!)</span>
-      <span style={{color: '#F44336'}}> Staten Island! (Extra $200)</span>
-      <span id="NJ"> Parts of New Jersey! (Extra $200!)</span>
-      <span id="Bronx"> and Parts of the Bronx!</span>
+      <p id="announce" style={homestyles.text}>
+        We now have the new <span class="blinkingblue"><strong> Playstation 5 </strong></span>
+          and the 
+        <span class="blinkinggreen">
+            <strong> Xbox Series X </strong>
+        </span>
+        !!!
+      </p>
       <br />
-      Make sure at least 5 car spaces are saved for trailer parking!
-    </div>
-    <br />
-    <div id="occasions">
-      We do 
-      <span id="parties"> Birthday Parties! </span>
-      <span id="church"> Church Functions! </span>
-      <span id="schools"> School Events! </span>
-      <span id="fundraiser"> Fundraisers! </span>
-      <span id="Bar"> Bar Mitzvahs!</span>
-      <span id="BatMitz"> Bat Mitzvahs!</span>
-      <span id="Prom"> Prom!</span>
-      <span id="block"> Block Parties! </span>
-      <span id="Charities"> Charities! </span> and More!
+      <div id="locations" style={homestyles.text}>
+        We're available to come to you in 
+        <span id="brooklyn"> Brooklyn! </span>
+        <span id="queens"> Queens!</span>
+        <span id="longisland"> Long Island! (Extra $125 if in Suffolk County)</span>
+        <span id="manhattan"> Manhattan! (Extra $100!)</span>
+        <span style={{color: '#F44336'}}> Staten Island! (Extra $200)</span>
+        <span id="NJ"> Parts of New Jersey! (Extra $200!)</span>
+        <span id="Bronx"> and Parts of the Bronx!</span>
+        <br />
+        Make sure at least 5 car spaces are saved for trailer parking!
+      </div>
       <br />
-      <a class="Call" href="tel:7186738529">Call for events!</a>
-    </div>
-    {/* <div className='mt-20 text-center w-100'>
-      <GetRequest />
-    </div> */}
+      <div id="occasions">
+        We do 
+        <span id="parties"> Birthday Parties! </span>
+        <span id="church"> Church Functions! </span>
+        <span id="schools"> School Events! </span>
+        <span id="fundraiser"> Fundraisers! </span>
+        <span id="Bar"> Bar Mitzvahs!</span>
+        <span id="BatMitz"> Bat Mitzvahs!</span>
+        <span id="Prom"> Prom!</span>
+        <span id="block"> Block Parties! </span>
+        <span id="Charities"> Charities! </span> and More!
+        <br />
+        <a class="Call" href="tel:7186738529">Call for events!</a>
+      </div>
+      {/* <div className='mt-20 text-center w-100'>
+        <GetRequest />
+      </div> */}
     </div> 
   )
 }

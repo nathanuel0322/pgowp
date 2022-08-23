@@ -8,6 +8,7 @@ import Services from './screens/Services';
 import Gamelist from './screens/Gamelist';
 import Contact from './screens/Contact';
 import About from './screens/About';
+import BDayCard from './screens/BDayCard';
 import Packages from './screens/Packages';
 import HamburgerNav from './components/global/HamburgerNav';
 import { useMediaQuery } from 'react-responsive';
@@ -24,6 +25,7 @@ function App() {
           <Route exact path='/gamelistpage' element={<Gamelist />} />
           <Route exact path='/contactpage' element={<Contact />} />
           <Route exact path='/aboutpage' element={<About />} />
+          <Route exact path='/BdayCard' element={<BDayCard />} />
         </Routes>
     </Router>
   )

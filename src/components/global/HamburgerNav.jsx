@@ -28,7 +28,11 @@ const HamburgerNav = () => {
         else if (location.pathname === "/aboutpage"){
             setcurrentpage("About");
         }
+        else if (location.pathname === "/BdayCard"){
+            setcurrentpage("E-Invites");
+        }
     }, [location.pathname])
+
     const mobile = useMediaQuery({query: '(min-width: 0px)'});
     const [menuclicked, setmenuclicked] = useState(false);
 
@@ -82,6 +86,9 @@ const HamburgerNav = () => {
                             Gallery
                         </a>
                     </li>
+                    <Link to={currentpage === "E-Invites" ? "/" : "/BdayCard"} style={hamburgerstyles.tabs} onClick={() => setmenuclicked(false)}>
+                        {currentpage === "E-Invites" ? "Home" : "E-Invites"}
+                    </Link>
                     <Link to={currentpage === "Contact" ? "/" : "/contactpage"} style={hamburgerstyles.tabs} onClick={() => setmenuclicked(false)}>
                         {currentpage === "Contact" ? "Home" : "Contact"}
                     </Link>

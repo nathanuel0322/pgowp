@@ -4,6 +4,9 @@ import '../../assets/css/reviewwidget.css';
 import OverallRating from './OverallRating';
 import YelpRating from './YelpRating';
 import GoogleRating from './GoogleRating';
+import Yelp5Stars from '../../assets/icons/regular_5@3x.png';
+import Star from '../../assets/icons/star.svg';
+import HalfStar from '../../assets/icons/halfstar.svg';
 
 class GetRequest extends React.Component {
   constructor(props) {
@@ -14,29 +17,56 @@ class GetRequest extends React.Component {
       allReviewsSelected: true,
       googleSelected: null,
       yelpSelected: null,
+      yelpreviewholder: [],
+      yelplength: null,
+      yelpreviewaverage: null,
     };
     this.forceUpdate();
   }
 
-  componentDidMount() {
-    // axios
-    // .get(
-    //   'https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/prestigious-gaming-on-wheels-plus-queens/reviews',
-    //   {
-    //     headers: {
-    //       Authorization: `Bearer ${process.env.REACT_APP_API_KEY}`,
-    //     },
-    //   },
-    // )
-    // .then((response) => {
-    //   console.log(response.data.reviews);
-    // })
-    // .catch(err => {
-    //   console.log(err);
-    // });
-  }
+  
+
+  // componentDidMount() {
+  //   axios
+  //   .get(
+  //     'https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/prestigious-gaming-on-wheels-plus-queens/reviews',
+  //     {
+  //       headers: {
+  //         // Authorization: `Bearer ${process.env.REACT_APP_API_KEY}`,
+  //         Authorization: `Bearer 9nMJtmh8uaNXNr3ADeXFq6bG7lT0R0GrRy49yMP95euhhxAold64X4g9rUwygp7k6jyPN5z0FyuwT5KQgYX1tIg5xGyHabUDHsfTxnxhamQi6xSX58BNmmZ89qLbYnYx`,
+  //       },
+  //     },
+  //   )
+  //   .then((response) => {
+  //     let reviewstarsum = 0;
+  //     let iteratorholder = 0;
+  //     console.log(response.data.reviews);
+  //     response.data.reviews.map((currentValue, index) => {
+  //       reviewstarsum += currentValue.rating;
+  //       iteratorholder++;
+  //       console.log("sum " + reviewstarsum);
+  //     })
+  //     this.setState({
+  //       yelpreviewholder: response.data.reviews, 
+  //       yelplength: iteratorholder,
+  //       yelpreviewaverage: reviewstarsum / iteratorholder,
+  //     });
+  //     console.log(this.state.yelpreviewaverage)
+      
+  //   })
+  //   .catch(err => {
+  //     console.log(err);
+  //   });
+    
+  // }
 
   render() {
+    // eslint-disable-next-line array-callback-return
+    this.state.yelpreviewholder.map((currentValue, index) => {
+      console.log(currentValue, index);
+    });
+
+
     const { totalReactPackages } = this.state;
 
     const wrapperFunction1 = () => {
@@ -66,7 +96,7 @@ class GetRequest extends React.Component {
 
     return (
       <div title="" className="">
-        <p className='text-xl font-bold'>Check out our reviews from past customers below!</p>
+        <p className='text-xl font-bold text-white'>Check out our reviews from past customers below!</p>
         <div id='TopReviewsContainer' className="eyarYd">
           <div id='TabsContainer_Inner' className='eyarYd kaXWRJ cFMrET' >
             <div id='TabsSlider_Container' className='iluRKv' >
@@ -193,42 +223,75 @@ class GetRequest extends React.Component {
               </div>
               <div title="Header__SourceInfo" className="fctGyX">
                 <div title="Rating__Container Header__StyledHeaderRating" className="kqGYQX bJFeVI">
-                  <div title="RatingValue__Container" className="bIDTiT">
-                    5.0
+                  <div title="RatingValue__Container" className="bIDTiT font-bold" style={{marginRight: '13px'}}>
+                    
+                    {this.state.yelpSelected ?
+                      this.state.yelpreviewaverage.toFixed(1)
+                    :
+                      4.5
+                    }
                   </div>
-                  <div title="RatingBar__Container" className="ecFtME">
-                    <div title="RatingItemFilledSvg__Container" className="hoAzGt es-rating-stars-item-filled">
-                      <div title="RatingItemFilledSvg__ContainerAbsolute RatingItemFilledSvg__Unfilled" className="chMKQB bFQRJO">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14">
-                          <path fill="none" d="M6.826 10.743l-3.28 1.724a.5.5 0 0 1-.725-.528l.627-3.65a.5.5 0 0 0-.144-.443L.65 5.26a.5.5 0 0 1 .277-.853l3.666-.533a.5.5 0 0 0 .377-.273L6.61.279a.5.5 0 0 1 .896 0L9.147 3.6a.5.5 0 0 0 .376.273l3.666.533a.5.5 0 0 1 .277.853l-2.653 2.586a.5.5 0 0 0-.144.442l.627 3.651a.5.5 0 0 1-.726.528l-3.279-1.724a.5.5 0 0 0-.465 0z"></path>
-                        </svg>
+                  {this.state.yelpSelected ?
+                    <div>
+                      <img src={Yelp5Stars} alt="yelpstars" width={100} height={20}/>
+                    </div>
+                  :
+                    <div title="RatingBar__Container" className="ecFtME">
+                      <div title="RatingItemFilledSvg__Container" className="hoAzGt es-rating-stars-item-filled">
+                        <div title="RatingItemFilledSvg__ContainerAbsolute RatingItemFilledSvg__Unfilled" className="chMKQB bFQRJO">
+                          <img src={Star} alt="filledstar" />
+                        </div>
+                        <div title="RatingItemFilledSvg__ContainerAbsolute RatingItemFilledSvg__Filled" className="chMKQB biFvfu">
+                          <img src={Star} alt="filledstar" />
+                        </div>
                       </div>
-                      <div title="RatingItemFilledSvg__ContainerAbsolute RatingItemFilledSvg__Filled" className="chMKQB biFvfu">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14">
-                          <path fill="none" d="M6.826 10.743l-3.28 1.724a.5.5 0 0 1-.725-.528l.627-3.65a.5.5 0 0 0-.144-.443L.65 5.26a.5.5 0 0 1 .277-.853l3.666-.533a.5.5 0 0 0 .377-.273L6.61.279a.5.5 0 0 1 .896 0L9.147 3.6a.5.5 0 0 0 .376.273l3.666.533a.5.5 0 0 1 .277.853l-2.653 2.586a.5.5 0 0 0-.144.442l.627 3.651a.5.5 0 0 1-.726.528l-3.279-1.724a.5.5 0 0 0-.465 0z"></path>
-                        </svg>
+                      <div title="RatingItemFilledSvg__Container" className="hoAzGt es-rating-stars-item-filled">
+                        <div title="RatingItemFilledSvg__ContainerAbsolute RatingItemFilledSvg__Unfilled" className="chMKQB bFQRJO">
+                          <img src={Star} alt="filledstar" />
+                        </div>
+                        <div title="RatingItemFilledSvg__ContainerAbsolute RatingItemFilledSvg__Filled" className="chMKQB biFvfu">
+                          <img src={Star} alt="filledstar" />
+                        </div>
+                      </div>
+                      <div title="RatingItemFilledSvg__Container" className="hoAzGt es-rating-stars-item-filled">
+                        <div title="RatingItemFilledSvg__ContainerAbsolute RatingItemFilledSvg__Unfilled" className="chMKQB bFQRJO">
+                          <img src={Star} alt="filledstar" />
+                        </div>
+                        <div title="RatingItemFilledSvg__ContainerAbsolute RatingItemFilledSvg__Filled" className="chMKQB biFvfu">
+                          <img src={Star} alt="filledstar" />
+                        </div>
+                      </div>
+                      <div title="" className="RatingItemFilledSvg__Container hoAzGt es-rating-stars-item-filled">
+                        <div title="" className="RatingItemFilledSvg__ContainerAbsolute RatingItemFilledSvg__Unfilled chMKQB bFQRJO">
+                          <img src={Star} alt="filledstar" />
+                        </div>
+                        <div title="" className="RatingItemFilledSvg__ContainerAbsolute RatingItemFilledSvg__Filled chMKQB biFvfu">
+                          <img src={Star} alt="filledstar" />
+                        </div>
+                      </div>
+                      <div title="" className="RatingItemFilledSvg__Container hoAzGt es-rating-stars-item-filled">
+                        <div title="" className="RatingItemFilledSvg__ContainerAbsolute RatingItemFilledSvg__Unfilled chMKQB bFQRJO">
+                          <img src={Star} alt="filledstar" />
+                        </div>
+                        <div title="" className="RatingItemFilledSvg__ContainerAbsolute RatingItemFilledSvg__Filled chMKQB biFvfu">
+                          <img src={Star} alt="filledstar" />
+                        </div>
                       </div>
                     </div>
-                    <div title="RatingItemFilledSvg__Container" className="hoAzGt es-rating-stars-item-filled">
-                      <div title="RatingItemFilledSvg__ContainerAbsolute RatingItemFilledSvg__Unfilled" className="chMKQB bFQRJO">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14">
-                          <path fill="none" d="M6.826 10.743l-3.28 1.724a.5.5 0 0 1-.725-.528l.627-3.65a.5.5 0 0 0-.144-.443L.65 5.26a.5.5 0 0 1 .277-.853l3.666-.533a.5.5 0 0 0 .377-.273L6.61.279a.5.5 0 0 1 .896 0L9.147 3.6a.5.5 0 0 0 .376.273l3.666.533a.5.5 0 0 1 .277.853l-2.653 2.586a.5.5 0 0 0-.144.442l.627 3.651a.5.5 0 0 1-.726.528l-3.279-1.724a.5.5 0 0 0-.465 0z"></path>
-                        </svg>
-                      </div>
-                      <div title="RatingItemFilledSvg__ContainerAbsolute RatingItemFilledSvg__Filled" className="chMKQB biFvfu">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14">
-                          <path fill="none" d="M6.826 10.743l-3.28 1.724a.5.5 0 0 1-.725-.528l.627-3.65a.5.5 0 0 0-.144-.443L.65 5.26a.5.5 0 0 1 .277-.853l3.666-.533a.5.5 0 0 0 .377-.273L6.61.279a.5.5 0 0 1 .896 0L9.147 3.6a.5.5 0 0 0 .376.273l3.666.533a.5.5 0 0 1 .277.853l-2.653 2.586a.5.5 0 0 0-.144.442l.627 3.651a.5.5 0 0 1-.726.528l-3.279-1.724a.5.5 0 0 0-.465 0z"></path>
-                        </svg>
-                      </div>
-                    </div>
-                    <div title="RatingItemFilledSvg__Container" className="hoAzGt es-rating-stars-item-filled">
-                      <div title="RatingItemFilledSvg__ContainerAbsolute RatingItemFilledSvg__Unfilled" className="chMKQB bFQRJO">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14">
-                          <path fill="none" d="M6.826 10.743l-3.28 1.724a.5.5 0 0 1-.725-.528l.627-3.65a.5.5 0 0 0-.144-.443L.65 5.26a.5.5 0 0 1 .277-.853l3.666-.533a.5.5 0 0 0 .377-.273L6.61.279a.5.5 0 0 1 .896 0L9.147 3.6a.5.5 0 0 0 .376.273l3.666.533a.5.5 0 0 1 .277.853l-2.653 2.586a.5.5 0 0 0-.144.442l.627 3.651a.5.5 0 0 1-.726.528l-3.279-1.724a.5.5 0 0 0-.465 0z"></path>
-                        </svg>
-                      </div>
-                      <div title="RatingItemFilledSvg__ContainerAbsolute RatingItemFilledSvg__Filled" className="chMKQB biFvfu">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14"><path fill="none" d="M6.826 10.743l-3.28 1.724a.5.5 0 0 1-.725-.528l.627-3.65a.5.5 0 0 0-.144-.443L.65 5.26a.5.5 0 0 1 .277-.853l3.666-.533a.5.5 0 0 0 .377-.273L6.61.279a.5.5 0 0 1 .896 0L9.147 3.6a.5.5 0 0 0 .376.273l3.666.533a.5.5 0 0 1 .277.853l-2.653 2.586a.5.5 0 0 0-.144.442l.627 3.651a.5.5 0 0 1-.726.528l-3.279-1.724a.5.5 0 0 0-.465 0z"></path></svg></div></div><div title="" className="RatingItemFilledSvg__Container hoAzGt es-rating-stars-item-filled"><div title="" className="RatingItemFilledSvg__ContainerAbsolute RatingItemFilledSvg__Unfilled chMKQB bFQRJO"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14"><path fill="none" d="M6.826 10.743l-3.28 1.724a.5.5 0 0 1-.725-.528l.627-3.65a.5.5 0 0 0-.144-.443L.65 5.26a.5.5 0 0 1 .277-.853l3.666-.533a.5.5 0 0 0 .377-.273L6.61.279a.5.5 0 0 1 .896 0L9.147 3.6a.5.5 0 0 0 .376.273l3.666.533a.5.5 0 0 1 .277.853l-2.653 2.586a.5.5 0 0 0-.144.442l.627 3.651a.5.5 0 0 1-.726.528l-3.279-1.724a.5.5 0 0 0-.465 0z"></path></svg></div><div title="" className="RatingItemFilledSvg__ContainerAbsolute RatingItemFilledSvg__Filled chMKQB biFvfu"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14"><path fill="none" d="M6.826 10.743l-3.28 1.724a.5.5 0 0 1-.725-.528l.627-3.65a.5.5 0 0 0-.144-.443L.65 5.26a.5.5 0 0 1 .277-.853l3.666-.533a.5.5 0 0 0 .377-.273L6.61.279a.5.5 0 0 1 .896 0L9.147 3.6a.5.5 0 0 0 .376.273l3.666.533a.5.5 0 0 1 .277.853l-2.653 2.586a.5.5 0 0 0-.144.442l.627 3.651a.5.5 0 0 1-.726.528l-3.279-1.724a.5.5 0 0 0-.465 0z"></path></svg></div></div><div title="" className="RatingItemFilledSvg__Container hoAzGt es-rating-stars-item-filled"><div title="" className="RatingItemFilledSvg__ContainerAbsolute RatingItemFilledSvg__Unfilled chMKQB bFQRJO"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14"><path fill="none" d="M6.826 10.743l-3.28 1.724a.5.5 0 0 1-.725-.528l.627-3.65a.5.5 0 0 0-.144-.443L.65 5.26a.5.5 0 0 1 .277-.853l3.666-.533a.5.5 0 0 0 .377-.273L6.61.279a.5.5 0 0 1 .896 0L9.147 3.6a.5.5 0 0 0 .376.273l3.666.533a.5.5 0 0 1 .277.853l-2.653 2.586a.5.5 0 0 0-.144.442l.627 3.651a.5.5 0 0 1-.726.528l-3.279-1.724a.5.5 0 0 0-.465 0z"></path></svg></div><div title="" className="RatingItemFilledSvg__ContainerAbsolute RatingItemFilledSvg__Filled chMKQB biFvfu"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14"><path fill="none" d="M6.826 10.743l-3.28 1.724a.5.5 0 0 1-.725-.528l.627-3.65a.5.5 0 0 0-.144-.443L.65 5.26a.5.5 0 0 1 .277-.853l3.666-.533a.5.5 0 0 0 .377-.273L6.61.279a.5.5 0 0 1 .896 0L9.147 3.6a.5.5 0 0 0 .376.273l3.666.533a.5.5 0 0 1 .277.853l-2.653 2.586a.5.5 0 0 0-.144.442l.627 3.651a.5.5 0 0 1-.726.528l-3.279-1.724a.5.5 0 0 0-.465 0z"></path></svg></div></div></div></div><div title="" className="HeaderTotalReviews__Container-sc-1a7tbil-0 eaRlNB"><div title="" className="HeaderTotalReviews__Value-sc-1a7tbil-1 bEwvRd">4</div><div title="" className="HeaderTotalReviews__Text-sc-1a7tbil-2 bNCDHs">reviews</div></div></div></div><div title="" className="HeaderWriteReviewButton__Component-sc-aghmpr-0 bOCgQx Header__StyledHeaderWriteReviewButton-sc-gozq6j-4 iXyBKR"><button size="15" className="ButtonBase__ButtonContainer-sc-p43e7i-3 fhFXwt HeaderWriteReviewButton__StyledButton-sc-aghmpr-1 dYQPWG" type="button" tabindex="0" style={{borderRadius: '4px', borderColor: 'rgba(0, 0, 0, 0)', color: 'rgb(255, 255, 255)', fontFamily: 'inherit', backgroundColor: 'rgb(25, 123, 255)',}}><span className="ButtonBase__Overlay-sc-p43e7i-4 fMszQs" style={{padding: '8px 20px', backgroundColor: 'rgba(0, 0, 0, 0)'}}><span className="ButtonBase__Ellipsis-sc-p43e7i-5 kzddPn">Write a Review</span></span></button><div title="" className="HeaderWriteReviewButton__Modal-sc-aghmpr-2 EUeEN"><div title="" className="HeaderWriteReviewButton__Title-sc-aghmpr-3 iNHxMu">Where do you want to leave a review?</div></div></div></div> 
+                  }
+                  <div style={{paddingLeft: '13px',  whiteSpace: 'nowrap'}} className="HeaderTotalReviews__Container-sc-1a7tbil-0 eaRlNB">
+                    {this.state.yelplength + " reviews"}
+                  </div>
+                </div>
+                    
+                    </div></div><div title="" className="HeaderWriteReviewButton__Component-sc-aghmpr-0 bOCgQx Header__StyledHeaderWriteReviewButton-sc-gozq6j-4 iXyBKR">
+                          
+                          
+                          
+                          <button size="15" className="ButtonBase__ButtonContainer-sc-p43e7i-3 fhFXwt HeaderWriteReviewButton__StyledButton-sc-aghmpr-1 dYQPWG" type="button" tabindex="0" style={{borderRadius: '4px', borderColor: 'rgba(0, 0, 0, 0)', color: 'rgb(255, 255, 255)', fontFamily: 'inherit', backgroundColor: 'rgb(25, 123, 255)', height: '35px'}}><span className="ButtonBase__Overlay-sc-p43e7i-4 fMszQs" style={{padding: '8px 20px', backgroundColor: 'rgba(0, 0, 0, 0)'}}><span className="ButtonBase__Ellipsis-sc-p43e7i-5 kzddPn">Write a Review</span></span></button><div title="" className="HeaderWriteReviewButton__Modal-sc-aghmpr-2 EUeEN">
+                </div>
+                </div>
+                </div> 
 
           Total react packages: {totalReactPackages}
         </div>
