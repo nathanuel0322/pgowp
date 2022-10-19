@@ -1,14 +1,16 @@
 import React from 'react';
+import { useMediaQuery } from 'react-responsive';
 import BackgroundImage from '../assets/images/Rectangle.jpg';
 import Stylesheet from "reactjs-stylesheet";
 
 export default function Packages(){
+    const tablet = useMediaQuery({query: '(min-width: 768px)'});
     return(
         <div>
             <img style={Object.assign({}, packagesstyles.image, {marginTop: '5.5%', opacity: 0.04,})} src={BackgroundImage} alt="Rectangle Poster" 
                 height="100%" width="100%" class="Rectangle" 
             />
-            <div style={packagesstyles.prices}>
+            <div style={Object.assign({}, packagesstyles.prices, {fontSize: tablet ? '3vw' : '6vw'})}>
                 <strong>
                     <ul style={packagesstyles.HoursList}>
                         <li style={Object.assign({}, packagesstyles.HoursListlists, {textDecoration: 'underline',})}>Starting Packages</li> 

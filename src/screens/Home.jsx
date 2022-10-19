@@ -24,10 +24,10 @@ export default function Home(){
         >
           PRESTIGIOUS GAMING ON WHEELS PLUS!
         </p>
-        <p className='blinkingorange' style={{color: '#FF5722', textAlign: 'center',fontFamily: "Teko, sans-serif", fontSize: '4vw', marginTop: '2%'}}>
+        <p className='blinkingorange' style={{color: '#FF5722', textAlign: 'center',fontFamily: "Teko, sans-serif", fontSize: tablet ? '4vw' : '6vw', marginTop: '2%'}}>
           Voted Best Game Truck in NY!
         </p>
-        <p className='a2 mt-1 text-white' style={{fontSize: !tablet ? '5vw' : '3vw'}}>
+        <p className='a2 mt-1 text-white' style={{fontSize: !tablet ? '6vw' : '3vw'}}>
           Hey! Hi There! You found us!
           <br />
           We are the best gaming/movie trailer experience you will ever encounter from luxurious quality to the best
@@ -43,7 +43,7 @@ export default function Home(){
           </div>
         </div> 
       </div>
-      <p id="quote" style={Object.assign({}, homestyles.text, {fontSize: tablet ? '3vw' : '5vw', fontFamily: "'Teko', sans-serif", color: 'white'})}>
+      <p id="quote" style={Object.assign({}, homestyles.text, {fontSize: tablet ? '3vw' : '6vw', fontFamily: "'Teko', sans-serif", color: 'white'})}>
         This is one game trailer you won’t forget. Up to 28 players at once. Don’t worry, we bring the party to <span className="quo"> you! </span>
         Party in any weather, <span className="rain"> rain </span> or <span class="shine"> shine </span>
       ,<span id="Hot"> Hot </span>
@@ -55,7 +55,7 @@ export default function Home(){
         trailer. 
       </p>
       <br />
-      <p id="announce" style={Object.assign({}, homestyles.text, {fontSize: tablet ? '3vw' : '5vw', textAlign: 'center', color: 'white'})}>
+      <p id="announce" style={Object.assign({}, homestyles.text, {fontSize: tablet ? '3vw' : '6vw', textAlign: 'center', color: 'white'})}>
         We now have the new <span class="blinkingblue"><strong> Playstation 5 </strong></span>
           and the 
         <span class="blinkinggreen">
@@ -64,7 +64,7 @@ export default function Home(){
         !!!
       </p>
       <br />
-      <p id="locations" style={Object.assign({}, homestyles.text, {fontSize: tablet ? '3vw' : '5vw', textAlign: 'center', color: 'white'})}>
+      <p id="locations" style={Object.assign({}, homestyles.text, {fontSize: tablet ? '3vw' : '6vw', textAlign: 'center', color: 'white'})}>
         We're available to come to you in 
         <span id="brooklyn"> Brooklyn! </span>
         <span id="queens"> Queens!</span>
@@ -77,7 +77,7 @@ export default function Home(){
         Make sure at least 5 car spaces are saved for trailer parking!
       </p>
       <br />
-      <p id="occasions" style={{fontSize: tablet ? '3vw' : '5vw'}}>
+      <p id="occasions" style={{fontSize: tablet ? '3vw' : '6vw'}}>
         We do 
         <span id="parties"> Birthday Parties! </span>
         <span id="church"> Church Functions! </span>

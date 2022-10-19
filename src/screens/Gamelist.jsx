@@ -64,7 +64,7 @@ const gameliststyles = Stylesheet.create({
     text: {
         marginTop: '10%',
         textAlign: 'center',
-        fontSize: '3vw',
+        fontSize: '4vw',
         fontFamily: "'Nunito', sans-serif",
         color: 'white',
     },
