@@ -89,7 +89,7 @@ export default function Home(){
         <span id="block"> Block Parties! </span>
         <span id="Charities"> Charities! </span> and More!
         <br />
-        <a class="Call" href="tel:7186738529">Call for events!</a>
+        <a class="Call" href="tel:7186738529" style={{color: 'chartreuse', textDecoration: 'underline'}}>Click here to call for events!</a>
       </p>
       {/* <div className='mt-20 text-center w-100'>
         <GetRequest />
