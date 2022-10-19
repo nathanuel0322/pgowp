@@ -8,6 +8,11 @@ body {
   overflow-y: hidden;
 }
 
+p {
+  margin: 0 auto;
+  width: 80%;
+}
+
 .Rectangle {
   opacity: 0.2;
   z-index: -1;

@@ -21,7 +21,7 @@ export default function Gamelist(){
                     <p style={gameliststyles.text}>
                         Our game truck carries all the latest game systems & games, and we're always updating.
                         <br />
-                        Even better, we have <span style={{color: 'blueviolet'}} class="blinking"><strong> JUST DANCE </strong></span> 
+                        Even better, we have <span style={{color: 'blueviolet'}} className="blinking"><strong> JUST DANCE </strong></span> 
                         for the dancers!
                     </p>
                 </strong>
@@ -41,7 +41,7 @@ export default function Gamelist(){
                         <img style={gameliststyles.rightpics} src={PS5} alt="Backpic" width ="40%" height="40%" />
                     </p>
                     <p style={gameliststyles.imageflex}>
-                        <img src={XBX} alt="Backpic" width ="35%" height="60%" class="XBX" />
+                        <img src={XBX} alt="Backpic" width ="35%" height="60%" className="XBX" />
                     </p>
                 </ p>
             :
@@ -52,7 +52,7 @@ export default function Gamelist(){
                     <img src={Switch}  alt="Backpic" width="100%" height="50%" />
                     <img src={FireTab} alt="Backpic" width="100%" height="40%" />
                     <img src={PS5} alt="Backpic" width ="100%" height="40%" />
-                    <img src={XBX} alt="Backpic" width ="100%" height="60%" class="XBX" />
+                    <img src={XBX} alt="Backpic" width ="100%" height="60%" className="XBX" />
                     <img src={Infiinity} alt="Backpic" width ="100%" height="60%"/>
                 </p>
             }
@@ -64,7 +64,7 @@ const gameliststyles = Stylesheet.create({
     text: {
         marginTop: '10%',
         textAlign: 'center',
-        fontSize: '6vw',
+        fontSize: '3vw',
         fontFamily: "'Nunito', sans-serif",
         color: 'white',
     },

@@ -6,7 +6,6 @@ import { useMediaQuery } from 'react-responsive';
 import Stylesheet from 'reactjs-stylesheet';
 
 export default function Home(){
-
   const mobile = useMediaQuery({query: '(min-width: 320px)'});
   const laptopsize = useMediaQuery({query: '(min-width: 1024px)'});
   const tablet = useMediaQuery({query: '(min-width: 768px)'});
@@ -20,15 +19,15 @@ export default function Home(){
             width: '100%', 
             textAlign: 'center', 
             color: '#ff8c00',
-            fontSize: mobile ? '300%' : '500%',
+            fontSize: !tablet ? '7vw' : '4vw',
           }}
         >
           PRESTIGIOUS GAMING ON WHEELS PLUS!
         </p>
-        <p className='blinkingorange' style={{color: '#FF5722', textAlign: 'center',fontFamily: "Teko, sans-serif", fontSize: '225%'}}>
+        <p className='blinkingorange' style={{color: '#FF5722', textAlign: 'center',fontFamily: "Teko, sans-serif", fontSize: '4vw', marginTop: '2%'}}>
           Voted Best Game Truck in NY!
         </p>
-        <p className='a2 text-2xl mt-1 text-white'>
+        <p className='a2 mt-1 text-white' style={{fontSize: !tablet ? '5vw' : '3vw'}}>
           Hey! Hi There! You found us!
           <br />
           We are the best gaming/movie trailer experience you will ever encounter from luxurious quality to the best
@@ -44,7 +43,7 @@ export default function Home(){
           </div>
         </div> 
       </div>
-      <div id="quote" style={Object.assign({}, homestyles.text, {fontFamily: "'Teko', sans-serif", color: 'white'})}>
+      <p id="quote" style={Object.assign({}, homestyles.text, {fontSize: tablet ? '3vw' : '5vw', fontFamily: "'Teko', sans-serif", color: 'white'})}>
         This is one game trailer you won’t forget. Up to 28 players at once. Don’t worry, we bring the party to <span className="quo"> you! </span>
         Party in any weather, <span className="rain"> rain </span> or <span class="shine"> shine </span>
       ,<span id="Hot"> Hot </span>
@@ -54,9 +53,9 @@ export default function Home(){
           
       <span class="quo" id="yuh"> luxury class </span>
         trailer. 
-      </div>
+      </p>
       <br />
-      <p id="announce" style={homestyles.text}>
+      <p id="announce" style={Object.assign({}, homestyles.text, {fontSize: tablet ? '3vw' : '5vw', textAlign: 'center', color: 'white'})}>
         We now have the new <span class="blinkingblue"><strong> Playstation 5 </strong></span>
           and the 
         <span class="blinkinggreen">
@@ -65,7 +64,7 @@ export default function Home(){
         !!!
       </p>
       <br />
-      <div id="locations" style={homestyles.text}>
+      <p id="locations" style={Object.assign({}, homestyles.text, {fontSize: tablet ? '3vw' : '5vw', textAlign: 'center', color: 'white'})}>
         We're available to come to you in 
         <span id="brooklyn"> Brooklyn! </span>
         <span id="queens"> Queens!</span>
@@ -76,9 +75,9 @@ export default function Home(){
         <span id="Bronx"> and Parts of the Bronx!</span>
         <br />
         Make sure at least 5 car spaces are saved for trailer parking!
-      </div>
+      </p>
       <br />
-      <div id="occasions">
+      <p id="occasions" style={{fontSize: tablet ? '3vw' : '5vw'}}>
         We do 
         <span id="parties"> Birthday Parties! </span>
         <span id="church"> Church Functions! </span>
@@ -91,7 +90,7 @@ export default function Home(){
         <span id="Charities"> Charities! </span> and More!
         <br />
         <a class="Call" href="tel:7186738529">Call for events!</a>
-      </div>
+      </p>
       {/* <div className='mt-20 text-center w-100'>
         <GetRequest />
       </div> */}
