@@ -7,6 +7,7 @@
     position: relative;
     width: 100%;
     -webkit-font-smoothing: antialiased;
+    background-color: white;
 }
 
 .cFMrET:not(:only-child) {
@@ -169,4 +170,58 @@
 
 .cOdTFM {
     line-height: 2em;
+}
+
+.ecFtME {
+    display: inline-flex;
+    flex-wrap: nowrap;
+    -webkit-box-align: center;
+    align-items: center;
+}
+
+.bJFeVI:not(:only-child) > :last-child {
+    margin-right: 12px;
+}
+
+.hoAzGt:not(:last-of-type) {
+    margin-right: 0px;
+}
+
+.hoAzGt {
+    position: relative;
+    width: 20px;
+    height: 20px;
+}
+
+.chMKQB {
+    position: absolute;
+    inset: 0px;
+    margin: auto;
+    line-height: 0;
+}
+
+.biFvfu {
+    clip-path: inset(0px 0% 0px 0px);
+}
+
+.chMKQB svg {
+    position: static !important;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.bFQRJO path {
+    fill: rgba(17, 17, 17, 0.2) !important;
+}
+
+.eaRlNB {
+    overflow: hidden;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 1.8;
+    color: rgba(17, 17, 17, 0.5);
+}
+
+.biFvfu path {
+    fill: rgb(252, 191, 2) !important;
 }

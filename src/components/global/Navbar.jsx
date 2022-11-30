@@ -41,6 +41,11 @@ const Navbar= () =>{
                 </li>
                 <li className='lists'>
                     <span>
+                        <Link to="/BdayCard">E-Invites</Link>
+                    </span>
+                </li>
+                <li className='lists'>
+                    <span>
                         <Link to="/contactpage">Contact</Link>
                     </span>
                 </li>

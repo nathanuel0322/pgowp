@@ -8,6 +8,11 @@ body {
   overflow-y: hidden;
 }
 
+p {
+  margin: 0 auto;
+  width: 80%;
+}
+
 .Rectangle {
   opacity: 0.2;
   z-index: -1;
@@ -21,6 +26,10 @@ body {
 .a2{
   font-family: 'Teko', sans-serif; 
   text-align: center;
+}
+
+.blinkingorange {
+  animation: blinkingOrange 1.2s infinite;
 }
 
 .blinkingblue{
@@ -47,6 +56,14 @@ body {
   60%{    color: transparent; }
   99%{    color:transparent;  }
   100%{   color: green;    }
+}
+
+@keyframes blinkingOrange{
+  0%{     color: rgb(255, 87, 34)}
+  49%{    color:rgb(255, 87, 34)}
+  60%{    color: transparent; }
+  99%{    color:transparent;  }
+  100%{   color: rgb(255, 87, 34)}
 }
 
 .pgowp{
@@ -82,12 +99,10 @@ body {
 #quote {
   margin-top: -30%;
   text-align: center;
-  font-size: 40px;
 }
 
 #announce{
   text-align: center;
-  font-size: 40px;
   text-align: center; 
   font-family: 'Teko', sans-serif;
   color: white;
@@ -247,75 +262,6 @@ and (min-width : 0px) and (max-width : 319px) {
 
 @media only screen
 and (min-width : 320px) and (max-width : 767px) {
-
-  /* Invisible Prestigious Poster  */
-  img {
-    opacity: 0;
-  }
-
-  .navbar {
-      display: none;
-  }
-
-  .active{
-    background-color: blue;
-    color: white;
-  }
-
-  .topnav{
-    display: block;
-    overflow: hidden;
-    font-family: 'Teko', sans-serif;
-    font-size: 100%;
-    background-color: blue;
-    width: 100%;
-    left: 0%;
-    top: 0%;
-    position: fixed;
-    z-index: 10;
-  }
-
-  .topnav #myPages{
-    display: none;
-  }
-
-  .topnav a{
-    color: white;
-    padding: 14px 16px;
-    text-decoration: none;
-    font-size: 150%;
-    display: block;
-  }
-
-  .topnav a.icon {
-    background: blue;
-    display: block;
-    position: fixed;
-    right: 0%;
-    top: 0%;
-  }
-  
-  .topnav a:hover {
-    background-color: orange;
-    color: black;
-  }
-
-  /* END */
-
-  .wp p, .wp a1, .wp a2 {
-    font-size: 125%;
-  }
-
-  #quote {
-        top: 97%;
-        font-size: 125%;
-    }
-
-  #announce{
-        top: 117%;
-        font-size: 125%;
-    }
-
   .quo {
     font-size: 169.25%;
   }
