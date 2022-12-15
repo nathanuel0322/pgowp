@@ -21,7 +21,7 @@ export default function Gamelist(){
                     <p style={gameliststyles.text}>
                         Our game truck carries all the latest game systems & games, and we're always updating.
                         <br />
-                        Even better, we have <span style={{color: 'blueviolet'}} className="blinking"><strong> JUST DANCE </strong></span> 
+                        Even better, we have <br /> <span style={{color: 'blueviolet'}} className="blinking"><strong> JUST DANCE </strong></span> <br /> 
                         for the dancers!
                     </p>
                 </strong>
@@ -64,7 +64,7 @@ const gameliststyles = Stylesheet.create({
     text: {
         marginTop: '10%',
         textAlign: 'center',
-        fontSize: '4vw',
+        fontSize: '1.25rem',
         fontFamily: "'Nunito', sans-serif",
         color: 'white',
     },

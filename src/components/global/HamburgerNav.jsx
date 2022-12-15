@@ -5,29 +5,30 @@ import Stylesheet from 'reactjs-stylesheet';
 import { IoReorderThree } from "react-icons/io5";
 import { useMediaQuery } from 'react-responsive';
 
-const HamburgerNav = () => {
+const HamburgerNav = ({drawerfunc}) => {
     const location = useLocation();
     const [currentpage, setcurrentpage] = useState(null);
     useEffect(() => {
-        if (location.pathname === "/servicespage"){
+        console.log("pathname: ", location.pathname)
+        if (location.pathname === "/services"){
             setcurrentpage("Services");
         }
-        else if (location.pathname === "/packagespage"){
+        else if (location.pathname === "/packages"){
             setcurrentpage("Packages");
         }
         else if (location.pathname === "/"){
             setcurrentpage("Home");
         }
-        else if (location.pathname === "/gamelistpage"){
+        else if (location.pathname === "/gamelist"){
             setcurrentpage("Game List");
         }
-        else if (location.pathname === "/contactpage"){
-            setcurrentpage("Contact");
+        else if (location.pathname === "/contactus"){
+            setcurrentpage("Contact Us");
         }
-        else if (location.pathname === "/aboutpage"){
+        else if (location.pathname === "/about"){
             setcurrentpage("About");
         }
-        else if (location.pathname === "/BdayCard"){
+        else if (location.pathname === "/e-invites"){
             setcurrentpage("E-Invites");
         }
     }, [location.pathname])
@@ -61,7 +62,10 @@ const HamburgerNav = () => {
                             {currentpage}
                         </Link>
                         <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', paddingRight: '2%'}}
-                            onClick={() => setmenuclicked(!menuclicked)}
+                            onClick={() => {
+                                // setmenuclicked(!menuclicked)
+                                drawerfunc(true)
+                            }}
                         >
                             <IoReorderThree size={50} />
                         </div>
@@ -95,8 +99,7 @@ const HamburgerNav = () => {
                         {currentpage === "About" ? "Home" : "About"}
                     </Link>
                 </ul>
-            </div>
-            
+            </div>      
         </header>
   );
 }

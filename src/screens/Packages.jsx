@@ -56,6 +56,7 @@ const packagesstyles = Stylesheet.create({
         marginTop: '-77%',
         fontSize: '200%',
         fontFamily: "'Comfortaa', cursive",
+        padding: '0rem 2rem'
     },
       
     HoursList: {
@@ -74,6 +75,7 @@ const packagesstyles = Stylesheet.create({
         marginTop: '5px',
         marginBottom: '5px',
         zIndex: 999,
+        fontSize: '1.25rem'
     },
       
     PLUS: {

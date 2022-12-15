@@ -19,6 +19,7 @@ export default function Contact(){
                 <br />
                 <p>Email Us!</p>
                 <br />
+                {/* Change this into form!!! */}
                 <button style={{textDecoration: 'underline', fontSize: '4vw'}} onClick={() => window.location = 'mailto:tbnd@prestigiousgamingonwheelsplus.com'}>
                     tbnd@prestigiousgamingonwheelsplus.com
                 </button>
