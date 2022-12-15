@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "./static/css/main.f4c25935.css",
-    "main.js": "./static/js/main.c37b8415.js",
+    "main.css": "./static/css/main.8ba24e99.css",
+    "main.js": "./static/js/main.fdf2abc0.js",
     "static/media/PrestigiousPoster.jpg": "./static/media/PrestigiousPoster.527b03711e91f951842c.jpg",
     "static/media/Rectangle.jpg": "./static/media/Rectangle.988889785b9e858a3720.jpg",
     "static/media/infinitygame.jpeg": "./static/media/infinitygame.412dc5ad7aec92507ab3.jpeg",
@@ -17,11 +17,11 @@
     "static/media/halfstar.svg": "./static/media/halfstar.e2910c813445fb01e7dc8f0fae338564.svg",
     "index.html": "./index.html",
     "static/media/star.svg": "./static/media/star.b2dcb558140749b1f264ad402ac50a16.svg",
-    "main.f4c25935.css.map": "./static/css/main.f4c25935.css.map",
-    "main.c37b8415.js.map": "./static/js/main.c37b8415.js.map"
+    "main.8ba24e99.css.map": "./static/css/main.8ba24e99.css.map",
+    "main.fdf2abc0.js.map": "./static/js/main.fdf2abc0.js.map"
   },
   "entrypoints": [
-    "static/css/main.f4c25935.css",
-    "static/js/main.c37b8415.js"
+    "static/css/main.8ba24e99.css",
+    "static/js/main.fdf2abc0.js"
   ]
 }
