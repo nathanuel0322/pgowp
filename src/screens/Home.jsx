@@ -1,9 +1,9 @@
 import React from 'react';
 import '../assets/css/home.css';
 import PrestigiousPoster from '../assets/images/PrestigiousPoster.jpg';
-import { GetRequest } from '../components/home/reviewwidget';
 import { useMediaQuery } from 'react-responsive';
 import Stylesheet from 'reactjs-stylesheet';
+import GetRequest from '../components/home/reviewwidget';
 
 export default function Home(){
   const mobile = useMediaQuery({query: '(min-width: 320px)'});
@@ -38,27 +38,27 @@ export default function Home(){
         <div style={{width: '100%', display: 'inline-block',}}>
           <div style={{position: 'relative', width:'100%', height:0, paddingBottom:'80%', display:'inline-block', boxSizing:'border-box',}}>
             <iframe style={{position: 'absolute', backgroundColor: '#03396c',}} title='Youtube' id="youtube" width="100%" height="50%" 
-            src="https://www.youtube.com/embed/SvnDdaO3NkE" frameborder="0" 
-            allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            src="https://www.youtube.com/embed/SvnDdaO3NkE"
+            allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
           </div>
         </div> 
       </div>
       <p id="quote" style={Object.assign({}, homestyles.text, {fontSize: tablet ? '3vw' : '6vw', fontFamily: "'Teko', sans-serif", color: 'white'})}>
         This is one game trailer you won’t forget. Up to 28 players at once. Don’t worry, we bring the party to <span className="quo"> you! </span>
-        Party in any weather, <span className="rain"> rain </span> or <span class="shine"> shine </span>
+        Party in any weather, <span className="rain"> rain </span> or <span className="shine"> shine </span>
       ,<span id="Hot"> Hot </span>
         or 
       <span id="cold"> Cold </span>
       . Come and enjoy your party in our 
           
-      <span class="quo" id="yuh"> luxury class </span>
+      <span className="quo" id="yuh"> luxury class </span>
         trailer. 
       </p>
       <br />
       <p id="announce" style={Object.assign({}, homestyles.text, {fontSize: tablet ? '3vw' : '6vw', textAlign: 'center', color: 'white'})}>
-        We now have the new <span class="blinkingblue"><strong> Playstation 5 </strong></span>
+        We now have the new <span className="blinkingblue"><strong> Playstation 5 </strong></span>
           and the 
-        <span class="blinkinggreen">
+        <span className="blinkinggreen">
             <strong> Xbox Series X </strong>
         </span>
         !!!
@@ -89,10 +89,13 @@ export default function Home(){
         <span id="block"> Block Parties! </span>
         <span id="Charities"> Charities! </span> and More!
         <br />
-        <a class="Call" href="tel:7186738529" style={{color: 'chartreuse', textDecoration: 'underline'}}>Click here to call for events!</a>
+        <a className="Call" href="tel:7186738529" style={{color: 'chartreuse', textDecoration: 'underline'}}>Click here to call for events!</a>
       </p>
+      <GetRequest />
+      {/* <div className="10to8-ratings-widget" data-uuid="acc2fe13-9501-4e4b-bf95-de28c1e9324a">
+        <a href="https://app.10to8.com/book/acc2fe13-9501-4e4b-bf95-de28c1e9324a/uuid/" target="_blank" rel="noreferrer">Powered by 10to8</a>
+      </div> */}
       {/* <div className='mt-20 text-center w-100'>
-        <GetRequest />
       </div> */}
     </div> 
   )

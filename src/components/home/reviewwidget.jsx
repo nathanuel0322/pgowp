@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import '../../assets/css/reviewwidget.css';
 import OverallRating from './OverallRating';
@@ -7,101 +7,37 @@ import GoogleRating from './GoogleRating';
 import Yelp5Stars from '../../assets/icons/regular_5@3x.png';
 import Star from '../../assets/icons/star.svg';
 import HalfStar from '../../assets/icons/halfstar.svg';
+import ReviewSlider from './ReviewSlider';
 
-class GetRequest extends React.Component {
-  constructor(props) {
-    super(props);
+export default function GetRequest() {
+  const [reviewobj, setReviewObj] = useState({
+    allReviewsSelected: true,
+    googleSelected: null,
+    googlereviews: [],
+    yelpreviews: [],
+    yelpSelected: null,
+    yelplength: null,
+    yelpreviewaverage: null,
+  });
 
-    this.state = {
-      totalReactPackages: null,
-      allReviewsSelected: true,
-      googleSelected: null,
-      yelpSelected: null,
-      yelpreviewholder: [],
-      yelplength: null,
-      yelpreviewaverage: null,
-    };
-    this.forceUpdate();
-  }
-
-  
-
-  // componentDidMount() {
-  //   axios
-  //   .get(
-  //     'https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/prestigious-gaming-on-wheels-plus-queens/reviews',
-  //     {
-  //       headers: {
-  //          Authorization: `Bearer ${process.env.REACT_APP_API_KEY}`,
-  //       },
-  //     },
-  //   )
-  //   .then((response) => {
-  //     let reviewstarsum = 0;
-  //     let iteratorholder = 0;
-  //     console.log(response.data.reviews);
-  //     response.data.reviews.map((currentValue, index) => {
-  //       reviewstarsum += currentValue.rating;
-  //       iteratorholder++;
-  //       console.log("sum " + reviewstarsum);
-  //     })
-  //     this.setState({
-  //       yelpreviewholder: response.data.reviews, 
-  //       yelplength: iteratorholder,
-  //       yelpreviewaverage: reviewstarsum / iteratorholder,
-  //     });
-  //     console.log(this.state.yelpreviewaverage)
-      
-  //   })
-  //   .catch(err => {
-  //     console.log(err);
-  //   });
-    
-  // }
-
-  render() {
-    // eslint-disable-next-line array-callback-return
-    this.state.yelpreviewholder.map((currentValue, index) => {
-      console.log(currentValue, index);
-    });
-
-
-    const { totalReactPackages } = this.state;
-
-    const wrapperFunction1 = () => {
-      this.setState({allReviewsSelected: true});
-      this.setState({googleSelected: false});
-      this.setState({yelpSelected: false})
-      console.log(this.state.allReviewsSelected,this.state.googleSelected,this.state.yelpSelected)
-      this.forceUpdate();
-    }
-
-    const wrapperFunction2 = () => {
-      this.setState({allReviewsSelected: false});
-      this.setState({googleSelected: true});
-      this.setState({yelpSelected: false})
-      console.log(this.state.allReviewsSelected,this.state.googleSelected,this.state.yelpSelected)
-      this.forceUpdate();
-    }
-
-    const wrapperFunction3 = () => {
-      this.setState({allReviewsSelected: false});
-      this.setState({googleSelected: false});
-      this.setState({yelpSelected: true})
-      console.log(this.state.allReviewsSelected,this.state.googleSelected,this.state.yelpSelected)
-      this.forceUpdate();
-    }
-
+  useEffect(() => {
+    fetch('https://yelpapi.herokuapp.com/google')
+      .then((response) => response.json())
+      // set the googlereviews array in reviewobj to the response data
+      .then((data) => {console.log("api data:", data); setReviewObj({ ...reviewobj, googlereviews: data })});
+  }, []);
 
     return (
-      <div title="" className="">
-        <p className='text-xl font-bold text-white'>Check out our reviews from past customers below!</p>
+      <div id="parentdiv">
+        <p id='reviewsubtitle' className='text-xl font-bold text-white'>Check out our reviews from past customers below!</p>
         <div id='TopReviewsContainer' className="eyarYd">
-          <div id='TabsContainer_Inner' className='eyarYd kaXWRJ cFMrET' >
+          <div id='TabsContainer_Inner' className='eyarYd kaXWRJ cFMrET'>
             <div id='TabsSlider_Container' className='iluRKv' >
-              <div id='TabsSlider_Inner' className='kWhNOk' style={{left: 0}}>
+              <div id='TabsSlider_Inner' className='kWhNOk'>
                 <div id='Tab_AllReviews' className='reviewtabs gbMejj' style={{transform: 'translate3d(0px, 0px, 0px)'}}>
-                  <div id='Tab_Container' className="hLJjKZ eSqAQ" onClick={() => {wrapperFunction1(); console.log(this.state.allReviewsSelected)}}>
+                  <div id='Tab_Container' className="hLJjKZ eSqAQ" onClick={() => {
+                    setReviewObj({...reviewobj, googleSelected: false, yelpSelected: false, allReviewsSelected: true})
+                  }}>
                     <div id='Tab_Inner' className='fYHkoy'>
                       <span id='TabTitle__Container' className="fvcFQJ">All Reviews</span>
                       <div id="Rating__Container" className='kqGYQX fdNGvL'>
@@ -111,7 +47,7 @@ class GetRequest extends React.Component {
                       </div>
                     </div>
                   </div>
-                  {this.state.allReviewsSelected ? 
+                  {reviewobj.allReviewsSelected ? 
                     <div style={{
                       position: 'absolute',
                       fontSize: 500,
@@ -131,7 +67,9 @@ class GetRequest extends React.Component {
                   }
                 </div>
                 <div id='Tab_Google' className='reviewtabs gbMejj' style={{transform: 'translate3d(0px, 0px, 0px)'}}>
-                  <div id='Tab_Container' className="hLJjKZ eSqAQ" onClick={() => {wrapperFunction2(); console.log(this.state.allReviewsSelected)}}>
+                  <div id='Tab_Container' className="hLJjKZ eSqAQ" onClick={() => {
+                    setReviewObj({...reviewobj, googleSelected: true, yelpSelected: false, allReviewsSelected: false})
+                  }}>
                     <div id="Tab__Inner" className="fYHkoy">
                       <div title="Google" id="Icon__IconContainer" className='dosZLJ' style={{width: '24px', height: '24px'}}>
                         <div>
@@ -150,7 +88,7 @@ class GetRequest extends React.Component {
                       </div>
                     </div>
                   </div>
-                  {this.state.googleSelected ? 
+                  {reviewobj.googleSelected ? 
                     <div style={{
                       position: 'absolute',
                       fontSize: 500,
@@ -170,7 +108,9 @@ class GetRequest extends React.Component {
                   }
                 </div>
                 <div id='Tab_Yelp' className='reviewtabs gbMejj' style={{transform: 'translate3d(0px, 0px, 0px)'}}>
-                  <div id='Tab_Container' className="hLJjKZ eSqAQ" onClick={() => {wrapperFunction3(); console.log(this.state.allReviewsSelected)}}>
+                  <div id='Tab_Container' className="hLJjKZ eSqAQ" onClick={() => {
+                    setReviewObj({...reviewobj, googleSelected: false, yelpSelected: true, allReviewsSelected: false})
+                  }}>
                     <div id="Tab__Inner" className="fYHkoy">
                       <div title="Yelp" id="Icon__IconContainer" className='dosZLJ' style={{width: '24px', height: '24px'}}>
                         <div>
@@ -188,7 +128,7 @@ class GetRequest extends React.Component {
                       </div>
                     </div>
                   </div>
-                  {this.state.yelpSelected ? 
+                  {reviewobj.yelpSelected ? 
                     <div style={{
                       position: 'absolute',
                       fontSize: 500,
@@ -213,24 +153,20 @@ class GetRequest extends React.Component {
           <div title="HeaderContainer__Inner Header__StyledHeaderContainer LayoutDefault__StyledHeader" className="fFcWqO ezwNNr">
             <div title="Header__Info" className="ifLRlC">
               <div title="HeaderTitle__Container" className="dmlKKH">
-                {/* {this.allReviewsSelected ? console.log(this.allReviewsSelected + 'Reviews Selected') : <OverallRating />} */}
-                {this.state.allReviewsSelected && <OverallRating />}
-                {/* {this.state.googleSelected ? console.log(this.state.googleSelected + 'Google Selected') : <GoogleRating />} */}
-                {this.state.googleSelected && <GoogleRating />}
-                {/* {this.state.yelpSelected ? console.log(this.state.yelpSelected + 'Yelp Selected') : <YelpRating />} */}
-                {this.state.yelpSelected && <YelpRating />}
+                {reviewobj.allReviewsSelected && <OverallRating />}
+                {reviewobj.googleSelected && <GoogleRating />}
+                {reviewobj.yelpSelected && <YelpRating />}
               </div>
               <div title="Header__SourceInfo" className="fctGyX">
                 <div title="Rating__Container Header__StyledHeaderRating" className="kqGYQX bJFeVI">
                   <div title="RatingValue__Container" className="bIDTiT font-bold" style={{marginRight: '13px'}}>
-                    
-                    {this.state.yelpSelected ?
-                      this.state.yelpreviewaverage.toFixed(1)
+                    {reviewobj.yelpSelected ?
+                      reviewobj.yelpreviewaverage.toFixed(1)
                     :
                       4.5
                     }
                   </div>
-                  {this.state.yelpSelected ?
+                  {reviewobj.yelpSelected ?
                     <div>
                       <img src={Yelp5Stars} alt="yelpstars" width={100} height={20}/>
                     </div>
@@ -278,26 +214,22 @@ class GetRequest extends React.Component {
                       </div>
                     </div>
                   }
-                  <div style={{paddingLeft: '13px',  whiteSpace: 'nowrap'}} className="HeaderTotalReviews__Container-sc-1a7tbil-0 eaRlNB">
-                    {this.state.yelplength + " reviews"}
+                        <div style={{paddingLeft: '13px',  whiteSpace: 'nowrap'}} className="HeaderTotalReviews__Container-sc-1a7tbil-0 eaRlNB">
+                          {reviewobj.yelplength + " reviews"}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div title="" className="HeaderWriteReviewButton__Component-sc-aghmpr-0 bOCgQx Header__StyledHeaderWriteReviewButton-sc-gozq6j-4 iXyBKR">
+                    <button size="15" id='writereview' className="ButtonBase__ButtonContainer-sc-p43e7i-3 fhFXwt HeaderWriteReviewButton__StyledButton-sc-aghmpr-1 dYQPWG" type="button" tabIndex="0" style={{borderRadius: '4px', borderColor: 'rgba(0, 0, 0, 0)', color: 'rgb(255, 255, 255)', fontFamily: 'inherit', backgroundColor: 'rgb(25, 123, 255)', height: '35px'}}>
+                      <span className="ButtonBase__Overlay-sc-p43e7i-4 fMszQs" style={{padding: '8px 20px', backgroundColor: 'rgba(0, 0, 0, 0)'}}>
+                        Write a Review
+                      </span>
+                    </button>
                   </div>
                 </div>
-                    
-                    </div></div><div title="" className="HeaderWriteReviewButton__Component-sc-aghmpr-0 bOCgQx Header__StyledHeaderWriteReviewButton-sc-gozq6j-4 iXyBKR">
-                          
-                          
-                          
-                          <button size="15" className="ButtonBase__ButtonContainer-sc-p43e7i-3 fhFXwt HeaderWriteReviewButton__StyledButton-sc-aghmpr-1 dYQPWG" type="button" tabindex="0" style={{borderRadius: '4px', borderColor: 'rgba(0, 0, 0, 0)', color: 'rgb(255, 255, 255)', fontFamily: 'inherit', backgroundColor: 'rgb(25, 123, 255)', height: '35px'}}><span className="ButtonBase__Overlay-sc-p43e7i-4 fMszQs" style={{padding: '8px 20px', backgroundColor: 'rgba(0, 0, 0, 0)'}}><span className="ButtonBase__Ellipsis-sc-p43e7i-5 kzddPn">Write a Review</span></span></button><div title="" className="HeaderWriteReviewButton__Modal-sc-aghmpr-2 EUeEN">
-                </div>
-                </div>
-                </div> 
-
-          Total react packages: {totalReactPackages}
+          <ReviewSlider reviews={reviewobj.allReviewsSelected ? [...reviewobj.googlereviews, ...reviewobj.yelpreviews] : reviewobj.googleSelected ? reviewobj.googlereviews : reviewobj.yelpreviews} />
         </div>
       </div>
     )
-  }
 }
-
-export { GetRequest };
-

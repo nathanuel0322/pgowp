@@ -1,3 +1,17 @@
+#parentdiv {
+    margin: 0 1rem;
+    margin-top: 1rem;
+}
+
+#reviewsubtitle {
+    text-align: center;
+}
+
+#TopReviewsContainer {
+    border-radius: 0.5rem;
+    margin-top: 1rem;
+}
+
 .eyarYd, .eyarYd * {
     box-sizing: border-box !important;
     outline: none !important;
@@ -16,7 +30,7 @@
 }
 
 .cFMrET {
-    border-radius: 8px;
+    /* border-radius: 8px; */
 }
 
 .kaXWRJ {
@@ -27,19 +41,15 @@
 }
 
 .iluRKv {
-    position: relative;
-    /* display: inline-flex; */
-    max-width: 100%;
 }
 
 .kWhNOk {
-    position: relative;
-    height: 100%;
     display: flex;
+    justify-content: center;
 }
 
 .iluRKv * {
-    -webkit-user-select: none;
+    /* -webkit-user-select: none; */
 }
 
 .hLJjKZ {
@@ -224,4 +234,8 @@
 
 .biFvfu path {
     fill: rgb(252, 191, 2) !important;
+}
+
+#writereview {
+    margin-top: 0.5rem;
 }

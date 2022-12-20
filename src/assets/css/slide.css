@@ -1,0 +1,13 @@
+#namestarts {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+#slideparent {
+    background-color: white;
+}
+
+.awssld__content {
+    background-color: white;
+}
