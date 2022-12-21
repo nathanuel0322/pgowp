@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import '../../assets/css/reviewwidget.css';
 import OverallRating from './OverallRating';
 import YelpRating from './YelpRating';
@@ -18,14 +17,24 @@ export default function GetRequest() {
     yelpSelected: null,
     yelplength: null,
     yelpreviewaverage: null,
+    reviewavg: null,
   });
 
   useEffect(() => {
     fetch('https://yelpapi.herokuapp.com/google')
       .then((response) => response.json())
       // set the googlereviews array in reviewobj to the response data
-      .then((data) => {console.log("api data:", data); setReviewObj({ ...reviewobj, googlereviews: data })});
+      .then((data) => {
+        console.log("api data:", data);
+        setReviewObj({ ...reviewobj, googlereviews: data, reviewavg: 
+          // add one trailing decimal zero if the average is a whole number
+          Math.round((data.reduce((accumulator, currentValue) => accumulator + currentValue.stars, 0) / data.length) * 10) / 10 });
+      });
   }, []);
+
+  useEffect(() => {
+    console.log("reviewavg is:", reviewobj.reviewavg);
+  }, [reviewobj.reviewavg]);
 
     return (
       <div id="parentdiv">
@@ -160,11 +169,7 @@ export default function GetRequest() {
               <div title="Header__SourceInfo" className="fctGyX">
                 <div title="Rating__Container Header__StyledHeaderRating" className="kqGYQX bJFeVI">
                   <div title="RatingValue__Container" className="bIDTiT font-bold" style={{marginRight: '13px'}}>
-                    {reviewobj.yelpSelected ?
-                      reviewobj.yelpreviewaverage.toFixed(1)
-                    :
-                      4.5
-                    }
+                    {String(reviewobj.reviewavg).split(".").length > 1 ? reviewobj.reviewavg : reviewobj.reviewavg + ".0"}
                   </div>
                   {reviewobj.yelpSelected ?
                     <div>
@@ -215,7 +220,7 @@ export default function GetRequest() {
                     </div>
                   }
                         <div style={{paddingLeft: '13px',  whiteSpace: 'nowrap'}} className="HeaderTotalReviews__Container-sc-1a7tbil-0 eaRlNB">
-                          {reviewobj.yelplength + " reviews"}
+                          {reviewobj.allReviewsSelected ? reviewobj.googlereviews.length + reviewobj.yelpreviews.length : reviewobj.googleSelected ? reviewobj.googlereviews.length : reviewobj.yelpreviews.length} reviews
                         </div>
                       </div>
                     </div>
@@ -228,7 +233,9 @@ export default function GetRequest() {
                     </button>
                   </div>
                 </div>
-          <ReviewSlider reviews={reviewobj.allReviewsSelected ? [...reviewobj.googlereviews, ...reviewobj.yelpreviews] : reviewobj.googleSelected ? reviewobj.googlereviews : reviewobj.yelpreviews} />
+          <div id="slidercontainer">
+            <ReviewSlider reviews={reviewobj.allReviewsSelected ? [...reviewobj.googlereviews, ...reviewobj.yelpreviews] : reviewobj.googleSelected ? reviewobj.googlereviews : reviewobj.yelpreviews} />
+          </div>
         </div>
       </div>
     )

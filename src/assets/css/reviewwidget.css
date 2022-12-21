@@ -10,6 +10,12 @@
 #TopReviewsContainer {
     border-radius: 0.5rem;
     margin-top: 1rem;
+    padding: 1rem 1rem;
+}
+
+#TabsContainer_Inner {
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
 }
 
 .eyarYd, .eyarYd * {
@@ -238,4 +244,8 @@
 
 #writereview {
     margin-top: 0.5rem;
+}
+
+#slidercontainer {
+    padding: 1.5rem 1.5rem;
 }

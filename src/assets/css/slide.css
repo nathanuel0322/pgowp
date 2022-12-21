@@ -2,12 +2,64 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    margin-left: 1rem;
+}
+
+#topdiv {
+    align-self: flex-start;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+#topdiv p:first-child {
+    width: 15rem;
+    font-size: 14px;
+    font-weight: 700;
+    max-width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+#topdiv p:last-child {
+    margin: 0 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }
 
 #slideparent {
-    background-color: white;
+    background-color: transparent;
 }
 
 .awssld__content {
-    background-color: white;
+    background-color: transparent;
+}
+
+#readmore {
+    display: inline-block;
+    cursor: pointer;
+    font-size: 14px;
+    color: rgba(17, 17, 17, 0.5);
+}
+
+#reviewtext {
+    margin: 0 0;
+}
+
+#timedisplay {
+    overflow: hidden;
+    min-width: 0px;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 1.17;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color: rgba(17, 17, 17, 0.5);
+}
+
+#slidestars {
+    margin-right: 0.5rem;
+    margin-top: 0.33rem;
 }

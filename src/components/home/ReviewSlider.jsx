@@ -10,7 +10,7 @@ export default function ReviewSlider({reviews}) {
     useEffect(() => {
         console.log("reviews", reviews)
         setSliderArr(reviews.map((review) => {
-            return {children: <Slide photo={review.photo} name={review.name} reviewtext={review.reviewtext} />}
+            return {children: <Slide photo={review.photo} name={review.name} reviewtext={review.reviewtext} stars={review.stars} time={review.time} />}
         }))
     }, [reviews])
     const AutoplaySlider = withAutoplay(AwesomeSlider);
