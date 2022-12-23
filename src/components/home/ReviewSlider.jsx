@@ -13,9 +13,9 @@ export default function ReviewSlider({reviews}) {
             return {children: <Slide photo={review.photo} name={review.name} reviewtext={review.reviewtext} stars={review.stars} time={review.time} />}
         }))
     }, [reviews])
-    const AutoplaySlider = withAutoplay(AwesomeSlider);
+    // const AutoplaySlider = withAutoplay(AwesomeSlider);
     return (
-        <AutoplaySlider
+        <AwesomeSlider
             id="midslideshow"
             bullets={false}
             play={true}
