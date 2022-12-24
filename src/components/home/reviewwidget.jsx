@@ -7,6 +7,8 @@ import Yelp5Stars from '../../assets/icons/regular_5@3x.png';
 import Star from '../../assets/icons/star.svg';
 import HalfStar from '../../assets/icons/halfstar.svg';
 import ReviewSlider from './ReviewSlider';
+import { ProgressBar, ThreeDots } from 'react-loader-spinner';
+import StarSet from './StarSet';
 
 export default function GetRequest() {
   const [reviewobj, setReviewObj] = useState({
@@ -19,6 +21,7 @@ export default function GetRequest() {
     yelpreviewaverage: null,
     reviewavg: null,
   });
+  const [apiLoaded, setApiLoaded] = useState(false);
 
   useEffect(() => {
     fetch('https://yelpapi.herokuapp.com/google')
@@ -28,7 +31,9 @@ export default function GetRequest() {
         console.log("api data:", data);
         setReviewObj({ ...reviewobj, googlereviews: data, reviewavg: 
           // add one trailing decimal zero if the average is a whole number
-          Math.round((data.reduce((accumulator, currentValue) => accumulator + currentValue.stars, 0) / data.length) * 10) / 10 });
+          Math.round((data.reduce((accumulator, currentValue) => accumulator + currentValue.stars, 0) / data.length) * 10) / 10 
+        });
+        setApiLoaded(true);
       });
   }, []);
 
@@ -167,66 +172,45 @@ export default function GetRequest() {
                 {reviewobj.yelpSelected && <YelpRating />}
               </div>
               <div title="Header__SourceInfo" className="fctGyX">
-                <div title="Rating__Container Header__StyledHeaderRating" className="kqGYQX bJFeVI">
-                  <div title="RatingValue__Container" className="bIDTiT font-bold" style={{marginRight: '13px'}}>
-                    {String(reviewobj.reviewavg).split(".").length > 1 ? reviewobj.reviewavg : reviewobj.reviewavg + ".0"}
+                {!apiLoaded ?
+                  <div title="Rating__Container Header__StyledHeaderRating" className="kqGYQX bJFeVI">
+                    <ThreeDots 
+                      height="40" 
+                      width="40" 
+                      radius="9"
+                      color="blue" 
+                      ariaLabel="three-dots-loading"
+                      wrapperStyle={{}}
+                      wrapperClassName=""
+                      visible={true}
+                    />
                   </div>
-                  {reviewobj.yelpSelected ?
-                    <div>
-                      <img src={Yelp5Stars} alt="yelpstars" width={100} height={20}/>
+                :
+                  <div title="Rating__Container Header__StyledHeaderRating" className="kqGYQX bJFeVI">
+                    <div title="RatingValue__Container" className="bIDTiT font-bold" style={{marginRight: '13px'}}>
+                      {String(reviewobj.reviewavg).split(".").length > 1 ? reviewobj.reviewavg : reviewobj.reviewavg + ".0"}
                     </div>
-                  :
-                    <div title="RatingBar__Container" className="ecFtME">
-                      <div title="RatingItemFilledSvg__Container" className="hoAzGt es-rating-stars-item-filled">
-                        <div title="RatingItemFilledSvg__ContainerAbsolute RatingItemFilledSvg__Unfilled" className="chMKQB bFQRJO">
-                          <img src={Star} alt="filledstar" />
-                        </div>
-                        <div title="RatingItemFilledSvg__ContainerAbsolute RatingItemFilledSvg__Filled" className="chMKQB biFvfu">
-                          <img src={Star} alt="filledstar" />
-                        </div>
+                    {reviewobj.yelpSelected ?
+                      <div>
+                        <img src={Yelp5Stars} alt="yelpstars" width={100} height={20}/>
                       </div>
-                      <div title="RatingItemFilledSvg__Container" className="hoAzGt es-rating-stars-item-filled">
-                        <div title="RatingItemFilledSvg__ContainerAbsolute RatingItemFilledSvg__Unfilled" className="chMKQB bFQRJO">
-                          <img src={Star} alt="filledstar" />
-                        </div>
-                        <div title="RatingItemFilledSvg__ContainerAbsolute RatingItemFilledSvg__Filled" className="chMKQB biFvfu">
-                          <img src={Star} alt="filledstar" />
-                        </div>
-                      </div>
-                      <div title="RatingItemFilledSvg__Container" className="hoAzGt es-rating-stars-item-filled">
-                        <div title="RatingItemFilledSvg__ContainerAbsolute RatingItemFilledSvg__Unfilled" className="chMKQB bFQRJO">
-                          <img src={Star} alt="filledstar" />
-                        </div>
-                        <div title="RatingItemFilledSvg__ContainerAbsolute RatingItemFilledSvg__Filled" className="chMKQB biFvfu">
-                          <img src={Star} alt="filledstar" />
-                        </div>
-                      </div>
-                      <div title="" className="RatingItemFilledSvg__Container hoAzGt es-rating-stars-item-filled">
-                        <div title="" className="RatingItemFilledSvg__ContainerAbsolute RatingItemFilledSvg__Unfilled chMKQB bFQRJO">
-                          <img src={Star} alt="filledstar" />
-                        </div>
-                        <div title="" className="RatingItemFilledSvg__ContainerAbsolute RatingItemFilledSvg__Filled chMKQB biFvfu">
-                          <img src={Star} alt="filledstar" />
-                        </div>
-                      </div>
-                      <div title="" className="RatingItemFilledSvg__Container hoAzGt es-rating-stars-item-filled">
-                        <div title="" className="RatingItemFilledSvg__ContainerAbsolute RatingItemFilledSvg__Unfilled chMKQB bFQRJO">
-                          <img src={Star} alt="filledstar" />
-                        </div>
-                        <div title="" className="RatingItemFilledSvg__ContainerAbsolute RatingItemFilledSvg__Filled chMKQB biFvfu">
-                          <img src={Star} alt="filledstar" />
-                        </div>
-                      </div>
-                    </div>
-                  }
-                        <div style={{paddingLeft: '13px',  whiteSpace: 'nowrap'}} className="HeaderTotalReviews__Container-sc-1a7tbil-0 eaRlNB">
-                          {reviewobj.allReviewsSelected ? reviewobj.googlereviews.length + reviewobj.yelpreviews.length : reviewobj.googleSelected ? reviewobj.googlereviews.length : reviewobj.yelpreviews.length} reviews
-                        </div>
-                      </div>
+                    :
+                      <StarSet rating={5} />
+                    }
+                    <div style={{paddingLeft: '13px',  whiteSpace: 'nowrap'}} className="HeaderTotalReviews__Container-sc-1a7tbil-0 eaRlNB">
+                      {reviewobj.allReviewsSelected ? reviewobj.googlereviews.length + reviewobj.yelpreviews.length : reviewobj.googleSelected ? reviewobj.googlereviews.length : reviewobj.yelpreviews.length} reviews
                     </div>
                   </div>
+                }
+              </div>
+            </div>
                   <div title="" className="HeaderWriteReviewButton__Component-sc-aghmpr-0 bOCgQx Header__StyledHeaderWriteReviewButton-sc-gozq6j-4 iXyBKR">
-                    <button size="15" id='writereview' className="ButtonBase__ButtonContainer-sc-p43e7i-3 fhFXwt HeaderWriteReviewButton__StyledButton-sc-aghmpr-1 dYQPWG" type="button" tabIndex="0" style={{borderRadius: '4px', borderColor: 'rgba(0, 0, 0, 0)', color: 'rgb(255, 255, 255)', fontFamily: 'inherit', backgroundColor: 'rgb(25, 123, 255)', height: '35px'}}>
+                    <button size="15" id='writereview' className="ButtonBase__ButtonContainer-sc-p43e7i-3 fhFXwt HeaderWriteReviewButton__StyledButton-sc-aghmpr-1 dYQPWG" type="button" tabIndex="0" style={{borderRadius: '4px', borderColor: 'rgba(0, 0, 0, 0)', color: 'rgb(255, 255, 255)', fontFamily: 'inherit', backgroundColor: 'rgb(25, 123, 255)', height: '35px'}} 
+                      onClick={() => {
+                        // open google maps page in new tab
+                        window.open('https://www.google.com/maps/place/Prestigious+Gaming+On+Wheels+Plus/@40.6716126,-73.7834678,20.21z/data=!4m5!3m4!1s0x89c267ef4ab3d5c7:0x77d90889fb9bc7fc!8m2!3d40.671612!4d-73.7834759');
+                      }}
+                    >
                       <span className="ButtonBase__Overlay-sc-p43e7i-4 fMszQs" style={{padding: '8px 20px', backgroundColor: 'rgba(0, 0, 0, 0)'}}>
                         Write a Review
                       </span>
@@ -234,7 +218,19 @@ export default function GetRequest() {
                   </div>
                 </div>
           <div id="slidercontainer">
-            <ReviewSlider reviews={reviewobj.allReviewsSelected ? [...reviewobj.googlereviews, ...reviewobj.yelpreviews] : reviewobj.googleSelected ? reviewobj.googlereviews : reviewobj.yelpreviews} />
+            {!apiLoaded ?
+              <ProgressBar
+                height="80"
+                width="80"
+                ariaLabel="progress-bar-loading"
+                wrapperStyle={{margin: '0 auto'}}
+                wrapperClass="progress-bar-wrapper"
+                borderColor = 'blue'
+                barColor = 'orange'
+              />
+            :
+              <ReviewSlider reviews={reviewobj.allReviewsSelected ? [...reviewobj.googlereviews, ...reviewobj.yelpreviews] : reviewobj.googleSelected ? reviewobj.googlereviews : reviewobj.yelpreviews} />
+            }
           </div>
         </div>
       </div>
