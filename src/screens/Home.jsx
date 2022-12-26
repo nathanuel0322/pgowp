@@ -4,7 +4,7 @@ import PrestigiousPoster from '../assets/images/PrestigiousPoster.jpg';
 import { useMediaQuery } from 'react-responsive';
 import Stylesheet from 'reactjs-stylesheet';
 import GetRequest from '../components/home/reviewwidget';
-import sample from '../assets/videos/Prestigious Gaming On Wheels Plus.mp4';
+import sample from '../assets/videos/PrestigiousGamingOnWheelsPlus.mp4';
 
 export default function Home(){
   const mobile = useMediaQuery({query: '(min-width: 320px)'});
