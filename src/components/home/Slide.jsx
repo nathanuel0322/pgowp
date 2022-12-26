@@ -6,7 +6,6 @@ export default function Slide({name, time, stars, photo, reviewtext, isyelp}) {
     const [ptextalter, setPTextAlter] = useState({text: reviewtext, expand: false})
     const notInitialRender = useRef(false);
     useEffect(() => {
-        console.log("platform:", isyelp)
         const rtarr = reviewtext.split(" ")
         if (rtarr.length >= 20) {
             // console.log("More than 20 words")
@@ -31,11 +30,11 @@ export default function Slide({name, time, stars, photo, reviewtext, isyelp}) {
 
     useEffect(() => {
         if (ptextalter.expand) {
-            console.log("initial organic height:", document.getElementsByClassName("awssld--organic-arrows")[0].offsetHeight)
-            console.log("initial wrapper height:", document.getElementsByClassName("awssld__wrapper")[0].offsetHeight)
-            console.log("initial reviewtext height:", document.getElementById("reviewtext").offsetHeight)
-            document.getElementsByClassName("awssld--organic-arrows")[0].style.height = document.getElementsByClassName("awssld__wrapper")[0].offsetHeight + document.getElementById("reviewtext").offsetHeight - (2.5 * document.getElementById("topdiv").offsetHeight) + "px";
-            console.log("new organic height:", document.getElementsByClassName("awssld--organic-arrows")[0].offsetHeight)
+            // console.log("initial organic height:", document.getElementsByClassName("awssld--organic-arrows")[0].offsetHeight)
+            // console.log("initial wrapper height:", document.getElementsByClassName("awssld__wrapper")[0].offsetHeight)
+            // console.log("initial reviewtext height:", document.getElementById("reviewtext").offsetHeight)
+            // document.getElementsByClassName("awssld--organic-arrows")[0].style.height = document.getElementsByClassName("awssld__wrapper")[0].offsetHeight + document.getElementById("reviewtext").offsetHeight - (2.5 * document.getElementById("topdiv").offsetHeight) + "px";
+            // console.log("new organic height:", document.getElementsByClassName("awssld--organic-arrows")[0].offsetHeight)
             // scroll to the bottom of the page
             window.scrollTo(0, document.body.scrollHeight);
         }
