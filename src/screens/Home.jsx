@@ -13,7 +13,7 @@ export default function Home(){
   return(
     <div style={{backgroundColor: '#03396c'}}>
       <video className='videoTag' autoPlay loop muted>
-        <source src={sample} type='video/mp4' />
+        <source src={require('../assets/videos/PrestigiousGamingOnWheelsPlus.mp4')} type='video/mp4' />
       </video>
       <img src={PrestigiousPoster} style={{display: tablet ? 'block' : 'none', marginTop: laptopsize ? '7.5%' : tablet && '9%'}} alt="Prestigious Poster" />
       <div className="wp" style={{marginTop: tablet ? '3%' : mobile && '5%',}}>

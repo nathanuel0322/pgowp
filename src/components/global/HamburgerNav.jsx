@@ -47,7 +47,7 @@ const HamburgerNav = ({drawerfunc}) => {
     })
     return (
         <header>
-            <div>
+            <div id="headerdiv">
                 <ul style={{display: 'flex', flexDirection: 'column', backgroundColor: 'blue', color: 'white', fontFamily: "'Teko', sans-serif", 
                     fontSize: '150%', alignItems: 'flex-start', zIndex: 999, width: '100%', top: '0%'}}
                 >

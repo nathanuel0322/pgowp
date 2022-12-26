@@ -1,1 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Teko&display=swap');
+
+#headerdiv {
+    position: fixed;
+    display: block;
+    width: 100%;
+    top: 0;
+    z-index: 999;
+}
