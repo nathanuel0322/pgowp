@@ -12,9 +12,9 @@ export default function Home(){
   const tablet = useMediaQuery({query: '(min-width: 768px)'});
   return(
     <div style={{backgroundColor: '#03396c'}}>
-      <video className='videoTag' autoPlay loop muted>
+      {/* <video className='videoTag' autoPlay loop muted>
         <source src={require('../assets/videos/PrestigiousGamingOnWheelsPlus.mp4')} type='video/mp4' />
-      </video>
+      </video> */}
       <img src={PrestigiousPoster} style={{display: tablet ? 'block' : 'none', marginTop: laptopsize ? '7.5%' : tablet && '9%'}} alt="Prestigious Poster" />
       <div className="wp" style={{marginTop: tablet ? '3%' : mobile && '5%',}}>
         <p className='text-5xl font-extrabold drop-shadow-2xl shadow-orange-700' 
