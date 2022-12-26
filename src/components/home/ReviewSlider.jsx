@@ -14,7 +14,7 @@ export default function ReviewSlider({reviews}) {
     useEffect(() => {
         console.log("reviews", reviews)
         setSliderArr(reviews.map((review) => {
-            return {children: <Slide photo={review.photo} name={review.name} reviewtext={review.reviewtext} stars={review.stars} time={review.time} />}
+            return {children: <Slide photo={review.photo} name={review.name} reviewtext={review.reviewtext} stars={review.stars} time={review.time} isyelp={review.yelp} />}
         }))
     }, [reviews])
     const AutoplaySlider = withAutoplay(AwesomeSlider);
@@ -27,7 +27,6 @@ export default function ReviewSlider({reviews}) {
             interval={6000}
             media={sliderarr}
             onTransitionStart={(e) => {
-                console.log("transition end", e)
                 document.getElementsByClassName("awssld--organic-arrows")[0].style.height = heightFirstRender;
             }}
         />

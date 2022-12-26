@@ -3,12 +3,9 @@ import EmptyStar from '../../assets/icons/emptystar.svg';
 import HalfStar from '../../assets/icons/halfstar.svg';
 
 export default function StarSet({num}) {
-    console.log("num", num)
     return (
         <div title="RatingBar__Container" className="ecFtME">
             {[1, 2, 3, 4, 5].map((star, index) => {
-                console.log("for index:", index+", num is:", num, "star is:", star);
-                console.log(num > star)
                 return (
                     <div title="RatingItemFilledSvg__Container" className="hoAzGt es-rating-stars-item-filled" key={index}>
                         {num >= star ?

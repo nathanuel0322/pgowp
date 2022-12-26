@@ -1,25 +1,26 @@
 import { useState, useEffect, useRef } from 'react';
 import '../../assets/css/slide.css';
 import StarSet from './StarSet';
-export default function Slide({name, time, stars, photo, reviewtext}) {
+export default function Slide({name, time, stars, photo, reviewtext, isyelp}) {
     const [showButton, setShowButton] = useState(false)
     const [ptextalter, setPTextAlter] = useState({text: reviewtext, expand: false})
     const notInitialRender = useRef(false);
     useEffect(() => {
+        console.log("platform:", isyelp)
         const rtarr = reviewtext.split(" ")
         if (rtarr.length >= 20) {
-            console.log("More than 20 words")
+            // console.log("More than 20 words")
             setShowButton(true);
             setPTextAlter({text: rtarr.slice(0, 20).join(" ")})
         }
     }, [])
 
     useEffect(() => {
-        console.log("show button is:", showButton)
+        // console.log("show button is:", showButton)
         if (notInitialRender.current) {
             if (!showButton) {
                 setPTextAlter({text: reviewtext, expand: true});
-                console.log("p to orig text");
+                // console.log("p to orig text");
             }
         }
         else {
@@ -40,11 +41,11 @@ export default function Slide({name, time, stars, photo, reviewtext}) {
 
     return (
         <div id="slideparent" style={{display:'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'absolute', top: '3rem', left: '1rem'}}>
-            <div id="topdiv">
-                <img src={photo} alt=""/>
+            <div id="topdiv" style={{marginBottom: isyelp && '0.5rem'}}>
+                <img src={photo} style={{borderRadius: isyelp && '2rem', width: isyelp && '2.25rem', height: isyelp && '2.25rem'}} alt=""/>
                 <div id="namestarts">
                     <p>{name}</p>
-                    <div><span id='slidestars'>{<StarSet num={stars} />}</span><span id='timedisplay'>{time}</span></div>
+                    <div id="starsnname"><span id='slidestars'>{isyelp ? <img src={require(`../../assets/icons/regular_${stars}@3x.png`)} style={{width: '6.25rem'}} alt='' /> : <StarSet num={stars} />}</span><span id='timedisplay'>{time}</span></div>
                 </div>
             </div>
             <div id="reviewtextbox">
