@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "./static/css/main.6cbbd427.css",
-    "main.js": "./static/js/main.876e23f5.js",
-    "static/media/Prestigious Gaming On Wheels Plus.mp4": "./static/media/Prestigious Gaming On Wheels Plus.d36d536216212fe53e50.mp4",
+    "main.js": "./static/js/main.987dc39b.js",
+    "static/media/PrestigiousGamingOnWheelsPlus.mp4": "./static/media/PrestigiousGamingOnWheelsPlus.920f088ae6c2eaa830ed.mp4",
     "static/media/PrestigiousPoster.jpg": "./static/media/PrestigiousPoster.527b03711e91f951842c.jpg",
     "static/media/Rectangle.jpg": "./static/media/Rectangle.988889785b9e858a3720.jpg",
     "static/media/infinitygame.jpeg": "./static/media/infinitygame.412dc5ad7aec92507ab3.jpeg",
@@ -21,10 +21,10 @@
     "index.html": "./index.html",
     "static/media/star.svg": "./static/media/star.b2dcb558140749b1f264ad402ac50a16.svg",
     "main.6cbbd427.css.map": "./static/css/main.6cbbd427.css.map",
-    "main.876e23f5.js.map": "./static/js/main.876e23f5.js.map"
+    "main.987dc39b.js.map": "./static/js/main.987dc39b.js.map"
   },
   "entrypoints": [
     "static/css/main.6cbbd427.css",
-    "static/js/main.876e23f5.js"
+    "static/js/main.987dc39b.js"
   ]
 }
