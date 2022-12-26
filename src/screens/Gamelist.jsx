@@ -8,6 +8,7 @@ import FireTab from "../assets/images/firetab.jpeg" ;
 import PS5 from "../assets/images/ps5.jpg";
 import XBX from "../assets/images/XBX.jpeg";
 import Infiinity from "../assets/images/infinitygame.jpeg";
+import Oculus from "../assets/images/OQ2.png";
 import { useMediaQuery } from 'react-responsive';
 
 import Stylesheet from "reactjs-stylesheet";
@@ -54,6 +55,7 @@ export default function Gamelist(){
                     <img src={PS5} alt="Backpic" width ="100%" height="40%" />
                     <img src={XBX} alt="Backpic" width ="100%" height="60%" className="XBX" />
                     <img src={Infiinity} alt="Backpic" width ="100%" height="60%"/>
+                    <img src={Oculus} alt="Backpic" width ="100%" height="60%" />
                 </p>
             }
         </div>

@@ -20,13 +20,14 @@ export default function Slide({name, time, stars, photo, reviewtext, isyelp}) {
         if (notInitialRender.current) {
             if (!showButton) {
                 setPTextAlter({text: reviewtext, expand: true});
-                // console.log("p to orig text");
             }
         }
         else {
             notInitialRender.current = true;
         }
     }, [showButton])
+
+    // use useffect to scroll to bottom of page when ptextalter.expand is true
 
     useEffect(() => {
         if (ptextalter.expand) {
@@ -35,6 +36,8 @@ export default function Slide({name, time, stars, photo, reviewtext, isyelp}) {
             console.log("initial reviewtext height:", document.getElementById("reviewtext").offsetHeight)
             document.getElementsByClassName("awssld--organic-arrows")[0].style.height = document.getElementsByClassName("awssld__wrapper")[0].offsetHeight + document.getElementById("reviewtext").offsetHeight - (2.5 * document.getElementById("topdiv").offsetHeight) + "px";
             console.log("new organic height:", document.getElementsByClassName("awssld--organic-arrows")[0].offsetHeight)
+            // scroll to the bottom of the page
+            window.scrollTo(0, document.body.scrollHeight);
         }
     }, [ptextalter])
 
@@ -50,7 +53,9 @@ export default function Slide({name, time, stars, photo, reviewtext, isyelp}) {
             </div>
             <div id="reviewtextbox">
                 <p id="reviewtext">{ptextalter.text}</p>
-                {showButton && <button id='readmore' onClick={() => setShowButton(false)} style={{textDecoration: 'underline'}}>Read more</button>}
+                {showButton && <button id='readmore' onClick={() => {
+                    setShowButton(false);
+                }} style={{textDecoration: 'underline'}}>Read more</button>}
             </div>
         </div>
     )
