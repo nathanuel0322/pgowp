@@ -13,7 +13,7 @@ const Navbar= () =>{
                     </span>
                 </li>
                 <li className='lists'>
-                    <Link to="/servicespage">Services</Link>
+                    <Link to="/services">Services</Link>
                 </li>
                 <li className='lists'>
                     <span>
@@ -22,12 +22,12 @@ const Navbar= () =>{
                 </li>
                 <li className='lists'>
                     <span>
-                        <Link to="/packagespage">Packages</Link>
+                        <Link to="/packages">Packages</Link>
                     </span>
                 </li>
                 <li className='lists'>
                     <span>
-                        <Link to="/gamelistpage">Game List</Link>
+                        <Link to="/gamelist">Game List</Link>
                     </span>
                 </li>
                 <li className='lists'>
@@ -41,17 +41,17 @@ const Navbar= () =>{
                 </li>
                 <li className='lists'>
                     <span>
-                        <Link to="/BdayCard">E-Invites</Link>
+                        <Link to="/e-invites">E-Invites</Link>
                     </span>
                 </li>
                 <li className='lists'>
                     <span>
-                        <Link to="/contactpage">Contact</Link>
+                        <Link to="/contact">Contact</Link>
                     </span>
                 </li>
                 <li className="right">
                     <span>
-                        <Link to="/aboutpage">About</Link>
+                        <Link to="/about">About</Link>
                     </span>
                 </li>
             </ul>
