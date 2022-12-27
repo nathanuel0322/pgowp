@@ -1,20 +1,15 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import '../assets/css/home.css';
 import PrestigiousPoster from '../assets/images/PrestigiousPoster.jpg';
 import { useMediaQuery } from 'react-responsive';
 import Stylesheet from 'reactjs-stylesheet';
-import ReviewWidget from '../components/home/reviewwidget';
+import GetRequest from '../components/home/reviewwidget';
 import sample from '../assets/videos/PrestigiousGamingOnWheelsPlus.mp4';
 
 export default function Home(){
   const mobile = useMediaQuery({query: '(min-width: 320px)'});
-  const tablet = useMediaQuery({query: '(min-width: 768px)'});
   const laptopsize = useMediaQuery({query: '(min-width: 1024px)'});
-
-  useEffect(() => {
-    console.log("desktop is", laptopsize)
-  }, [])
-
+  const tablet = useMediaQuery({query: '(min-width: 768px)'});
   return(
     <div style={{backgroundColor: '#03396c'}}>
       {/* <video className='videoTag' autoPlay loop muted>
@@ -100,7 +95,7 @@ export default function Home(){
         <br />
         <a className="Call" href="tel:7186738529" style={{color: 'chartreuse', textDecoration: 'underline'}}>Click here to call for events!</a>
       </p>
-      <ReviewWidget />
+      <GetRequest />
       {/* <div className="10to8-ratings-widget" data-uuid="acc2fe13-9501-4e4b-bf95-de28c1e9324a">
         <a href="https://app.10to8.com/book/acc2fe13-9501-4e4b-bf95-de28c1e9324a/uuid/" target="_blank" rel="noreferrer">Powered by 10to8</a>
       </div> */}

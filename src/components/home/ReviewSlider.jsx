@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from "react";
 import AwesomeSlider from 'react-awesome-slider';
-import CubeStyles from 'react-awesome-slider/src/styled/cube-animation/cube-animation.scss';
-import FallStyles from 'react-awesome-slider/src/styled/fall-animation/fall-animation.scss';
-import FoldOutStyles from 'react-awesome-slider/src/styled/fold-out-animation/fold-out-animation.scss';
 import withAutoplay from 'react-awesome-slider/dist/autoplay';
 import 'react-awesome-slider/dist/styles.css';
 import '../../assets/css/reviewslider.css';
@@ -11,9 +8,9 @@ import Slide from "./Slide";
 export default function ReviewSlider({reviews}) {
     const [sliderarr, setSliderArr] = useState([])
     const [heightFirstRender, setHeightFirstRender] = useState(null);
-    // useEffect(() => {
-        // setHeightFirstRender(document.getElementsByClassName("awssld--organic-arrows")[0].style.height);
-    // }, [])
+    useEffect(() => {
+        setHeightFirstRender(document.getElementsByClassName("awssld--organic-arrows")[0].style.height);
+    }, [])
     useEffect(() => {
         console.log("reviews", reviews)
         setSliderArr(reviews.map((review) => {
@@ -30,14 +27,8 @@ export default function ReviewSlider({reviews}) {
             interval={6000}
             media={sliderarr}
             onTransitionStart={(e) => {
-                // document.getElementsByClassName("awssld--organic-arrows")[0].style.height = heightFirstRender;
+                document.getElementsByClassName("awssld--organic-arrows")[0].style.height = heightFirstRender;
             }}
-            mobileTouch={true}
-            organicArrows={false}
-            // cssModule={CubeStyles}
-            // animation="cubeAnimation"
-            cssModule={FoldOutStyles}
-            animation="foldOutAnimation"
         />
     )
 }

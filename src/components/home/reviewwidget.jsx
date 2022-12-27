@@ -9,9 +9,8 @@ import HalfStar from '../../assets/icons/halfstar.svg';
 import ReviewSlider from './ReviewSlider';
 import { ProgressBar, ThreeDots } from 'react-loader-spinner';
 import StarSet from './StarSet';
-import { useMediaQuery } from 'react-responsive';
 
-export default function ReviewWidget() {
+export default function GetRequest() {
   const [reviewobj, setReviewObj] = useState({
     allReviewsSelected: true,
     googleSelected: null,
@@ -24,12 +23,8 @@ export default function ReviewWidget() {
     reviewavg: null
   });
   const [apiLoaded, setApiLoaded] = useState(false);
-  const mobile = useMediaQuery({query: '(min-width: 320px)'});
-  const tablet = useMediaQuery({query: '(min-width: 768px)'});
-  const laptopsize = useMediaQuery({query: '(min-width: 1024px)'});
 
   useEffect(() => {
-    console.log("laptop size:", laptopsize)
     fetch('https://yelpapi.herokuapp.com/google')
       .then((googleresponse) => googleresponse.json())
       // set the googlereviews array in reviewobj to the response data
@@ -47,7 +42,10 @@ export default function ReviewWidget() {
               yelpreviewaverage: Math.round((yelpdata.reduce((accumulator, currentValue) => accumulator + currentValue.rating, 0) / yelpdata.length) * 10) / 10,
               googlereviews: googledata,
               googlereviewavg: Math.round((googledata.reduce((accumulator, currentValue) => accumulator + currentValue.stars, 0) / googledata.length) * 10) / 10,
-              reviewavg: Math.round(([...yelpdata, ...googledata].reduce((accumulator, currentValue) => accumulator + currentValue.stars, 0) / (yelpdata.length + googledata.length)) * 10) / 10 
+              reviewavg: Math.round(([...yelpdata, ...googledata].reduce((accumulator, currentValue) => {
+                console.log("accumulator is:", accumulator, "currentValue is:", currentValue);
+                return(accumulator + currentValue.stars)
+              }, 0) / (yelpdata.length + googledata.length)) * 10) / 10 
             });
             setApiLoaded(true);
           })
@@ -61,7 +59,7 @@ export default function ReviewWidget() {
   return (
     <div id="parentdiv">
       <p id='reviewsubtitle' className='text-xl font-bold text-white'>Check out our reviews from past customers below!</p>
-      <div id='TopReviewsContainer' className="eyarYd" style={{width: (laptopsize || tablet) && '55%', margin: (laptopsize || tablet) && '1rem auto'}}>
+      <div id='TopReviewsContainer' className="eyarYd">
         <div id='TabsContainer_Inner' className='eyarYd kaXWRJ cFMrET'>
           <div id='TabsSlider_Container' className='iluRKv' >
             <div id='TabsSlider_Inner' className='kWhNOk'>
