@@ -1,39 +1,29 @@
-import React, { useEffect } from 'react';
+import React, { } from 'react';
 import '../assets/css/home.css';
 import PrestigiousPoster from '../assets/images/PrestigiousPoster.jpg';
-import { useMediaQuery } from 'react-responsive';
 import Stylesheet from 'reactjs-stylesheet';
 import ReviewWidget from '../components/home/reviewwidget';
-import sample from '../assets/videos/PrestigiousGamingOnWheelsPlus.mp4';
 
 export default function Home(){
-  const mobile = useMediaQuery({ query: "(max-width: 480px)" });
-  const tablet = useMediaQuery({query: '(min-width: 768px)'});
-  const laptopsize = useMediaQuery({query: '(min-width: 1024px)'});
-
-  useEffect(() => {
-    console.log("desktop is", laptopsize)
-  }, [])
-
   return(
     <div style={{backgroundColor: '#03396c'}}>
-      <img src={PrestigiousPoster} style={{display: tablet ? 'block' : 'none', marginTop: laptopsize ? '7.5%' : tablet && '9%'}} alt="Prestigious Poster" />
-      <div className="wp" style={{marginTop: tablet ? '3%' : mobile && '5%',}}>
+      <img src={PrestigiousPoster} className='poster' alt="Prestigious Poster" />
+      <div className="wp">
         <p className='text-5xl font-extrabold drop-shadow-2xl shadow-orange-700' 
-          style={{
-            fontFamily: "'Teko', sans-serif",
-            width: '100%', 
-            textAlign: 'center', 
-            color: '#ff8c00',
-            fontSize: !tablet ? '7vw' : '4vw',
-          }}
+          style={{fontFamily: "'Teko', sans-serif", width: '100%', textAlign: 'center', color: '#ff8c00',}}
         >
           PRESTIGIOUS GAMING ON WHEELS PLUS!
         </p>
-        <p className='blinkingorange' style={{color: '#FF5722', textAlign: 'center',fontFamily: "Teko, sans-serif", fontSize: tablet ? '4vw' : '6vw', marginTop: '2%'}}>
+        <p className='blinkingorange'>
           Voted Best Game Truck in NY!
         </p>
-        <p className='a2 mt-1 text-white' style={{fontSize: !tablet ? '6vw' : '3vw'}}>
+        <p className='blinkingblue'>
+          Super Bowl Parties! 🏈
+        </p>
+        <p className='blinkinggreen'>
+          Gaming Tournaments! 🎮
+        </p>
+        <p className='a2 mt-1 text-white'>
           Hey! Hi There! You found us!
           <br />
           We are the best gaming/movie trailer experience you will ever encounter from luxurious quality to the best
@@ -49,19 +39,19 @@ export default function Home(){
           </div>
         </div> 
       </div>
-      <p id="quote" style={Object.assign({}, homestyles.text, {fontSize: tablet ? '3vw' : '6vw', fontFamily: "'Teko', sans-serif", color: 'white'})}>
+      <p id="quote" style={Object.assign({}, homestyles.text, {fontFamily: "'Teko', sans-serif", color: 'white'})}>
         This is one game trailer you won’t forget. Up to 28 players at once. Don’t worry, we bring the party to <span className="quo"> you! </span>
-        Party in any weather, <span className="rain"> rain </span> or <span className="shine"> shine </span>
-      ,<span id="Hot"> Hot </span>
+        Party in any weather, <span className="rain"> rain </span> or <span className="shine"> shine</span>
+      ,<span id="Hot"> hot </span>
         or 
-      <span id="cold"> Cold </span>
+      <span id="cold"> cold</span>
       . Come and enjoy your party in our 
           
       <span className="quo" id="yuh"> luxury class </span>
         trailer. 
       </p>
       <br />
-      <p id="announce" style={Object.assign({}, homestyles.text, {fontSize: tablet ? '3vw' : '6vw', textAlign: 'center', color: 'white'})}>
+      <p id="announce" style={Object.assign({}, homestyles.text, {textAlign: 'center', color: 'white'})}>
         We now have the new <span className="blinkingblue"><strong> Playstation 5 </strong></span>
           and the 
         <span className="blinkinggreen">
@@ -70,7 +60,7 @@ export default function Home(){
         !!!
       </p>
       <br />
-      <p id="locations" style={Object.assign({}, homestyles.text, {fontSize: tablet ? '3vw' : '6vw', textAlign: 'center', color: 'white'})}>
+      <p id="locations" style={Object.assign({}, homestyles.text, { textAlign: 'center', color: 'white'})}>
         We're available to come to you in 
         <span id="brooklyn"> Brooklyn! </span>
         <span id="queens"> Queens!</span>
@@ -83,7 +73,7 @@ export default function Home(){
         Make sure at least 5 car spaces are saved for trailer parking!
       </p>
       <br />
-      <p id="occasions" style={{fontSize: tablet ? '3vw' : '6vw'}}>
+      <p id="occasions">
         We do 
         <span id="parties"> Birthday Parties! </span>
         <span id="church"> Church Functions! </span>

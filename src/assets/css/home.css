@@ -28,18 +28,66 @@ p {
   text-align: center;
 }
 
+
+.blinkingorange, .blinkingblue, .blinkinggreen {
+  font-size: 6vw;
+  text-align: center;
+  font-family: 'Teko', sans-serif;
+  margin: 1vw auto;
+}
+
 .blinkingorange {
   animation: blinkingOrange 1.2s infinite;
 }
 
 .blinkingblue{
-  animation:blinkingBlue 1.2s infinite;
-  font-size: 130%;
+  /* animation:blinkingBlue 1.2s infinite; */
+  color: rgb(7, 242, 241);
 }
 
 .blinkinggreen{
-  animation:blinkingGreen 1.2s infinite;
-  font-size: 130%;
+  /* animation:blinkingGreen 1.2s infinite; */
+  color: greenyellow;
+}
+
+.poster {
+  display: none;
+}
+
+.wp {
+  margin-top: 5%;
+}
+
+.wp > *:first-child {
+  font-size: 7vw;
+}
+.wp > *:last-child {
+  font-size: 6vw;
+}
+
+@media (min-width: 768px) {
+  .blinkingorange, .blinkingblue, .blinkinggreen {
+    font-size: 4vw;
+  }
+  .poster {
+    display: block;
+    margin-top: 9%;
+  }
+  .wp > *:first-child {
+    font-size: 4vw;
+  }
+  .wp > *:last-child {
+    font-size: 3vw;
+  }
+  #quote, #announce, #locations, #occasions {
+    font-size: 3vw;
+  }
+}
+
+@media (min-width: 1024px) {
+  .poster {
+    margin-top: 7%;
+  }
 }
 
 @keyframes blinkingBlue{
@@ -96,6 +144,10 @@ p {
   top: 80%;
 }
 
+#quote, #announce, #locations, #occasions {
+  font-size: 6vw;
+}
+
 #quote {
   margin-top: -30%;
   text-align: center;
@@ -106,9 +158,6 @@ p {
   text-align: center; 
   font-family: 'Teko', sans-serif;
   color: white;
-}
-.quo {
-  font-size: 50px;
 }
 
 #yuh {
