@@ -9,7 +9,6 @@ const HamburgerNav = ({drawerfunc}) => {
     const location = useLocation();
     const [currentpage, setcurrentpage] = useState(null);
     useEffect(() => {
-        console.log("pathname: ", location.pathname)
         if (location.pathname === "/services"){
             setcurrentpage("Services");
         }

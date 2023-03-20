@@ -26,6 +26,7 @@
     "react-scripts": "^5.0.1",
     "react-spring": "^9.6.1",
     "reactjs-stylesheet": "^1.0.9",
+    "typed.js": "^2.0.132",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

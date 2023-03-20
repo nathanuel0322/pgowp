@@ -1,10 +1,36 @@
-import React, { } from 'react';
+import React, { useEffect, useRef } from 'react';
 import '../assets/css/home.css';
 import PrestigiousPoster from '../assets/images/PrestigiousPoster.jpg';
-import Stylesheet from 'reactjs-stylesheet';
+import Typed from "typed.js";
 import ReviewWidget from '../components/home/reviewwidget';
 
 export default function Home(){
+  // Create reference to store the DOM element containing the animation
+  const el = useRef(null);
+  
+  // Create reference to store the Typed instance itself
+  const typed = useRef(null);
+    
+  useEffect(() => {
+    const options = {
+        strings: [
+          'Voted Best Game Truck in NY!'
+        ],
+        typeSpeed: 45,
+        backSpeed: 45,
+        loop: true,
+    };
+
+    // elRef refers to the <span> rendered below
+    typed.current = new Typed(el.current, options);
+    
+    return () => {
+        // Make sure to destroy Typed instance during cleanup
+        // to prevent memory leaks
+        typed.current.destroy();
+    }
+  }, [])
+
   return(
     <div style={{backgroundColor: '#03396c'}}>
       <img src={PrestigiousPoster} className='poster' alt="Prestigious Poster" />
@@ -14,12 +40,9 @@ export default function Home(){
         >
           PRESTIGIOUS GAMING ON WHEELS PLUS!
         </p>
-        <p className='blinkingorange'>
-          Voted Best Game Truck in NY!
-        </p>
-        <p className='blinkingblue'>
-          Super Bowl Parties! 🏈
-        </p>
+        <div id='outertyped'>
+          <span id='typedvote' className='blinkingorange' ref={el} />
+        </div>
         <p className='blinkinggreen'>
           Gaming Tournaments! 🎮
         </p>
@@ -39,19 +62,19 @@ export default function Home(){
           </div>
         </div> 
       </div>
-      <p id="quote" style={Object.assign({}, homestyles.text, {fontFamily: "'Teko', sans-serif", color: 'white'})}>
-        This is one game trailer you won’t forget. Up to 28 players at once. Don’t worry, we bring the party to <span className="quo"> you! </span>
+      <p id="quote">
+        This is one game trailer you won’t forget. Up to 28 players at once. Don’t worry, we bring the party to you!
         Party in any weather, <span className="rain"> rain </span> or <span className="shine"> shine</span>
       ,<span id="Hot"> hot </span>
         or 
       <span id="cold"> cold</span>
       . Come and enjoy your party in our 
           
-      <span className="quo" id="yuh"> luxury class </span>
+      <span id="yuh"> luxury class </span>
         trailer. 
       </p>
       <br />
-      <p id="announce" style={Object.assign({}, homestyles.text, {textAlign: 'center', color: 'white'})}>
+      <p id="announce">
         We now have the new <span className="blinkingblue"><strong> Playstation 5 </strong></span>
           and the 
         <span className="blinkinggreen">
@@ -60,17 +83,18 @@ export default function Home(){
         !!!
       </p>
       <br />
-      <p id="locations" style={Object.assign({}, homestyles.text, { textAlign: 'center', color: 'white'})}>
+      <p id="locations">
         We're available to come to you in 
         <span id="brooklyn"> Brooklyn! </span>
         <span id="queens"> Queens!</span>
         <span id="longisland"> Long Island! (Extra $125 if in Suffolk County)</span>
         <span id="manhattan"> Manhattan! (Extra $100!)</span>
         <span style={{color: '#F44336'}}> Staten Island! (Extra $200)</span>
-        <span id="NJ"> Parts of New Jersey! (Extra $200!)</span>
         <span id="Bronx"> and Parts of the Bronx!</span>
         <br />
         Make sure at least 5 car spaces are saved for trailer parking!
+        <br />
+        For parties in <span id='NJ'>New Jersey</span>, click <a id='triplea' href="https://www.tripleamobilegaming.com/" target="_blank" rel="noreferrer">here</a> to check out our sister company, TripleA.
       </p>
       <br />
       <p id="occasions">
@@ -96,9 +120,3 @@ export default function Home(){
     </div> 
   )
 }
-
-const homestyles = Stylesheet.create({
-  text: {
-    fontSize: '5vw',
-  }
-})
