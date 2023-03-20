@@ -21,23 +21,23 @@ export default function Packages(){
                         <li style={packagesstyles.HoursListlists}>3 Hours - $650</li> <br />
                         <li style={packagesstyles.HoursListlists}>Each Additional Hour - $150</li> <br />
                         <li style={packagesstyles.HoursListlists}>Laser Tag Party! - $700</li>
-                        <li style={Object.assign({}, packagesstyles.HoursListlists, {fontFamily: "'Goblin One', cursive,", color: '#FF9800',})}>3-Hour Movie Package - $475 (Contact for More Info)</li> 
-                        <li style={Object.assign({}, packagesstyles.HoursListlists, {color: 'red'})}>*Birthday Child receives a Free Birthday T-Shirt!</li>
+                        <li style={Object.assign({}, packagesstyles.HoursListlists, {fontFamily: "'Goblin One', cursive,", color: '#FF9800',})}>3-Hour Movie Package (Contact for More Info)</li> 
+                        <li style={Object.assign({}, packagesstyles.HoursListlists, {color: '#FF2F2F'})}>*Birthday Child receives a Free Birthday T-Shirt!</li>
                         <li style={packagesstyles.HoursListlists}>All Party Attendants receive Prestigious Gaming Wristbands!  </li>
                         <li style={packagesstyles.HoursListlists}><span style={packagesstyles.PLUS}>*PLUS</span> - gives you additional amenities for the duration of the Game Trailer 
                         Party!</li> 
                         <br />
-                        <li style={Object.assign({}, packagesstyles.HoursListlists, {color: '#FF5722'})}>Playstation VR! - $100 for kids 10 & up!</li>
-                        <li style={Object.assign({}, packagesstyles.HoursListlists, {color: '#FF5722'})}>Extra Large Connect 4! - $60</li>
-                        <li style={Object.assign({}, packagesstyles.HoursListlists, {color: '#FF5722'})}> Extra Large Yard Jenga! - $60</li>
-                        <li style={Object.assign({}, packagesstyles.HoursListlists, {color: '#FF7E00'})}>Popcorn Machine! - $145</li>
-                        <li style={Object.assign({}, packagesstyles.HoursListlists, {color: '#FF007F'})}>Cotton Candy Machine! - $200</li>
+                        <li style={Object.assign({}, packagesstyles.HoursListlists, {color: '#FF5722'})}>Playstation VR!</li>
+                        <li style={Object.assign({}, packagesstyles.HoursListlists, {color: '#FF5722'})}>Extra Large Connect 4!</li>
+                        <li style={Object.assign({}, packagesstyles.HoursListlists, {color: '#FF5722'})}> Extra Large Yard Jenga!</li>
+                        <li style={Object.assign({}, packagesstyles.HoursListlists, {color: '#FF7E00'})}>Popcorn Machine!</li>
+                        <li style={Object.assign({}, packagesstyles.HoursListlists, {color: '#FF007F'})}>Cotton Candy Machine!</li>
                         <li style={Object.assign({}, packagesstyles.HoursListlists, {marginTop: 20, textDecoration: 'underline'})} >For a More Fun and Exciting Party, You can also add:</li>
                         <li style={Object.assign({}, packagesstyles.HoursListlists, {color: '#FF5722'})}>Laser Tag with Live Scoring!</li>
                         <li style={Object.assign({}, packagesstyles.HoursListlists, {color: '#FF5722'})}>Additional $20 per person for two 15-minute sessions!</li>
-                        <li style={Object.assign({}, packagesstyles.HoursListlists, {color: '#5a47a8'})}>Karaoke! - $75</li>
-                        <li style={Object.assign({}, packagesstyles.HoursListlists, {color: '#E91E63'})}>Hot Dog Grill! - $100</li>
-                        <li style={Object.assign({}, packagesstyles.HoursListlists, {color: '#05ff69'})}>Yard Games! - $80</li>
+                        <li style={Object.assign({}, packagesstyles.HoursListlists, {color: '#8778C4'})}>Karaoke!</li>
+                        <li style={Object.assign({}, packagesstyles.HoursListlists, {color: '#E91E63'})}>Hot Dog Grill!</li>
+                        <li style={Object.assign({}, packagesstyles.HoursListlists, {color: '#05ff69'})}>Yard Games!</li>
                         <li style={Object.assign({}, packagesstyles.HoursListlists, {fontSize: '80%',})}>Please note: All Parties over 4 hours will receive a complimentary plus item after 
                         game time is over!</li>
                     </ul>
