@@ -3,6 +3,24 @@
 @tailwind utilities;
 @import url('https://fonts.googleapis.com/css2?family=Teko&display=swap');
 
+#homeouterdiv {
+  background-color: #03396c;
+  font-size: 7vw;
+}
+#titlediv {
+  font-family: Teko, sans-serif;
+  width: 100%;
+  text-align: center;
+  color: rgb(255, 140, 0);
+}
+#outertyped {
+  margin-top: 1%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
 body {
   overflow-x: hidden;
   overflow-y: hidden;
@@ -30,21 +48,15 @@ p {
 
 
 .blinkinggreen {
-  font-size: 6vw;
   text-align: center;
   font-family: 'Teko', sans-serif;
   margin: 1vw auto;
   margin-top: 0px;
-  /* animation:blinkingGreen 1.2s infinite; */
   color: greenyellow;
 }
 
-/* For as long as voted best is typed */
-
 .blinkingorange, .typed-cursor {
-  /* animation: blinkingOrange 1.2s infinite; */
   color: rgb(255, 87, 34);
-  font-size: 6vw;
   font-family: 'Teko', sans-serif;
   text-align: center;
 }
@@ -165,7 +177,6 @@ p {
 
 #locations {
   text-align: center;
-  font-size: 200%;
   font-family: 'Teko', sans-serif;
   color: white;
 }
@@ -187,7 +198,6 @@ p {
 }
 
 #occasions {
-  font-size: 175%;
   text-align: center;
   font-family: 'Teko', sans-serif;
   color: white;
@@ -296,11 +306,9 @@ and (min-width : 0px) and (max-width : 319px) {
 and (min-width : 320px) and (max-width : 767px) {
   #locations {
     top: 132%;
-    font-size: 125%;
   }
 
   #occasions {
-    font-size: 125%;
     top: 157%;
   }
 
@@ -336,9 +344,6 @@ and (min-width : 768px) and (max-width : 1024px) {
 #NJ {
   color: #009688;
 }
-#outertyped {
-  margin-top: 1%;
-}
 .videoTag {
   position: fixed;
   top: 0;
@@ -347,14 +352,6 @@ and (min-width : 768px) and (max-width : 1024px) {
   height: 100vh;
   opacity: 0.25;
   object-fit: cover;
-}
-#quote, #announce, #locations, #occasions {
-  font-size: 5vw;
-}
-@media (min-width: 1200px) {
-  /* #quote {
-    font-size: 10rem
-  } */
 }
 
 @media (min-width: 768px) {
@@ -373,5 +370,8 @@ and (min-width : 768px) and (max-width : 1024px) {
   }
   #quote, #announce, #locations, #occasions {
     font-size: 3vw;
+  }
+  #outertyped {
+    margin-top: 0%;
   }
 }

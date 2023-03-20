@@ -32,12 +32,10 @@ export default function Home(){
   }, [])
 
   return(
-    <div style={{backgroundColor: '#03396c'}}>
+    <div id="homeouterdiv">
       <img src={PrestigiousPoster} className='poster' alt="Prestigious Poster" />
       <div className="wp">
-        <p className='text-5xl font-extrabold drop-shadow-2xl shadow-orange-700' 
-          style={{fontFamily: "'Teko', sans-serif", width: '100%', textAlign: 'center', color: '#ff8c00',}}
-        >
+        <p id="titlediv" className='text-5xl font-extrabold drop-shadow-2xl shadow-orange-700'>
           PRESTIGIOUS GAMING ON WHEELS PLUS!
         </p>
         <div id='outertyped'>
