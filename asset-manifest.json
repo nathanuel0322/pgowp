@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "./static/css/main.84ae0deb.css",
-    "main.js": "./static/js/main.1a72a9f4.js",
+    "main.css": "./static/css/main.04630d96.css",
+    "main.js": "./static/js/main.275cb304.js",
     "static/media/PrestigiousPoster.jpg": "./static/media/PrestigiousPoster.527b03711e91f951842c.jpg",
     "static/media/Rectangle.jpg": "./static/media/Rectangle.988889785b9e858a3720.jpg",
     "static/media/infinitygame.jpeg": "./static/media/infinitygame.412dc5ad7aec92507ab3.jpeg",
@@ -15,15 +15,15 @@
     "static/media/Switch.jpg": "./static/media/Switch.e94d4e4679ae22e35b76.jpg",
     "static/media/Ps4Pro.jpg": "./static/media/Ps4Pro.f9a425fcda6d0eb7f541.jpg",
     "static/media/ps5.jpg": "./static/media/ps5.250228bfa48f0f418ea9.jpg",
-    "static/media/emptystar.svg": "./static/media/emptystar.d2c391681158c8cee873b5902c8b108e.svg",
-    "static/media/halfstar.svg": "./static/media/halfstar.e2910c813445fb01e7dc8f0fae338564.svg",
+    "static/media/emptystar.svg": "./static/media/emptystar.aecdf625b59ae567e0c03bb095c85ced.svg",
     "index.html": "./index.html",
+    "static/media/halfstar.svg": "./static/media/halfstar.90f13998eb73713ff4a6c5c810190f8b.svg",
     "static/media/star.svg": "./static/media/star.b2dcb558140749b1f264ad402ac50a16.svg",
-    "main.84ae0deb.css.map": "./static/css/main.84ae0deb.css.map",
-    "main.1a72a9f4.js.map": "./static/js/main.1a72a9f4.js.map"
+    "main.04630d96.css.map": "./static/css/main.04630d96.css.map",
+    "main.275cb304.js.map": "./static/js/main.275cb304.js.map"
   },
   "entrypoints": [
-    "static/css/main.84ae0deb.css",
-    "static/js/main.1a72a9f4.js"
+    "static/css/main.04630d96.css",
+    "static/js/main.275cb304.js"
   ]
 }
