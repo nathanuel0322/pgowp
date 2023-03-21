@@ -1,4 +1,12 @@
-::placeholder{
+.bdayimg {
+    margin-top: 6.5%;
+}
+#CardtoSave > div {
+    display: flex;
+    flex-direction: row;
+    margin-left: 15%;
+}
+.inputs ::placeholder{
     text-align: center;
     color: red;
 }
@@ -11,4 +19,38 @@
     font-size: 4vw;
     background: transparent;
     line-height: 2;
+}
+#bdaybuttondiv {
+    display: flex;
+    justify-content: center;
+    font-family: Teko, sans-serif;
+}
+#bdaybuttondiv > input {
+    margin-top: 4vh;
+    width: 30vw;
+    background-color: orange;
+    font-size: 7vw;
+    font-family: Teko, sans-serif;
+    border-radius: 25px;
+}
+#bdaydisclaimer {
+    display: flex;
+    justify-content: center;
+    font-family: Teko, sans-serif;
+    color: white;
+    font-size: 4vw;
+    margin-top: 4vw;
+    text-align: center;
+}
+
+@media (max-width: 435px) {
+
+}
+@media (max-width: 400px) {
+
+}
+@media (max-width: 350px) {
+    #bdaydiv1 {
+        margin-top: -14.5vw;
+    }
 }

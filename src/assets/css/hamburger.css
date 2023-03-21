@@ -1,9 +1,37 @@
 @import url('https://fonts.googleapis.com/css2?family=Teko&display=swap');
 
-/* #headerdiv {
-    position: fixed;
-    display: block;
+@media (max-width: 383px) {
+    #pagelabel {
+        white-space: nowrap;
+        padding-right: 50% !important;   
+    }
+}
+#headerdiv > ul > li > a {
+    padding-right: 64%;
+}
+#headerdiv > ul {
+    display: flex;
+    flex-direction: column;
+    background-color: blue;
+    color: white;
+    font-family: Teko, sans-serif;
+    font-size: 150%;
+    align-items: flex-start;
     width: 100%;
-    top: 0;
-    z-index: 999;
-} */
+}
+#headerdiv > ul > :first-child {
+    display: flex !important;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    background-color: blue;
+}
+#headerdiv > ul > :first-child > :last-child {
+    padding-right: 2%;
+}
+#headerdiv > ul > * {
+    padding-left: 4%;
+    padding-top: 2.5%;
+    padding-bottom: 2.5%;
+    width: 100%;
+}

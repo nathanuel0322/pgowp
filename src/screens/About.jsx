@@ -1,14 +1,13 @@
 import React from 'react';
 import '../assets/css/about.css';
 import BackgroundImage from '../assets/images/Rectangle.jpg';
-import Stylesheet from "reactjs-stylesheet";
 import GamingContract from '../assets/files/GamingContract.pdf';
 
 export default function About() {
   return (
     <div>
-      <img style={Object.assign({}, aboutstyles.image, {opacity: 0.05,})} src={BackgroundImage} alt="Rectangle Poster" height="100%" width="100%" />
-      <div style={aboutstyles.aboutsection}>
+      <img id='aboutimg' src={BackgroundImage} alt="Rectangle Poster" height="100%" width="100%" />
+      <div id='abouttext'>
         <strong>
           <p className="family-owned">
             Prestigious Gaming on Wheels Plus is a new family-owned business. 
@@ -48,19 +47,3 @@ export default function About() {
     </div>
   );
 }
-
-const aboutstyles = Stylesheet.create({
-  image: {
-    marginTop: '5.5%',
-  },
-
-  aboutsection: {
-    position: 'absolute',
-    marginTop: '-75%',
-    color: 'white',
-    fontFamily: "'Playfair Display', serif",
-    fontSize: '150%',
-    textAlign: 'center',
-    padding: '0rem 2rem',
-  }
-})

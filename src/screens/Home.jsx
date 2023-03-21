@@ -51,11 +51,10 @@ export default function Home(){
           sounding game/movie trailer on wheels. 
         </p>
       </div>
-      <div style={{width: '75%', margin: '0 auto', padding: '20px 0', textAlign:'center'}}>
-        <div style={{width: '100%', display: 'inline-block',}}>
-          <div style={{position: 'relative', width:'100%', height:0, paddingBottom:'80%', display:'inline-block', boxSizing:'border-box',}}>
-            <iframe style={{position: 'absolute', backgroundColor: '#03396c',}} title='Youtube' id="youtube" width="100%" height="50%" 
-            src="https://www.youtube.com/embed/SvnDdaO3NkE"
+      <div id="outerytdiv">
+        <div>
+          <div>
+            <iframe title='Youtube' id="youtube" width="100%" height="50%" src="https://www.youtube.com/embed/SvnDdaO3NkE"
             allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
           </div>
         </div> 

@@ -26,7 +26,7 @@ body {
   overflow-y: hidden;
 }
 
-p {
+#homeouterdiv p {
   margin: 0 auto;
   width: 80%;
 }
@@ -68,7 +68,28 @@ p {
 .poster {
   display: none;
 }
-
+#outerytdiv {
+  width: 75%;
+  margin: 0px auto;
+  padding: 20px 0px;
+  text-align: center;
+}
+#outerytdiv > div {
+  width: 100%;
+  display: inline-block;
+}
+#outerytdiv > div > div {
+  position: relative;
+  width: 100%;
+  height: 0px;
+  padding-bottom: 80%;
+  display: inline-block;
+  box-sizing: border-box;
+}
+#outerytdiv > div > div > iframe {
+  position: absolute;
+  background-color: rgb(3, 57, 108);
+}
 .wp {
   margin-top: 5%;
   text-align: center;

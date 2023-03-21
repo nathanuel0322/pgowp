@@ -1,5 +1,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap');
 
+#aboutimg {
+    margin-top: 5.5%;
+    opacity: 0.05;
+}
+#abouttext {
+    position: absolute;
+    margin-top: -75%;
+    color: white;
+    font-family: "Playfair Display", serif;
+    font-size: 150%;
+    text-align: center;
+    padding: 0rem 2rem;
+}
 body {
     background-color: white;
     overflow-x: hidden;

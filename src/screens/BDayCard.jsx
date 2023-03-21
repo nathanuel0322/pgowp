@@ -1,10 +1,8 @@
 import React, {useState, useEffect, useRef} from 'react';
 import BDayCardPic from '../assets/images/Invites.jpeg';
-import Stylesheet from "reactjs-stylesheet";
 import '../assets/css/bdaycard.css';
 import html2canvas from 'html2canvas';
 import { useMediaQuery } from 'react-responsive';
-
 
 export default function BDayCard() {
     const changetextvw435 = useMediaQuery({query: '(max-width: 435px)'});
@@ -51,11 +49,9 @@ export default function BDayCard() {
   return (
     <div>
         <div id='CardtoSave'>
-            <img style={Object.assign({}, aboutstyles.image,)} src={BDayCardPic} alt="Rectangle Poster" height="100%" width="100%" />
-            <div style={{display: 'flex', flexDirection: 'row', marginLeft: '15%',
-                marginTop: topdivmargin}}
-            >
-                <form onSubmit={handleSubmit} style={{}}>
+            <img id="bdayimg" src={BDayCardPic} alt="Rectangle Poster" height="100%" width="100%" />
+            <div id='bdaydiv1' style={{marginTop: topdivmargin}}>
+                <form onSubmit={handleSubmit}>
                     <label>
                         <input 
                             className='inputs'
@@ -76,9 +72,7 @@ export default function BDayCard() {
                     </label>
                 </form>            
             </div>
-            <div style={{display: 'flex', flexDirection: 'row', marginLeft: '15%',
-                marginTop: !changetextvw435 ? '-3.5vw' : changetextvw400 ? (changetextvw350 ? '-4vw' : '-3.5vw')  : '-3.5vw', }}
-            >
+            <div id="bdaydiv2" style={{marginTop: !changetextvw435 ? '-3.5vw' : changetextvw400 ? (changetextvw350 ? '-4vw' : '-3.5vw')  : '-3.5vw'}}>
                 <form onSubmit={handleSubmit}>
                     <label>
                         <input 
@@ -100,11 +94,9 @@ export default function BDayCard() {
                     </label>
                 </form>            
             </div>
-            
         </div>
-        <div style={{width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'center', fontFamily: "'Teko', sans-serif"}}>
-                <input type="submit" value='Save Image' style={{marginTop: '4vh', width: '30vw', backgroundColor: 'orange', fontSize: '7vw', 
-                    fontFamily: "'Teko', sans-serif", borderRadius: '25px'}} 
+        <div id='bdaybuttondiv'>
+                <input type="submit" value='Save Image' id='bdaybutton'
                     onClick={() => {
                         // MUST FIX TOP DIV MARGIN FOR LARGE SCREENS LATER ON
                         settopdivmargin(!changetextvw435 ? '-14vw' : changetextvw400 ? (changetextvw350 ? '-16.5vw' : '-15vw')  : '-14vw');
@@ -113,24 +105,9 @@ export default function BDayCard() {
                     }}
                 />
         </div>
-        <div style={{display: 'flex', justifyContent: 'center', fontFamily: "'Teko', sans-serif", color: 'white', fontSize: '4vw', marginTop: '4vw', textAlign: 'center'}}>
+        <div id='bdaydisclaimer'>
             If you need to make any changes after saving image, reload the page first!!!
         </div>
     </div>
   )
 }
-
-const aboutstyles = Stylesheet.create({
-  image: {
-    marginTop: '6.5%',
-  },
-
-  aboutsection: {
-    position: 'absolute',
-    marginTop: '-75%',
-    color: 'white',
-    fontFamily: "'Playfair Display', serif",
-    fontSize: '150%',
-    textAlign: 'center',
-  }
-})
