@@ -2,10 +2,9 @@
     margin: 0 1rem;
     margin-top: 1rem;
 }
-
 #reviewsubtitle {
     letter-spacing: 0.05rem;
-    font-size: 3vw;
+    font-size: 4vw;
 }
 
 #TopReviewsContainer {
@@ -53,8 +52,8 @@
 .kWhNOk {
     display: flex;
     padding-left: 1rem;
-    max-height: 5vw;
     align-items: center;
+    padding-block: 0.25rem;
 }
 
 .iluRKv * {
@@ -79,11 +78,11 @@
     margin-left: 0.5rem;
 }
 .reviewtabs.gbMejj {
-    max-height: 4vw;
+    max-height: 6vh;
     display: flex;
 }
 .fYHkoy {
-    font-size: 1.6vw;
+    font-size: 3.6vw;
     display: flex;
     z-index: 2;
     -webkit-box-align: center;
@@ -172,6 +171,7 @@
     margin-top: 0.175rem;
     line-height: 2em;
     font-weight: 600;
+    font-size: 3.5vw;
 }
 
 .cMwniS {
@@ -252,7 +252,7 @@
     margin-top: 0.5rem;
     border-radius: 20px;
     background-color: rgb(25, 123, 255);
-    font-size: 1.75vw;
+    font-size: 3.5vw;
     text-align: center;
     padding-top: 0.3rem;
     padding-bottom: 0.2rem;

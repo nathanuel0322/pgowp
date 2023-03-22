@@ -109,7 +109,7 @@ export default function Home(){
         <br />
         <a className="Call" href="tel:7186738529" style={{color: 'chartreuse', textDecoration: 'underline'}}>Click here to call for events!</a>
       </p>
-      {/* <ReviewWidget /> */}
+      <ReviewWidget />
       {/* <div className="10to8-ratings-widget" data-uuid="acc2fe13-9501-4e4b-bf95-de28c1e9324a">
         <a href="https://app.10to8.com/book/acc2fe13-9501-4e4b-bf95-de28c1e9324a/uuid/" target="_blank" rel="noreferrer">Powered by 10to8</a>
       </div> */}
