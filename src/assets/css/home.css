@@ -4,13 +4,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Teko&display=swap');
 
 #homeouterdiv {
+  font-family: 'Teko', sans-serif;
   background-color: #03396c;
   font-size: 7vw;
+  color: white;
+  text-align: center;
 }
 #titlediv {
-  font-family: Teko, sans-serif;
-  width: 100%;
-  text-align: center;
   color: rgb(255, 140, 0);
 }
 #outertyped {
@@ -20,49 +20,24 @@
   align-items: center;
   justify-content: center;
 }
-
-body {
-  overflow-x: hidden;
-  overflow-y: hidden;
-}
-
 #homeouterdiv p {
   margin: 0 auto;
   width: 80%;
 }
-
 .Rectangle {
   opacity: 0.2;
   z-index: -1;
 }
-
-.bckgrnd {
-  width: 100%;
-  left: 0%;
-}
-
-.a2{
-  font-family: 'Teko', sans-serif; 
-  text-align: center;
-}
-
-
 .blinkinggreen {
   text-align: center;
-  font-family: 'Teko', sans-serif;
-  margin: 1vw auto;
-  margin-top: 0px;
   color: greenyellow;
 }
-
 .blinkingorange, .typed-cursor {
   color: rgb(255, 87, 34);
   font-family: 'Teko', sans-serif;
   text-align: center;
 }
-
 .blinkingblue{
-  /* animation:blinkingBlue 1.2s infinite; */
   color: rgb(7, 242, 241);
 }
 .poster {
@@ -72,7 +47,6 @@ body {
   width: 75%;
   margin: 0px auto;
   padding: 20px 0px;
-  text-align: center;
 }
 #outerytdiv > div {
   width: 100%;
@@ -82,7 +56,7 @@ body {
   position: relative;
   width: 100%;
   height: 0px;
-  padding-bottom: 80%;
+  padding-bottom: 100%;
   display: inline-block;
   box-sizing: border-box;
 }
@@ -92,7 +66,6 @@ body {
 }
 .wp {
   margin-top: 5%;
-  text-align: center;
 }
 
 .wp > *:first-child {
@@ -100,6 +73,52 @@ body {
 }
 .wp > *:last-child {
   font-size: 6vw;
+}
+.pgowp{
+  color: #ff8c00 !important;
+  text-align: center;
+}
+#quote {
+  margin-top: -40% !important;
+}
+#yuh {
+  color: rgb(212,175,55)
+}
+#cold {
+  color: rgb(7, 242, 241);
+}
+#Hot {
+  color: rgb(236, 0, 2)
+}
+.rain {
+  color: rgb(3, 74, 236);
+}
+.shine {
+  color: rgb(212,175,55);
+}
+#brooklyn {
+  color: rgb(193, 106, 12);
+}
+#queens {
+  color: #9575CD;
+}
+#longisland {
+  color: #009688;
+}
+#manhattan {
+  color: #ec983c;
+}
+#parties {
+  color: #00BCD4;
+}
+#church {
+  color: rgb(139,69,19)
+}
+#schools {
+  color: #FDB600
+}
+#fundraiser {
+  color: #4CAF50;
 }
 
 @media (min-width: 1024px) {
@@ -130,115 +149,6 @@ body {
   60%{    color: transparent; }
   99%{    color:transparent;  }
   100%{   color: rgb(255, 87, 34)}
-}
-
-.pgowp{
-  color: #ff8c00 !important;
-  text-align: center;
-}
-
-.wp a1 {
-  position: absolute;
-  width: 100%;
-  top: 70%;
-  text-align: center;
-  font-size: 250%;
-  color: blue;
-  font-weight: bold;
-}
-
-.wp a2 {
-  position: absolute;
-  top: 75%;
-  width: 100%;
-  text-align: center;
-  font-size: 200%;
-  color: blue;
-  font-weight: bold;
-}
-
-.wp a3 {
-  position: absolute;
-  top: 80%;
-}
-
-#quote {
-  margin-top: -30%;
-  text-align: center;
-  font-family: 'Teko', sans-serif;
-  color: white;
-}
-
-#announce{
-  text-align: center;
-  text-align: center; 
-  font-family: 'Teko', sans-serif;
-  color: white;
-}
-
-#yuh {
-  color: rgb(212,175,55)
-}
-
-#cold {
-  color: rgb(7, 242, 241);
-}
-
-#Hot {
-  color: rgb(236, 0, 2)
-}
-
-.rain {
-  color: rgb(3, 74, 236);
-}
-
-.shine {
-  color: rgb(212,175,55);
-}
-
-#locations {
-  text-align: center;
-  font-family: 'Teko', sans-serif;
-  color: white;
-}
-
-#brooklyn {
-  color: rgb(193, 106, 12);
-}
-
-#queens {
-  color: #9575CD;
-}
-
-#longisland {
-  color: #009688;
-}
-
-#manhattan {
-  color: #ec983c;
-}
-
-#occasions {
-  text-align: center;
-  font-family: 'Teko', sans-serif;
-  color: white;
-}
-
-#parties 
-{
-  color: #00BCD4;
-}
-
-#church {
-  color: rgb(139,69,19)
-}
-
-#schools {
-  color: #FDB600
-}
-
-#fundraiser {
-  color: #4CAF50;
 }
 
 .reviews{

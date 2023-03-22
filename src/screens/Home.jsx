@@ -44,7 +44,7 @@ export default function Home(){
         <p className='blinkinggreen'>
           Gaming Tournaments! 🎮
         </p>
-        <p className='a2 mt-1 text-white'>
+        <p>
           Hey! Hi There! You found us!
           <br />
           We are the best gaming/movie trailer experience you will ever encounter from luxurious quality to the best
@@ -90,6 +90,7 @@ export default function Home(){
         <span id="Bronx"> and Parts of the Bronx!</span>
         <br />
         Make sure at least 5 car spaces are saved for trailer parking!
+        <br />
         <br />
         For parties in <span id='NJ'>New Jersey</span>, click <a id='triplea' href="https://www.tripleamobilegaming.com/" target="_blank" rel="noreferrer">here</a> to check out our sister company, TripleA.
       </p>
