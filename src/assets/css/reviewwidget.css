@@ -4,7 +4,8 @@
 }
 
 #reviewsubtitle {
-    text-align: center;
+    letter-spacing: 0.05rem;
+    font-size: 3vw;
 }
 
 #TopReviewsContainer {
@@ -38,7 +39,10 @@
 .cFMrET {
     /* border-radius: 8px; */
 }
-
+#ratingnum {
+    color: black;
+    font-size: 2vw;
+}
 .kaXWRJ {
     overflow: hidden;
     border-bottom: 1px solid rgba(17, 17, 17, 0.1);
@@ -46,12 +50,11 @@
     background-color: rgba(17, 17, 17, 0.05);
 }
 
-.iluRKv {
-}
-
 .kWhNOk {
     display: flex;
-    justify-content: center;
+    padding-left: 1rem;
+    max-height: 5vw;
+    align-items: center;
 }
 
 .iluRKv * {
@@ -75,13 +78,28 @@
 .kaXWRJ .reviewtabs:first-child > div {
     margin-left: 0.5rem;
 }
-
+.reviewtabs.gbMejj {
+    max-height: 4vw;
+    display: flex;
+}
 .fYHkoy {
-    position: relative;
+    font-size: 1.6vw;
     display: flex;
     z-index: 2;
     -webkit-box-align: center;
     align-items: center;
+}
+.fvcFQJ {
+    font-weight: 400;
+    color: rgb(17, 17, 17);
+    line-height: 1;
+    white-space: nowrap;
+}
+.hlAsxU {
+    font-weight: 700;
+    line-height: normal;
+    color: rgb(17, 17, 17);
+    margin-left: 0.5rem;
 }
 
 .hHDmip:not(:first-child) {
@@ -106,13 +124,6 @@
 }
  
 
-.fvcFQJ {
-    font-weight: 400;
-    font-size: 14px;
-    color: rgb(17, 17, 17);
-    line-height: 1;
-    white-space: nowrap;
-}
 
 .kqGYQX {
     display: flex;
@@ -124,12 +135,6 @@
     margin-left: 8px;
 }
 
-.hlAsxU {
-    font-weight: 700;
-    line-height: normal;
-    font-size: 14px;
-    color: rgb(17, 17, 17);
-}
 
 .ezwNNr:not(:only-child) {
     border-top-left-radius: 0px;
@@ -161,9 +166,12 @@
     font-size: 20px;
     display: flex;
     -webkit-box-align: center;
-    align-items: center;
     white-space: nowrap;
-    width: 100%;
+}
+.cOdTFM {
+    margin-top: 0.175rem;
+    line-height: 2em;
+    font-weight: 600;
 }
 
 .cMwniS {
@@ -185,10 +193,6 @@
     height: inherit;
 }
 
-.cOdTFM {
-    line-height: 2em;
-    font-weight: 600;
-}
 
 .ecFtME {
     display: inline-flex;
@@ -246,6 +250,13 @@
 
 #writereview {
     margin-top: 0.5rem;
+    border-radius: 20px;
+    background-color: rgb(25, 123, 255);
+    font-size: 1.75vw;
+    text-align: center;
+    padding-top: 0.3rem;
+    padding-bottom: 0.2rem;
+    padding-inline: 0.75rem;
 }
 
 #slidercontainer {
