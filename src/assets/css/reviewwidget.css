@@ -256,7 +256,6 @@
     white-space: nowrap;
     line-height: 1.32;
 }
-
-#slidercontainer {
-    padding: 1.5rem 1.5rem;
+#slidercontainer *:not(.awssld--active, .awssld__content, #namestarts, #starsnname, #slidestars) {
+    height: auto !important;
 }

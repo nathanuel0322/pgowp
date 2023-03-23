@@ -27,7 +27,7 @@ export default function ReviewWidget() {
   const mobile = useMediaQuery({query: '(min-width: 320px)'});
   const tablet = useMediaQuery({query: '(min-width: 768px)'});
   const laptopsize = useMediaQuery({query: '(min-width: 1024px)'});
-  const [readMoreVisible, setReadMoreVisible] = useState(false)
+  const [readMoreVisible, setReadMoreVisible] = useState(true)
 
   const switchRmv = () => {
     console.log("rmv ran")
@@ -273,7 +273,7 @@ export default function ReviewWidget() {
             Write a Review
           </button>
         </div>
-        <div id="slidercontainer" style={{height: !readMoreVisible && 'auto'}}>
+        <div id="slidercontainer" style={{height: 'auto'}}>
           {!apiLoaded ?
             <ProgressBar
               height="80"
@@ -298,9 +298,11 @@ export default function ReviewWidget() {
           }
         </div>
         <button onClick={() => {
-            setReadMoreVisible(!readMoreVisible);
-            // document.getElementsByClassName('awssld__container')[0].style.height = 'auto'
-            document.getElementById('reviewtext').style.overflow = 'visible'
+          setReadMoreVisible(!readMoreVisible);
+          const rtholder = document.getElementById('reviewtext')
+          // document.getElementsByClassName('awssld__container')[0].style.height = 'auto'
+          rtholder.style.overflow = readMoreVisible ? 'hidden' : 'visible'
+          rtholder.style.maxHeight = readMoreVisible ? '67px' : '100%'
         }}>
           hey!!!
         </button>

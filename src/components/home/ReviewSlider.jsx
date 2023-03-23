@@ -39,9 +39,11 @@ export default function ReviewSlider({reviews, heightfunc, heightvar}) {
             cancelOnInteraction={false} // should stop playing on user interaction
             interval={6000}
             media={sliderarr}
-            // onTransitionStart={(e) => {
-            //     document.getElementsByClassName("awssld--foldOutAnimation")[0].style.height = heightFirstRender;
-            // }}
+            onTransitionStart={(e) => {
+                console.log("ots")
+                document.getElementById('reviewtext').style.overflow = "hidden"
+                // document.getElementsByClassName("awssld--foldOutAnimation")[0].style.height = heightFirstRender;
+            }}
             mobileTouch={true}
             organicArrows={false}
             // cssModule={CubeStyles}
