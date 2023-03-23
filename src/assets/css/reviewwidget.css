@@ -1,6 +1,7 @@
 #parentdiv {
     margin: 0 1rem;
     margin-top: 1rem;
+    font: 400 14px / 18px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }
 #reviewsubtitle {
     letter-spacing: 0.05rem;
@@ -40,7 +41,7 @@
 }
 #ratingnum {
     color: black;
-    font-size: 2vw;
+    font-size: 20px;
 }
 .kaXWRJ {
     overflow: hidden;
@@ -82,7 +83,6 @@
     display: flex;
 }
 .fYHkoy {
-    font-size: 3.6vw;
     display: flex;
     z-index: 2;
     -webkit-box-align: center;
@@ -146,12 +146,9 @@
 
 .fFcWqO {
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    flex-wrap: wrap;
-    -webkit-box-pack: justify;
+    flex-direction: row;
+    align-items: center;
     justify-content: space-between;
-    -webkit-box-align: center;
     padding: 18px 24px 24px;
     background-color: rgba(17, 17, 17, 0.05);
 }
@@ -170,8 +167,6 @@
 .cOdTFM {
     margin-top: 0.175rem;
     line-height: 2em;
-    font-weight: 600;
-    font-size: 3.5vw;
 }
 
 .cMwniS {
@@ -242,6 +237,8 @@
     font-size: 12px;
     line-height: 1.8;
     color: rgba(17, 17, 17, 0.5);
+    margin-left: 1vw;
+    white-space: nowrap;
 }
 
 .biFvfu path {
@@ -250,13 +247,14 @@
 
 #writereview {
     margin-top: 0.5rem;
-    border-radius: 20px;
+    border-radius: 4px;
     background-color: rgb(25, 123, 255);
-    font-size: 3.5vw;
+    font-size: 15px;
     text-align: center;
-    padding-top: 0.3rem;
-    padding-bottom: 0.2rem;
-    padding-inline: 0.75rem;
+    padding: 8px 20px;
+    font-weight: bold;
+    white-space: nowrap;
+    line-height: 1.32;
 }
 
 #slidercontainer {

@@ -27,31 +27,40 @@ export default function ReviewWidget() {
   const mobile = useMediaQuery({query: '(min-width: 320px)'});
   const tablet = useMediaQuery({query: '(min-width: 768px)'});
   const laptopsize = useMediaQuery({query: '(min-width: 1024px)'});
+  const [readMoreVisible, setReadMoreVisible] = useState(false)
+
+  const switchRmv = () => {
+    console.log("rmv ran")
+    setReadMoreVisible((lastarg) => {console.log("lastarg is:", lastarg); return(!lastarg)});
+  };
+  useEffect(() => {
+    console.log("rmv changed to:", readMoreVisible)
+  }, [readMoreVisible])
 
   useEffect(() => {
     console.log("laptop size:", laptopsize)
-    // fetch('https://yelpapi.herokuapp.com/google')
-    //   .then((googleresponse) => googleresponse.json())
-    //   // set the googlereviews array in reviewobj to the response data
-    //   .then((googledata) => {
-    //     console.log("google api data:", googledata);
-    //     fetch('https://yelpapi.herokuapp.com/yelp')
-    //       .then((yelpresponse) => yelpresponse.json())
-    //       .then((yelpdata) => {
-    //         console.log("yelp data:", yelpdata);
-    //         console.log("yelpdata length:", yelpdata.length);
-    //         console.log("googledata length:", googledata.length);
-    //         setReviewObj({
-    //           ...reviewobj,
-    //           yelpreviews: yelpdata,
-    //           yelpreviewaverage: Math.round((yelpdata.reduce((accumulator, currentValue) => accumulator + currentValue.rating, 0) / yelpdata.length) * 10) / 10,
-    //           googlereviews: googledata,
-    //           googlereviewavg: Math.round((googledata.reduce((accumulator, currentValue) => accumulator + currentValue.stars, 0) / googledata.length) * 10) / 10,
-    //           reviewavg: Math.round(([...yelpdata, ...googledata].reduce((accumulator, currentValue) => accumulator + currentValue.stars, 0) / (yelpdata.length + googledata.length)) * 10) / 10 
-    //         });
-    //         setApiLoaded(true);
-    //       })
-    //   });
+    fetch('https://yelpapi.herokuapp.com/google')
+      .then((googleresponse) => googleresponse.json())
+      // set the googlereviews array in reviewobj to the response data
+      .then((googledata) => {
+        console.log("google api data:", googledata);
+        fetch('https://yelpapi.herokuapp.com/yelp')
+          .then((yelpresponse) => yelpresponse.json())
+          .then((yelpdata) => {
+            console.log("yelp data:", yelpdata);
+            console.log("yelpdata length:", yelpdata.length);
+            console.log("googledata length:", googledata.length);
+            setReviewObj({
+              ...reviewobj,
+              yelpreviews: yelpdata,
+              yelpreviewaverage: Math.round((yelpdata.reduce((accumulator, currentValue) => accumulator + currentValue.rating, 0) / yelpdata.length) * 10) / 10,
+              googlereviews: googledata,
+              googlereviewavg: Math.round((googledata.reduce((accumulator, currentValue) => accumulator + currentValue.stars, 0) / googledata.length) * 10) / 10,
+              reviewavg: Math.round(([...yelpdata, ...googledata].reduce((accumulator, currentValue) => accumulator + currentValue.stars, 0) / (yelpdata.length + googledata.length)) * 10) / 10 
+            });
+            setApiLoaded(true);
+          })
+      });
   }, []);
 
   useEffect(() => {
@@ -264,7 +273,7 @@ export default function ReviewWidget() {
             Write a Review
           </button>
         </div>
-        <div id="slidercontainer">
+        <div id="slidercontainer" style={{height: !readMoreVisible && 'auto'}}>
           {!apiLoaded ?
             <ProgressBar
               height="80"
@@ -276,9 +285,25 @@ export default function ReviewWidget() {
               barColor = 'orange'
             />
           :
-            <ReviewSlider reviews={reviewobj.allReviewsSelected ? [...reviewobj.googlereviews, ...reviewobj.yelpreviews] : reviewobj.googleSelected ? reviewobj.googlereviews : reviewobj.yelpreviews} />
+            <ReviewSlider
+              reviews={reviewobj.allReviewsSelected ?
+                [...reviewobj.googlereviews, ...reviewobj.yelpreviews] 
+              : reviewobj.googleSelected ?
+                  reviewobj.googlereviews
+                :
+                  reviewobj.yelpreviews}
+              heightfunc={switchRmv}
+              heightvar={readMoreVisible}
+            />
           }
         </div>
+        <button onClick={() => {
+            setReadMoreVisible(!readMoreVisible);
+            // document.getElementsByClassName('awssld__container')[0].style.height = 'auto'
+            document.getElementById('reviewtext').style.overflow = 'visible'
+        }}>
+          hey!!!
+        </button>
       </div>
     </div>
   )

@@ -11,15 +11,20 @@
     flex-direction: row;
     align-items: center;
 }
+#topdivimg {
+    height: 44px !important;
+    width: 44px !important;
+}
 
-#topdiv p:first-child {
-    width: 15rem;
+#namestarts > p {
     font-size: 14px;
     font-weight: 700;
     max-width: 100%;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    text-align: left;
+    margin: 0px;
 }
 
 #topdiv p:last-child {
@@ -38,6 +43,7 @@
     position: absolute;
     top: 3rem;
     left: 1rem;
+    color: black;
 }
 
 .awssld__content {
@@ -49,13 +55,22 @@
     cursor: pointer;
     font-size: 14px;
     color: rgba(17, 17, 17, 0.5);
+    margin-top: 0.25rem;
+}
+#readmore:hover {
+    text-decoration: underline;
 }
 
 #reviewtext {
-    margin: 0 0;
-    z-index: 999;
-    color: black;
-    width: 100%;
+    width: 95% !important;
+    text-align: left;
+    margin-left: 0px !important;
+    margin-top: 8px !important;
+    line-height: 1.4;
+    color: rgb(17, 17, 17);
+    font-size: 16px;
+    overflow: hidden;
+    max-height: 67px;
 }
 
 #timedisplay {
@@ -68,6 +83,9 @@
     text-overflow: ellipsis;
     color: rgba(17, 17, 17, 0.5);
 }
+.awssld--active {
+    height: 100% !important;
+}
 
 #slidestars {
     margin-right: 0.5rem;
@@ -78,4 +96,9 @@
     display: flex;
     flex-direction: row;
     align-items: center;
+}
+#reviewtextbox {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }

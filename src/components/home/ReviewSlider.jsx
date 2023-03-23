@@ -8,15 +8,21 @@ import 'react-awesome-slider/dist/styles.css';
 import '../../assets/css/reviewslider.css';
 import Slide from "./Slide";
 
-export default function ReviewSlider({reviews}) {
+export default function ReviewSlider({reviews, heightfunc, heightvar}) {
     const [sliderarr, setSliderArr] = useState([])
     const [heightFirstRender, setHeightFirstRender] = useState(null);
     useEffect(() => {
-        setHeightFirstRender(document.getElementsByClassName("awssld--foldOutAnimation")[0].style.height);
+        // setHeightFirstRender(document.getElementsByClassName("awssld--foldOutAnimation")[0].style.height);
         console.log("reviews", reviews)
         setSliderArr(reviews.map((review) => {
             // console.log("reviewtext for review by", review.name, "is:", review.reviewtext)
-            return {children: <Slide name={review.name} time={review.time} stars={review.stars} photo={review.photo} reviewtext={review.reviewtext} isyelp={review.yelp} />}
+            return {children: 
+                <Slide name={review.name} time={review.time} stars={review.stars} photo={review.photo} reviewtext={review.reviewtext} 
+                    isyelp={review.yelp}
+                    slideheightfunc={heightfunc}
+                    slideheightvar={heightvar}
+                />
+            }
         }))
     }, [])
     // useEffect(() => {
@@ -33,9 +39,9 @@ export default function ReviewSlider({reviews}) {
             cancelOnInteraction={false} // should stop playing on user interaction
             interval={6000}
             media={sliderarr}
-            onTransitionStart={(e) => {
-                document.getElementsByClassName("awssld--foldOutAnimation")[0].style.height = heightFirstRender;
-            }}
+            // onTransitionStart={(e) => {
+            //     document.getElementsByClassName("awssld--foldOutAnimation")[0].style.height = heightFirstRender;
+            // }}
             mobileTouch={true}
             organicArrows={false}
             // cssModule={CubeStyles}
