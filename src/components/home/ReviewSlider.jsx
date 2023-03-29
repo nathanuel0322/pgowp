@@ -42,6 +42,7 @@ export default function ReviewSlider({reviews, heightfunc, heightvar}) {
             onTransitionStart={(e) => {
                 console.log("ots")
                 document.getElementById('reviewtext').style.overflow = "hidden"
+                document.getElementById('awssld__container').style.height = "auto"
                 // document.getElementsByClassName("awssld--foldOutAnimation")[0].style.height = heightFirstRender;
             }}
             mobileTouch={true}

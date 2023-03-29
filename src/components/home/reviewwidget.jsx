@@ -33,6 +33,7 @@ export default function ReviewWidget() {
     console.log("rmv ran")
     setReadMoreVisible((lastarg) => {console.log("lastarg is:", lastarg); return(!lastarg)});
   };
+  
   useEffect(() => {
     console.log("rmv changed to:", readMoreVisible)
   }, [readMoreVisible])
@@ -62,6 +63,8 @@ export default function ReviewWidget() {
           })
       });
   }, []);
+
+  // awssld__container -> rate: 1.66836475 
 
   useEffect(() => {
     console.log("reviewavg is:", reviewobj.reviewavg);

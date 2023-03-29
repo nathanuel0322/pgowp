@@ -207,7 +207,7 @@
 .hoAzGt {
     position: relative;
     width: 20px;
-    height: 20px;
+    height: 20px !important;
 }
 
 .chMKQB {
@@ -215,6 +215,7 @@
     inset: 0px;
     margin: auto;
     line-height: 0;
+    height: 20px !important;
 }
 
 .biFvfu {
@@ -256,6 +257,6 @@
     white-space: nowrap;
     line-height: 1.32;
 }
-#slidercontainer *:not(.awssld--active, .awssld__content, #namestarts, #starsnname, #slidestars) {
-    height: auto !important;
+#slidercontainer *:not(.awssld--active, .awssld__content, #namestarts, #starsnname, #slidestars, .ecFtME, .chMKQB, .hoAzGt) {
+    height: auto;
 }
