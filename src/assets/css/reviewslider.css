@@ -22,7 +22,3 @@
 .awssld__next {
     right: -1rem;
 }
-/* this container determines the height of the text in the slide */
-.awssld__container {
-    height: auto;
-}

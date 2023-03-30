@@ -3,7 +3,8 @@ import '../../assets/css/slide.css';
 import StarSet from './StarSet';
 import { useMediaQuery } from 'react-responsive';
 
-export default function Slide({name, time, stars, photo, reviewtext, isyelp, slideheightfunc, slideheightvar}) {
+export default function Slide({name, time, stars, photo, reviewtext, isyelp, slideheightfunc, slideheightvar, reviewTextRef}) {
+    const [localreadvar, setLocalReadVar] = useState(slideheightvar);
     const largerthanmobile = useMediaQuery({query: '(min-width: 480px)'});
     // const tablet = useMediaQuery({query: '(min-width: 768px)'});
     // const laptopsize = useMediaQuery({query: '(min-width: 1024px)'});
@@ -16,18 +17,15 @@ export default function Slide({name, time, stars, photo, reviewtext, isyelp, sli
 
     useEffect(() => {
         console.log("istablet is:", largerthanmobile)
-    }
-    , [])
+    }, [])
 
     useEffect(() => {
-        console.log("reviewtext is:", reviewtext)
-        // const rtarr = ptextalter.split(" ")
-        // if (rtarr.length >= 20) {
-        //     // console.log("More than 20 words")
-        //     setReadMoreVisible(true);
-        //     setPTextAlter(rtarr.slice(0, 20).join(" "))
-        // }
-        console.log("reviewtext is:", ptextalter)
+        console.log("shv changed inside slide.jsx:", slideheightvar)
+    }, [slideheightvar])
+
+    useEffect(() => {
+        // console.log("reviewtext is:", reviewtext)
+        // console.log("reviewtext is:", ptextalter)
         if (largerthanmobile) {
             // const heightstorage = document.getElementsByClassName("awssld__wrapper")[0].offsetHeight + document.getElementById("reviewtext").offsetHeight - (2.5 * document.getElementById("topdiv").offsetHeight) + "px";
             // document.getElementsByClassName("awssld--foldOutAnimation")[0].style.height = heightstorage;
@@ -64,7 +62,7 @@ export default function Slide({name, time, stars, photo, reviewtext, isyelp, sli
 
 
     return (
-        <div id="slideparent">
+        <div id="slideparent" ref={reviewTextRef}>
             <div id="topdiv" style={{marginBottom: isyelp && '0.5rem'}}>
                 <img src={photo} id="topdivimg" style={{borderRadius: isyelp && '2rem', width: isyelp && '2.25rem', height: isyelp && '2.25rem'}} 
                     referrerPolicy="no-referrer" alt=""
@@ -85,27 +83,13 @@ export default function Slide({name, time, stars, photo, reviewtext, isyelp, sli
                     </div>
                 </div>
             </div>
-            <div id="reviewtextbox" style={{height: !slideheightvar && 'auto'}}>
-                <p id="reviewtext" style={{overflow: slideheightvar && 'visible'}}>
-                    {
-                        largerthanmobile ?
-                            reviewtext
-                        :
-                            ptextalter
-                        // if review text is more than 20 words, show the first 20 words
-                        // if review text is less than 20 words, show the whole review text
-                        // reviewtext.split(" ").length >= 20 ?
-                        //     reviewtext.split(" ").slice(0, 20).join(" ")
-                        // :
-                        //     reviewtext
-                    }
+            <div id="reviewtextbox" style={{height: !localreadvar && 'auto'}}>
+                <p id="reviewtext" style={{overflow: !localreadvar ? 'visible' : 'hidden', maxHeight: !localreadvar ? '100%' : '67px'}}>
+                    {largerthanmobile ? reviewtext : ptextalter}
                 </p>
-                <button id='readmore' onClick={() => slideheightfunc()}>
-                    {slideheightvar ? "Hide" : "Read more"}
+                <button id='readmore' onClick={() => {setLocalReadVar(!localreadvar); slideheightfunc()}}>
+                    {!localreadvar ? "Hide" : "Read more"}
                 </button>
-                {/* {(slideheightvar && !largerthanmobile) &&
-                    <button id='readmore' onClick={() => setReadMoreVisible(false)} style={{textDecoration: 'underline'}}>Read more</button>
-                } */}
             </div>
         </div>
     )

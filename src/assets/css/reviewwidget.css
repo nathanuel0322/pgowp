@@ -257,6 +257,6 @@
     white-space: nowrap;
     line-height: 1.32;
 }
-#slidercontainer *:not(.awssld--active, .awssld__content, #namestarts, #starsnname, #slidestars, .ecFtME, .chMKQB, .hoAzGt) {
+#slidercontainer *:not(.awssld--active, .awssld__content, #namestarts, #starsnname, #slidestars, .ecFtME, .chMKQB, .hoAzGt, .progress-bar-wrapper *, .awssld__container) {
     height: auto;
 }

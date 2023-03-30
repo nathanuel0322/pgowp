@@ -29,13 +29,20 @@ export default function ReviewWidget() {
   const laptopsize = useMediaQuery({query: '(min-width: 1024px)'});
   const [readMoreVisible, setReadMoreVisible] = useState(true)
 
-  const switchRmv = () => {
+  const switchRmv = (givenheight) => {
+    const curcontainer = document.getElementsByClassName('awssld__container')[0];
+    const containerHeight = curcontainer.clientHeight;
+    console.log("old height:", containerHeight)
+    curcontainer.style.height = `${containerHeight * 1.66836475}px`;
+    console.log("new height:", curcontainer.clientHeight);
     console.log("rmv ran")
     setReadMoreVisible((lastarg) => {console.log("lastarg is:", lastarg); return(!lastarg)});
   };
-  
+
   useEffect(() => {
     console.log("rmv changed to:", readMoreVisible)
+    if (!readMoreVisible) {
+    }
   }, [readMoreVisible])
 
   useEffect(() => {
