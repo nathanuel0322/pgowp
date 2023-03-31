@@ -40,14 +40,15 @@
     flex-direction: column;
     align-items: center;
     justify-content:center;
-    position: absolute;
+    /* position: absolute;
     top: 3rem;
-    left: 1rem;
+    left: 1rem; */
     color: black;
 }
 
 .awssld__content {
     background-color: transparent;
+    padding-inline: 1rem;
 }
 
 #readmore {
@@ -81,7 +82,7 @@
     color: rgba(17, 17, 17, 0.5);
 }
 .awssld--active {
-    height: 100% !important;
+    /* height: 100% !important; */
 }
 
 #slidestars {

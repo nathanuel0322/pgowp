@@ -14,14 +14,60 @@ export default function Slide({name, time, stars, photo, reviewtext, isyelp, sli
     const [ptextalter, setPTextAlter] = useState(reviewtext)
     const [expandText, setExpandText] = useState(false)
     const notInitialRender = useRef(false);
+    const [persclientHeight, setPersClientHeight] = useState(null)
+    const [isalltextvisible, setIsAllTextVisible] = useState(false)
 
     useEffect(() => {
+        if (!localreadvar) {
+            console.log("localreadvar ran")
+            const curcontainer = document.getElementsByClassName('awssld__container')[0];
+            const reviewtextel = document.getElementById('reviewtext');
+            
+            
+            const tempEl = document.createElement('p');
+            tempEl.innerHTML = reviewtextel.innerHTML;
+            tempEl.style.cssText = window.getComputedStyle(reviewtextel).cssText;
+            tempEl.style.overflow = 'visible';
+            tempEl.style.maxHeight = 'none';
+            tempEl.style.position = 'absolute';
+            tempEl.style.top = '-9999px';
+            document.body.appendChild(tempEl);
+
+            // height of reviewtext is being held down here
+
+            const oldHeight = reviewtextel.clientHeight;
+            const newHeight = tempEl.clientHeight;
+
+            document.body.removeChild(tempEl);
+
+            console.log("clientHeight of aswsld__container is:", curcontainer.clientHeight)
+            console.log("combination is:", curcontainer.clientHeight - oldHeight + newHeight)
+
+            const slideparentdiv = document.getElementById('slideparent')
+            if (curcontainer.clientHeight < slideparentdiv.clientHeight) {
+                setPersClientHeight(curcontainer.clientHeight)
+                curcontainer.style.height = ((curcontainer.clientHeight + newHeight) * .75) + "px";
+                console.log("new height is:", curcontainer.clientHeight + newHeight)
+            }
+        }
+        else {
+            // change height back to normal here
+            document.getElementsByClassName('awssld__container')[0].style.height = persclientHeight + "px";
+        }
+    }, [localreadvar])
+
+    useEffect(() => {
+        const reviewtextel = document.getElementById('reviewtext');
+        if (reviewtextel.scrollHeight <= reviewtextel.clientHeight) {
+            // All the text is visible and fits inside the element
+            setIsAllTextVisible(true)
+        } else {
+        // Some text is hidden or overflowing outside the element
+            setIsAllTextVisible(false)
+        }
         console.log("istablet is:", largerthanmobile)
+        setPersClientHeight(document.getElementsByClassName('awssld__container')[0].clientHeight)
     }, [])
-
-    useEffect(() => {
-        console.log("shv changed inside slide.jsx:", slideheightvar)
-    }, [slideheightvar])
 
     useEffect(() => {
         // console.log("reviewtext is:", reviewtext)
@@ -34,6 +80,7 @@ export default function Slide({name, time, stars, photo, reviewtext, isyelp, sli
     }, [reviewtext])
 
     useEffect(() => {
+        console.log("shv changed inside slide.jsx:", slideheightvar)
         // console.log("show button is:", slideheightvar)
         if (notInitialRender.current) {
             if (!slideheightvar) {
@@ -87,9 +134,19 @@ export default function Slide({name, time, stars, photo, reviewtext, isyelp, sli
                 <p id="reviewtext" style={{overflow: !localreadvar ? 'visible' : 'hidden', maxHeight: !localreadvar ? '100%' : '67px'}}>
                     {largerthanmobile ? reviewtext : ptextalter}
                 </p>
-                <button id='readmore' onClick={() => {setLocalReadVar(!localreadvar); slideheightfunc()}}>
-                    {!localreadvar ? "Hide" : "Read more"}
-                </button>
+                {!isalltextvisible &&
+                    <button id='readmore' onClick={() => {
+                        setLocalReadVar(!localreadvar);
+                        slideheightfunc()
+                        // Get the target element
+                        const targetElement = document.getElementById('slideparent');
+
+                        // Scroll to the target element with smooth animation
+                        targetElement.scrollIntoView({ behavior: 'smooth' });
+                    }}>
+                        {!localreadvar ? "Hide" : "Read more"}
+                    </button>
+                }
             </div>
         </div>
     )

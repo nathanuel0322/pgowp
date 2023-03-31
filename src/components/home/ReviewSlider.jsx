@@ -39,24 +39,9 @@ export default function ReviewSlider({reviews, heightfunc, heightvar}) {
             interval={6000}
             media={sliderarr}
             onTransitionStart={(e) => {
-                console.log("ots")
+                console.log("on transition start")
                 document.getElementById('reviewtext').style.overflow = "hidden";
                 document.getElementsByClassName('awssld__container')[0].style.height = "auto";
-            }}
-            onTransitionEnd={() => {
-                const reviewTextEl = reviewTextRef.current.querySelector('#reviewtext');
-                const tempEl = document.createElement('p');
-                tempEl.innerHTML = reviewTextEl.innerHTML;
-                tempEl.style.cssText = window.getComputedStyle(reviewTextEl).cssText;
-                tempEl.style.overflow = 'visible';
-                tempEl.style.maxHeight = 'none';
-                tempEl.style.position = 'absolute';
-                tempEl.style.top = '-9999px';
-                document.body.appendChild(tempEl);
-                const height = tempEl.offsetHeight;
-                document.body.removeChild(tempEl);
-                console.log("text in this case:", reviewTextEl.innerText)
-                console.log('height of reviewtext expanded:', height);
             }}
             mobileTouch={true}
             organicArrows={false}

@@ -42,6 +42,7 @@
 #ratingnum {
     color: black;
     font-size: 20px;
+    margin-right: 13px;
 }
 .kaXWRJ {
     overflow: hidden;
@@ -258,5 +259,15 @@
     line-height: 1.32;
 }
 #slidercontainer *:not(.awssld--active, .awssld__content, #namestarts, #starsnname, #slidestars, .ecFtME, .chMKQB, .hoAzGt, .progress-bar-wrapper *, .awssld__container) {
+    /* height: auto; */
+}
+#slidercontainer {
     height: auto;
+}
+.awssld__wrapper {
+    display: flex;
+}
+.eaRlNB {
+    padding-left: 13px;
+    white-space: nowrap;
 }

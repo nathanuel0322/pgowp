@@ -30,13 +30,15 @@ export default function ReviewWidget() {
   const [readMoreVisible, setReadMoreVisible] = useState(true)
 
   const switchRmv = (givenheight) => {
-    const curcontainer = document.getElementsByClassName('awssld__container')[0];
-    const containerHeight = curcontainer.clientHeight;
-    console.log("old height:", containerHeight)
-    curcontainer.style.height = `${containerHeight * 1.66836475}px`;
-    console.log("new height:", curcontainer.clientHeight);
+    // const curcontainer = document.getElementsByClassName('awssld__container')[0];
+    // const containerHeight = curcontainer.clientHeight;
+    // console.log("old height:", containerHeight)
+    // curcontainer.style.height = `${containerHeight * 1.66836475}px`;
+    // console.log("new height:", curcontainer.clientHeight);
     console.log("rmv ran")
     setReadMoreVisible((lastarg) => {console.log("lastarg is:", lastarg); return(!lastarg)});
+
+    // this is where we need to add function for when read more is pressed
   };
 
   useEffect(() => {
@@ -215,7 +217,7 @@ export default function ReviewWidget() {
                 </div>
               :
                 <div title="Rating__Container Header__StyledHeaderRating" className="kqGYQX bJFeVI">
-                  <div title="RatingValue__Container" id='ratingnum' className="bIDTiT font-bold" style={{marginRight: '13px'}}>
+                  <div title="RatingValue__Container" id='ratingnum' className="bIDTiT font-bold">
                     {String(reviewobj.reviewavg).split(".").length > 1 ? reviewobj.reviewavg : reviewobj.reviewavg + ".0"}
                   </div>
                   {reviewobj.yelpSelected ?
@@ -223,50 +225,22 @@ export default function ReviewWidget() {
                       <img src={Yelp5Stars} alt="yelpstars" width={100} height={20}/>
                     </div>
                   :
-                  <div title="RatingBar__Container" className="ecFtME">
-                  <div title="RatingItemFilledSvg__Container" className="hoAzGt es-rating-stars-item-filled">
-                    <div title="RatingItemFilledSvg__ContainerAbsolute RatingItemFilledSvg__Unfilled" className="chMKQB bFQRJO">
-                      <img src={Star} alt="filledstar" />
+                    <div title="RatingBar__Container" className="ecFtME">
+                      {[0,1,2,3,4].map((item, index) => {
+                        return(
+                          <div title="RatingItemFilledSvg__Container" className="hoAzGt es-rating-stars-item-filled" key={index}>
+                            <div title="RatingItemFilledSvg__ContainerAbsolute RatingItemFilledSvg__Unfilled" className="chMKQB bFQRJO">
+                              <img src={Star} alt="filledstar" />
+                            </div>
+                            <div title="RatingItemFilledSvg__ContainerAbsolute RatingItemFilledSvg__Filled" className="chMKQB biFvfu">
+                              <img src={Star} alt="filledstar" />
+                            </div>
+                          </div>
+                        )
+                      })}
                     </div>
-                    <div title="RatingItemFilledSvg__ContainerAbsolute RatingItemFilledSvg__Filled" className="chMKQB biFvfu">
-                      <img src={Star} alt="filledstar" />
-                    </div>
-                  </div>
-                  <div title="RatingItemFilledSvg__Container" className="hoAzGt es-rating-stars-item-filled">
-                    <div title="RatingItemFilledSvg__ContainerAbsolute RatingItemFilledSvg__Unfilled" className="chMKQB bFQRJO">
-                      <img src={Star} alt="filledstar" />
-                    </div>
-                    <div title="RatingItemFilledSvg__ContainerAbsolute RatingItemFilledSvg__Filled" className="chMKQB biFvfu">
-                      <img src={Star} alt="filledstar" />
-                    </div>
-                  </div>
-                  <div title="RatingItemFilledSvg__Container" className="hoAzGt es-rating-stars-item-filled">
-                    <div title="RatingItemFilledSvg__ContainerAbsolute RatingItemFilledSvg__Unfilled" className="chMKQB bFQRJO">
-                      <img src={Star} alt="filledstar" />
-                    </div>
-                    <div title="RatingItemFilledSvg__ContainerAbsolute RatingItemFilledSvg__Filled" className="chMKQB biFvfu">
-                      <img src={Star} alt="filledstar" />
-                    </div>
-                  </div>
-                  <div title="" className="RatingItemFilledSvg__Container hoAzGt es-rating-stars-item-filled">
-                    <div title="" className="RatingItemFilledSvg__ContainerAbsolute RatingItemFilledSvg__Unfilled chMKQB bFQRJO">
-                      <img src={Star} alt="filledstar" />
-                    </div>
-                    <div title="" className="RatingItemFilledSvg__ContainerAbsolute RatingItemFilledSvg__Filled chMKQB biFvfu">
-                      <img src={Star} alt="filledstar" />
-                    </div>
-                  </div>
-                  <div title="" className="RatingItemFilledSvg__Container hoAzGt es-rating-stars-item-filled">
-                    <div title="" className="RatingItemFilledSvg__ContainerAbsolute RatingItemFilledSvg__Unfilled chMKQB bFQRJO">
-                      <img src={Star} alt="filledstar" />
-                    </div>
-                    <div title="" className="RatingItemFilledSvg__ContainerAbsolute RatingItemFilledSvg__Filled chMKQB biFvfu">
-                      <img src={Star} alt="filledstar" />
-                    </div>
-                  </div>
-                </div>
                   }
-                  <div style={{paddingLeft: '13px',  whiteSpace: 'nowrap'}} className="HeaderTotalReviews__Container-sc-1a7tbil-0 eaRlNB">
+                  <div className="HeaderTotalReviews__Container-sc-1a7tbil-0 eaRlNB">
                     {reviewobj.allReviewsSelected ? reviewobj.googlereviews.length + reviewobj.yelpreviews.length : reviewobj.googleSelected ? reviewobj.googlereviews.length : reviewobj.yelpreviews.length} reviews
                   </div>
                 </div>
@@ -283,7 +257,7 @@ export default function ReviewWidget() {
             Write a Review
           </button>
         </div>
-        <div id="slidercontainer" style={{height: 'auto'}}>
+        <div id="slidercontainer">
           {!apiLoaded ?
             <ProgressBar
               height="80"
@@ -307,15 +281,6 @@ export default function ReviewWidget() {
             />
           }
         </div>
-        <button onClick={() => {
-          setReadMoreVisible(!readMoreVisible);
-          const rtholder = document.getElementById('reviewtext')
-          // document.getElementsByClassName('awssld__container')[0].style.height = 'auto'
-          rtholder.style.overflow = readMoreVisible ? 'hidden' : 'visible'
-          rtholder.style.maxHeight = readMoreVisible ? '67px' : '100%'
-        }}>
-          hey!!!
-        </button>
       </div>
     </div>
   )

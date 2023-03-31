@@ -22,3 +22,6 @@
 .awssld__next {
     right: -1rem;
 }
+.awssld__container {
+    transition: all 0.5s ease 0s;
+}
