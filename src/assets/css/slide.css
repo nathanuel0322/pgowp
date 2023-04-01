@@ -52,7 +52,6 @@
 }
 
 #readmore {
-    display: inline-block;
     font-size: 14px;
     color: rgba(17, 17, 17, 0.5);
     margin-top: 0.25rem;
@@ -102,4 +101,13 @@
 }
 .awssld__controls {
     margin-top: 1rem;
+}
+.gaUYjb {
+    display: block !important;
+    position: static !important;
+    color: inherit !important;
+    max-width: 100% !important;
+    text-decoration: none !important;
+    border: none !important;
+    margin-top: 12px;
 }

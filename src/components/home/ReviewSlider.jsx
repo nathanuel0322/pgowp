@@ -10,7 +10,6 @@ import Slide from "./Slide";
 
 export default function ReviewSlider({reviews, heightfunc, heightvar}) {
     const [sliderarr, setSliderArr] = useState([])
-    const reviewTextRef = useRef(null);
     useEffect(() => {
         console.log("reviews", reviews)
         setSliderArr(reviews.map((review) => {
@@ -19,7 +18,6 @@ export default function ReviewSlider({reviews, heightfunc, heightvar}) {
                     isyelp={review.yelp}
                     slideheightfunc={heightfunc}
                     slideheightvar={heightvar}
-                    reviewTextRef={reviewTextRef}
                 />
             }
         }))
@@ -42,6 +40,9 @@ export default function ReviewSlider({reviews, heightfunc, heightvar}) {
                 console.log("on transition start")
                 document.getElementById('reviewtext').style.overflow = "hidden";
                 document.getElementsByClassName('awssld__container')[0].style.height = "auto";
+                // document.getElementById('readmore').style.display = "inline-block";
+
+                document.getElementsByClassName('readmore')[0].style.display = "inline-block";
             }}
             mobileTouch={true}
             organicArrows={false}

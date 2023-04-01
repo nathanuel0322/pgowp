@@ -152,6 +152,7 @@
     justify-content: space-between;
     padding: 18px 24px 24px;
     background-color: rgba(17, 17, 17, 0.05);
+    flex-wrap: wrap;
 }
 
 .ifLRlC {
@@ -265,7 +266,7 @@
     height: auto;
 }
 .awssld__wrapper {
-    display: flex;
+    display: flex !important;
 }
 .eaRlNB {
     padding-left: 13px;
