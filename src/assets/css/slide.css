@@ -2,7 +2,9 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    margin-left: 1rem;
+    padding-left: 1rem;
+    max-width: calc(100% - 40px);
+    overflow: hidden;
 }
 
 #topdiv {
@@ -19,7 +21,7 @@
 #namestarts > p {
     font-size: 14px;
     font-weight: 700;
-    max-width: 100%;
+    width: 100%;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -48,7 +50,23 @@
 
 .awssld__content {
     background-color: transparent;
-    padding-inline: 1rem;
+    padding-inline: 1.5rem;
+}
+@media (min-width: 521px) {
+    .awssld__content {
+        padding-inline: 2.5rem;
+    }
+    .awssld__prev {
+        left: -0.25rem;
+    }
+    .awssld__next {
+        right: -0.25rem;
+    }
+}
+@media (min-width: 320px) {
+    .awssld__content {
+        padding-inline: 0rem;
+    }
 }
 
 #readmore {
@@ -61,7 +79,7 @@
 }
 
 #reviewtext {
-    width: 95% !important;
+    width: 100% !important;
     text-align: left;
     margin-left: 0px !important;
     margin-top: 8px !important;
@@ -93,11 +111,13 @@
     display: flex;
     flex-direction: row;
     align-items: center;
+    max-width: 100%;
 }
 #reviewtextbox {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    max-width: 100%;
 }
 .awssld__controls {
     margin-top: 1rem;

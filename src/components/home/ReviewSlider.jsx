@@ -45,7 +45,7 @@ export default function ReviewSlider({reviews, heightfunc, heightvar}) {
                 document.getElementsByClassName('readmore')[0].style.display = "inline-block";
             }}
             mobileTouch={true}
-            organicArrows={false}
+            // organicArrows={false}
             // cssModule={CubeStyles}
             // animation="cubeAnimation"
             cssModule={FoldOutStyles}

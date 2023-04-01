@@ -63,6 +63,7 @@
 #outerytdiv > div > div > iframe {
   position: absolute;
   background-color: rgb(3, 57, 108);
+  border-radius: 1rem;
 }
 .wp {
   margin-top: 5%;
@@ -284,7 +285,13 @@ and (min-width : 768px) and (max-width : 1024px) {
   opacity: 0.25;
   object-fit: cover;
 }
-
+#reviewsubtitle {
+  letter-spacing: 0.05rem;
+  font-size: 7vw;
+  line-height: 1;
+  color: orange;
+  font-family: 'Teko', sans-serif;
+}
 @media (min-width: 768px) {
   .blinkingorange, .blinkingblue, .blinkinggreen, .typed-cursor {
     font-size: 4vw;
@@ -299,7 +306,7 @@ and (min-width : 768px) and (max-width : 1024px) {
   .wp > *:last-child {
     font-size: 3vw;
   }
-  #quote, #announce, #locations, #occasions {
+  #quote, #announce, #locations, #occasions, #reviewsubtitle {
     font-size: 3vw;
   }
   #outertyped {

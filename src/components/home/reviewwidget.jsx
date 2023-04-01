@@ -251,7 +251,7 @@ export default function ReviewWidget() {
             HeaderWriteReviewButton__StyledButton-sc-aghmpr-1 dYQPWG" type="button" tabIndex="0" 
             onClick={() => {
               // open google maps page in new tab
-              window.open(reviewobj.yelpSelected ? 'https://www.yelp.com/writeareview/biz/hk7BNtXuUG2YdkAIjehMjQ?return_url=%2Fbiz%2Fhk7BNtXuUG2YdkAIjehMjQ&review_origin=biz-details-war-button' : 'https://www.google.com/maps/place/Prestigious+Gaming+On+Wheels+Plus/@40.6716126,-73.7834678,20.21z/data=!4m5!3m4!1s0x89c267ef4ab3d5c7:0x77d90889fb9bc7fc!8m2!3d40.671612!4d-73.7834759');
+              window.open(reviewobj.yelpSelected ? 'https://www.yelp.com/writeareview/biz/hk7BNtXuUG2YdkAIjehMjQ?return_url=%2Fbiz%2Fhk7BNtXuUG2YdkAIjehMjQ&review_origin=biz-details-war-button' : 'https://www.google.com/search?hl=en-US&gl=us&q=Prestigious+Gaming+On+Wheels+Plus,+13210+154th+St,+Queens,+NY+11434&ludocid=8635943149184468988&lsig=AB86z5UQXhJCg5YNNsAkTIaa8xBp#lrd=0x89c267ef4ab3d5c7:0x77d90889fb9bc7fc,3');
             }}
           >
             Write a Review
