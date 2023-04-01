@@ -52,6 +52,11 @@
     padding-block: 0.25rem;
     flex-wrap: wrap;
 }
+@media (max-width: 407px) {
+    #TabsSlider_Inner {
+        justify-content: center;
+    }
+}
 
 .iluRKv * {
     /* -webkit-user-select: none; */
@@ -154,11 +159,6 @@
     background-color: rgba(17, 17, 17, 0.05);
     flex-wrap: wrap;
 }
-
-.ifLRlC {
-    margin-right: 24px;
-}
-
 .dmlKKH {
     color: rgb(17, 17, 17);
     font-size: 20px;
@@ -173,21 +173,6 @@
 
 .cMwniS {
     margin-right: 8px;
-}
-
-.dosZLJ {
-    flex: 0 1 0%;
-}
-
-.dosZLJ > div {
-    width: inherit;
-    height: inherit;
-}
-
-.dosZLJ > div > svg {
-    display: block;
-    width: inherit;
-    height: inherit;
 }
 
 

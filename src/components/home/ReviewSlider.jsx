@@ -8,7 +8,7 @@ import 'react-awesome-slider/dist/styles.css';
 import '../../assets/css/reviewslider.css';
 import Slide from "./Slide";
 
-export default function ReviewSlider({reviews, heightfunc, heightvar}) {
+export default function ReviewSlider({reviews}) {
     const [sliderarr, setSliderArr] = useState([])
     useEffect(() => {
         console.log("reviews", reviews)
@@ -16,8 +16,6 @@ export default function ReviewSlider({reviews, heightfunc, heightvar}) {
             return {children: 
                 <Slide name={review.name} time={review.time} stars={review.stars} photo={review.photo} reviewtext={review.reviewtext} 
                     isyelp={review.yelp}
-                    slideheightfunc={heightfunc}
-                    slideheightvar={heightvar}
                 />
             }
         }))
