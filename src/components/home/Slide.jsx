@@ -9,11 +9,6 @@ import { ReactComponent as YelpRating } from '../../assets/icons/yelprating.svg'
 export default function Slide({name, time, stars, photo, reviewtext, isyelp, readtrigger}) {
     const [localreadvar, setLocalReadVar] = useState(true);
     const largerthanmobile = useMediaQuery({query: '(min-width: 480px)'});
-    // const tablet = useMediaQuery({query: '(min-width: 768px)'});
-    // const laptopsize = useMediaQuery({query: '(min-width: 1024px)'});
-    // give each Slide component its own instance of reviewtext
-    // const [rtstorage, setRTStorage] = useState(reviewtext)
-    // const [slideheightvar, setReadMoreVisible] = useState(false)
     const [persclientHeight, setPersClientHeight] = useState(null)
     const [isalltextvisible, setIsAllTextVisible] = useState(false)
     
@@ -35,10 +30,6 @@ export default function Slide({name, time, stars, photo, reviewtext, isyelp, rea
             tempEl.style.position = 'absolute';
             tempEl.style.top = '-9999px';
             document.body.appendChild(tempEl);
-
-            // height of reviewtext is being held down here
-
-            const oldHeight = reviewtextel.clientHeight;
             const newHeight = tempEl.clientHeight;
 
             document.body.removeChild(tempEl);
@@ -50,11 +41,8 @@ export default function Slide({name, time, stars, photo, reviewtext, isyelp, rea
             if (curcontainer.clientHeight < slideparentdiv.clientHeight) {
                 setPersClientHeight(curcontainer.clientHeight)
                 const sumvar = curcontainer.clientHeight + newHeight;
-                console.log("cur plus newheight is:", )
-                console.log("opp of ltm is:", !largerthanmobile)
                 curcontainer.style.height = (sumvar * (!largerthanmobile ? 
                     ((sumvar > 425) ? 1.16 : 1.09375) : 1)) + "px";
-                console.log("new height is:", curcontainer.clientHeight)
             }
         }
         else {
@@ -84,10 +72,7 @@ export default function Slide({name, time, stars, photo, reviewtext, isyelp, rea
         const newHeight = tempEl.clientHeight;
 
         document.body.removeChild(tempEl);
-        console.log("oldHeight is:", oldHeight)
-        console.log("newHeight is:", newHeight)
         if (oldHeight === newHeight) {
-            console.log("old height and new height are equal")
             setIsAllTextVisible(true);
         } else {
             setIsAllTextVisible(false);

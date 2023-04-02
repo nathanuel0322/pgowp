@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState, useRef } from "react";
 import AwesomeSlider from 'react-awesome-slider';
 import CubeStyles from 'react-awesome-slider/src/styled/cube-animation/cube-animation.scss';
@@ -47,9 +48,9 @@ export default function ReviewSlider({reviews}) {
         console.log("slider arr is:", sliderarr)
     }, [sliderarr])
 
-    // const AutoplaySlider = withAutoplay(AwesomeSlider);
+    const AutoplaySlider = withAutoplay(AwesomeSlider);
     return (
-        <AwesomeSlider
+        <AutoplaySlider
             className="midslideshow"
             bullets={false}
             play={true}
@@ -60,11 +61,10 @@ export default function ReviewSlider({reviews}) {
                 setReadMoreTrigger(true)
                 document.getElementById('reviewtext').style.overflow = "hidden";
                 document.getElementsByClassName('awssld__container')[0].style.height = "auto";
-                // document.getElementById('readmore').style.display = "inline-block";
                 document.getElementsByClassName('readmore')[0].style.display = "inline-block";
             }}
             onTransitionEnd={(e) => {
-                setReadMoreTrigger(false)
+                // setReadMoreTrigger(false)
             }}
             mobileTouch={true}
             // organicArrows={false}
