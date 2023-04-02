@@ -57,52 +57,36 @@ export default function ReviewWidget() {
   // awssld__container -> rate: 1.66836475 
 
   useEffect(() => {
-    console.log("reviewavg is:", reviewobj.reviewavg);
-  }, [reviewobj.reviewavg]);
+    console.log("reviewobj modifiied")
+    console.log("allreviewsselected:", reviewobj.allReviewsSelected);
+    console.log("googleselected:", reviewobj.googleSelected);
+    console.log("yelpselected:", reviewobj.yelpSelected);
+  }, [reviewobj.allReviewsSelected, reviewobj.googleSelected, reviewobj.yelpSelected]);
 
   return (
     <div id="parentdiv">
       <p id='reviewsubtitle' className='text-xl font-bold text-white'>Check out our reviews from past customers below!</p>
-      <div id='TopReviewsContainer' className="eyarYd" style={{width: (laptopsize || tablet) && '55%', margin: (laptopsize || tablet) && '1rem auto'}}>
+      <div id='TopReviewsContainer' className="eyarYd" style={{width: (laptopsize || tablet) && '75%', margin: (laptopsize || tablet) && '1rem auto'}}>
         <div id='TabsContainer_Inner' className='eyarYd kaXWRJ cFMrET'>
           <div id='TabsSlider_Inner' className='kWhNOk'>
             <div id='Tab_AllReviews' className='reviewtabs gbMejj'>
               <div id='Tab_Container' className="hLJjKZ eSqAQ" onClick={() => {
                   setReviewObj({...reviewobj, googleSelected: false, yelpSelected: false, allReviewsSelected: true})
                 }}
-                style={{}}
               >
-                <div id='Tab_Inner' className='fYHkoy'>
-                  <span id='TabTitle__Container' className="fvcFQJ">All Reviews</span>
-                  <div id="RatingValue__Container" className='hlAsxU'>
+                <div className='fYHkoy'>
+                  <span className="fvcFQJ">All Reviews</span>
+                  <div className='hlAsxU'>
                     5.0
                   </div>
                 </div>
               </div>
-              {/* {reviewobj.allReviewsSelected ? 
-                <div style={{
-                  position: 'absolute',
-                  fontSize: 500,
-                  display: 'block',
-                  right: '0px',
-                  bottom: '0px',
-                  left: '0px',
-                  height: '2px',
-                  transform: 'translate(0px, 0px) scaleY(1)',
-                  transformOrigin: '50% 100%',
-                  backgroundColor: 'rgb(17, 17, 17)',
-                  content: "",
-                }}>
-                </div>
-              :
-                <div></div>
-              } */}
             </div>
-            <div id='Tab_Google' className='reviewtabs gbMejj'>
+            <div className='reviewtabs gbMejj'>
               <div id='Tab_Container' className="hLJjKZ eSqAQ" onClick={() => {
                 setReviewObj({...reviewobj, googleSelected: true, yelpSelected: false, allReviewsSelected: false})
               }}>
-                <div id="Tab__Inner" className="fYHkoy">
+                <div className="fYHkoy">
                   <div title="Google">
                     <div>
                       <GoogleIcon />
@@ -114,24 +98,6 @@ export default function ReviewWidget() {
                   </div>
                 </div>
               </div>
-              {/* {reviewobj.googleSelected ? 
-                <div style={{
-                  position: 'absolute',
-                  fontSize: 500,
-                  display: 'block',
-                  right: '0px',
-                  bottom: '0px',
-                  left: '0px',
-                  height: '2px',
-                  transform: 'translate(0px, 0px) scaleY(1)',
-                  transformOrigin: '50% 100%',
-                  backgroundColor: 'rgb(17, 17, 17)',
-                  content: "",
-                }}>
-                </div>
-              :
-              <div></div>              
-              } */}
             </div>
             <div id='Tab_Yelp' className='reviewtabs gbMejj'>
               <div id='Tab_Container' className="hLJjKZ eSqAQ" onClick={() => {
@@ -147,24 +113,6 @@ export default function ReviewWidget() {
                   </div>
                 </div>
               </div>
-              {/* {reviewobj.yelpSelected ? 
-                <div style={{
-                  position: 'absolute',
-                  fontSize: 500,
-                  display: 'block',
-                  right: '0px',
-                  bottom: '0px',
-                  left: '0px',
-                  height: '2px',
-                  transform: 'translate(0px, 0px) scaleY(1)',
-                  transformOrigin: '50% 100%',
-                  backgroundColor: 'rgb(17, 17, 17)',
-                  content: "",
-                }}>
-                </div>
-              :
-              <div></div>              
-              } */}
             </div>
           </div>
         </div>
@@ -276,7 +224,8 @@ export default function ReviewWidget() {
               : reviewobj.googleSelected ?
                   reviewobj.googlereviews
                 :
-                  reviewobj.yelpreviews}
+                  reviewobj.yelpreviews
+              }
             />
           }
         </div>

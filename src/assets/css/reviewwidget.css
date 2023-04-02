@@ -4,6 +4,7 @@
     font: 400 14px / 18px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }
 #TopReviewsContainer {
+    background: linear-gradient(to bottom right, orange,#86c5da);
     border-radius: 0.5rem;
     margin-top: 1rem;
     padding: 1rem 1rem;
@@ -51,6 +52,9 @@
     align-items: center;
     padding-block: 0.25rem;
     flex-wrap: wrap;
+}
+.kWhNOk > * {
+    color: white !important;
 }
 @media (max-width: 407px) {
     #TabsSlider_Inner {
@@ -181,6 +185,9 @@
     flex-wrap: nowrap;
     -webkit-box-align: center;
     align-items: center;
+    background-color: gray;
+    padding: 0.25rem 0.25rem;
+    border-radius: 25px;
 }
 
 .bJFeVI:not(:only-child) > :last-child {
@@ -208,7 +215,6 @@
     inset: 0px;
     margin: auto;
     line-height: 0;
-    height: 20px !important;
 }
 
 .biFvfu {
@@ -260,6 +266,6 @@
     display: flex !important;
 }
 .eaRlNB {
-    padding-left: 13px;
+    padding-left: 9px;
     white-space: nowrap;
 }

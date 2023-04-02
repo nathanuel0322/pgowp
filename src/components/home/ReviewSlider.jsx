@@ -10,16 +10,38 @@ import Slide from "./Slide";
 
 export default function ReviewSlider({reviews}) {
     const [sliderarr, setSliderArr] = useState([])
+    const [readmoretrigger, setReadMoreTrigger] = useState(false)
+    const [isFirstRender, setIsFirstRender] = useState(true);
+
     useEffect(() => {
         console.log("reviews", reviews)
         setSliderArr(reviews.map((review) => {
             return {children: 
                 <Slide name={review.name} time={review.time} stars={review.stars} photo={review.photo} reviewtext={review.reviewtext} 
-                    isyelp={review.yelp}
+                    isyelp={review.yelp} readtrigger={readmoretrigger}
                 />
             }
         }))
     }, [])
+
+    useEffect(() => {
+        console.log("reviews changed")
+        console.log("reviews now", reviews)
+        setSliderArr(reviews.map((review) => {
+            return {children: 
+                <Slide name={review.name} time={review.time} stars={review.stars} photo={review.photo} reviewtext={review.reviewtext} 
+                    isyelp={review.yelp} readtrigger={readmoretrigger}
+                />
+            }
+        }))
+        
+        if (!isFirstRender) {
+            // press the button with class "awssld__next"
+            document.getElementsByClassName('awssld__next')[0].click();
+        } else {
+            setIsFirstRender(false);
+        }
+    }, [reviews])
     
     useEffect(() => {
         console.log("slider arr is:", sliderarr)
@@ -35,12 +57,14 @@ export default function ReviewSlider({reviews}) {
             interval={6000}
             media={sliderarr}
             onTransitionStart={(e) => {
-                console.log("on transition start")
+                setReadMoreTrigger(true)
                 document.getElementById('reviewtext').style.overflow = "hidden";
                 document.getElementsByClassName('awssld__container')[0].style.height = "auto";
                 // document.getElementById('readmore').style.display = "inline-block";
-
                 document.getElementsByClassName('readmore')[0].style.display = "inline-block";
+            }}
+            onTransitionEnd={(e) => {
+                setReadMoreTrigger(false)
             }}
             mobileTouch={true}
             // organicArrows={false}

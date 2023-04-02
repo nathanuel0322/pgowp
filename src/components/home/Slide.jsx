@@ -6,7 +6,7 @@ import { useMediaQuery } from 'react-responsive';
 import { ReactComponent as GoogleRating } from '../../assets/icons/googlerating.svg';
 import { ReactComponent as YelpRating } from '../../assets/icons/yelprating.svg';
 
-export default function Slide({name, time, stars, photo, reviewtext, isyelp}) {
+export default function Slide({name, time, stars, photo, reviewtext, isyelp, readtrigger}) {
     const [localreadvar, setLocalReadVar] = useState(true);
     const largerthanmobile = useMediaQuery({query: '(min-width: 480px)'});
     // const tablet = useMediaQuery({query: '(min-width: 768px)'});
@@ -18,6 +18,7 @@ export default function Slide({name, time, stars, photo, reviewtext, isyelp}) {
     const [isalltextvisible, setIsAllTextVisible] = useState(false)
     
     const reviewTextRef = useRef(null);
+    const slideParentRef = useRef(null);
 
     useEffect(() => {
         if (!localreadvar) {
@@ -63,10 +64,14 @@ export default function Slide({name, time, stars, photo, reviewtext, isyelp}) {
     }, [localreadvar])
 
     useEffect(() => {
-        // const curcontainer = document.getElementsByClassName('awssld__container')[0];
+        if (!readtrigger) {
+            setLocalReadVar(true);
+        }
+    }, [readtrigger])
 
+    useEffect(() => {
         const tempEl = document.createElement('p');
-        tempEl.innerHTML = reviewTextRef.current.innerHTML;
+        tempEl.innerHTML = reviewTextRef.innerHTML;
         tempEl.style.cssText = window.getComputedStyle(reviewTextRef.current).cssText;
         tempEl.style.overflow = 'visible';
         tempEl.style.maxHeight = 'none';
@@ -75,21 +80,14 @@ export default function Slide({name, time, stars, photo, reviewtext, isyelp}) {
         tempEl.style.lineHeight = '1.4';
         tempEl.style.width = reviewTextRef.current.clientWidth + 'px';
         document.body.appendChild(tempEl);
-
-        // height of reviewtext is being held down here
-
         const oldHeight = reviewTextRef.current.clientHeight;
         const newHeight = tempEl.clientHeight;
 
         document.body.removeChild(tempEl);
-
-
-        // console.log("combination is:", curcontainer.clientHeight - oldHeight + newHeight)
-
-
         console.log("oldHeight is:", oldHeight)
         console.log("newHeight is:", newHeight)
         if (oldHeight === newHeight) {
+            console.log("old height and new height are equal")
             setIsAllTextVisible(true);
         } else {
             setIsAllTextVisible(false);
@@ -98,7 +96,7 @@ export default function Slide({name, time, stars, photo, reviewtext, isyelp}) {
     }, [])
 
     return (
-        <div id="slideparent">
+        <div id="slideparent" ref={slideParentRef}>
             <div id="topdiv" style={{marginBottom: isyelp && '0.5rem'}}>
                 <img src={photo} id="topdivimg" style={{borderRadius: isyelp && '2rem', width: isyelp && '2.25rem', height: isyelp && '2.25rem'}} 
                     referrerPolicy="no-referrer" alt=""
@@ -121,22 +119,18 @@ export default function Slide({name, time, stars, photo, reviewtext, isyelp}) {
             </div>
             <div id="reviewtextbox" style={{height: !localreadvar && 'auto'}}>
                 <p id="reviewtext" className='reviewtext' ref={reviewTextRef} style={{overflow: !localreadvar ? 'visible' : 'hidden', 
-                    maxHeight: !localreadvar ? '100%' : '67px'
+                    maxHeight: localreadvar ? '67px' : '100%'
                 }}>
                     {reviewtext}
                 </p>
-                <button id='readmore' className='readmore' style={{display: !isalltextvisible ? 'inline-block' : 'none'}} onClick={() => {
+                <button id='readmore' className='readmore' style={{display: isalltextvisible ? 'none' : 'inline-block'}} onClick={() => {
                     setLocalReadVar(!localreadvar);
-                    // slideheightfunc()
-                    // Get the target element
                     const targetElement = document.getElementsByClassName('gaUYjb')[0];
-                    // // Scroll to the target element with smooth animation
-                    // wait half a second before scrolling
                     setTimeout(() => {
                         targetElement.scrollIntoView({ behavior: 'smooth' });
                     }, 250);
                 }}>
-                    {!localreadvar ? "Hide" : "Read more"}
+                    {localreadvar ? "Read more" : "Hide"}
                 </button>
                 <div className="gaUYjb" target="_blank" rel="noopener noreferrer nofollow">
                     <div>
