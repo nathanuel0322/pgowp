@@ -4,8 +4,8 @@ import '../assets/css/packages.css'
 
 export default function Packages(){
     return(
-        <div>
-            <img src={BackgroundImage} alt="Rectangle Poster" height="100%" width="100%" className="Rectangle" id='recpack' />
+        <div id='packdiv'>
+            <div id="overlay"></div>
             <div id='listdiv'>
                 <strong>
                     <ul id="liul">

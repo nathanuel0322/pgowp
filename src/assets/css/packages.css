@@ -1,5 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Comfortaa&display=swap');
 
+#packdiv {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 .prices {
   margin-top: -77%;
   font-size: 200%;
@@ -50,13 +55,13 @@ ul.HoursList li {
 }
 #listdiv {
   font-size: 6vw;
-  margin-top: -77%;
+  margin-block: 10%;
   font-family: "Comfortaa", cursive;
   padding: 0rem 2rem;
 }
 .PLUS {
-    font-size: 200%;
-    color: orange;
+  font-size: 200%;
+  color: orange;
 }
 
 @media only screen

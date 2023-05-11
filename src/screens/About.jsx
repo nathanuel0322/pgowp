@@ -1,12 +1,12 @@
 import React from 'react';
 import '../assets/css/about.css';
-import BackgroundImage from '../assets/images/Rectangle.jpg';
+import '../assets/css/global.css';
 import GamingContract from '../assets/files/GamingContract.pdf';
 
 export default function About() {
   return (
-    <div>
-      <img id='aboutimg' src={BackgroundImage} alt="Rectangle Poster" height="100%" width="100%" />
+    <div id="aboutdiv">
+      <div id="overlay"></div>
       <div id='abouttext'>
         <strong>
           <p className="family-owned">

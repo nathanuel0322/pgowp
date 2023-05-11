@@ -5,14 +5,13 @@
     opacity: 0.1;
 }
 #contactdiv {
-    position: absolute;
     width: 100%;
     text-align: center;
     font-size: 225%;
     font-family: 'Teko', sans-serif;
     text-decoration: none;
     color: white;
-    margin-top: -75%;
+    margin-block: 10%;
 }
 #contactme {
     display: flex;

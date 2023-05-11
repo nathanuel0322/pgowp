@@ -27,7 +27,7 @@ export default function Contact(){
     };
     return(
         <div>
-            <img id="contactimg" src={BackgroundImage} alt="Rectangle Poster" height="100%" width="100%" class="Rectangle" />
+            <div id="overlay"></div>
             <div id="contactdiv">
                 Click <a href="tel:718-496-1267" style={{color: 'darkturquoise', textDecoration: 'underline'}}>here</a> to call or 
                 <span style={{color: 'darkturquoise'}}> email</span> us using the form below
