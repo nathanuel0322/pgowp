@@ -13,7 +13,7 @@ export default function Navbar() {
                             <img id='logoimg' src={require('../../assets/images/favicon-96x96.png')} alt="PGOWP Logo" />
                         </Link>
                     </div>
-                    <div id="captionwrap">
+                    <div id="captionwrap" className='flex'>
                         <Link to="/">
                             PGOWP
                         </Link>

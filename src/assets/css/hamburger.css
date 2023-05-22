@@ -1,11 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Teko&display=swap');
 
-@media (max-width: 383px) {
-    #pagelabel {
-        white-space: nowrap;
-        padding-right: 50% !important;   
-    }
-}
 #mobilenav {
     width: 100%;
     position: fixed;
@@ -39,35 +33,6 @@
     margin-right: auto;
     margin-left: auto;
 }
-#headerdiv > ul > li > a {
-    padding-right: 64%;
-}
-#headerdiv > ul {
-    display: flex;
-    flex-direction: column;
-    background-color: blue;
-    color: white;
-    font-family: Teko, sans-serif;
-    font-size: 150%;
-    align-items: flex-start;
-    width: 100%;
-}
-#headerdiv > ul > :first-child {
-    display: flex !important;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    background-color: blue;
-}
-#headerdiv > ul > :first-child > :last-child {
-    padding-right: 2%;
-}
-#headerdiv > ul > * {
-    padding-left: 4%;
-    padding-top: 2.5%;
-    padding-bottom: 2.5%;
-    width: 100%;
-}
 #mobilebook {
     min-width: 125px;
     padding-bottom: 10px;
@@ -95,12 +60,13 @@
     -webkit-user-select: none;
     user-select: none;
 }
+#mobilebook:hover {
+    background: radial-gradient(50% 895.56% at 47.69% 50%, #db9a1c 0, #d07808 100%) !important;
+    box-shadow: 0 6px 40px #e3a029;
+}
 @media (max-width: 768px) {
-    #mobilebook {
-        font-size: calc( 1.04375rem + (1.125 - 1.04375) * ((100vw - 20rem) / (48 - 20)));
-    }
     #captionwrap, #mobilebook {
-        font-size: calc( 1.175rem + (1.5 - 1.175) * ((100vw - 20rem) / (48 - 20)));
+        font-size: calc(0.687 * (1.175rem + (1.5 - 1.175) * ((100vw - 20rem) / (48 - 20))));
     }
 }
 @media (max-width: 575px) {
@@ -110,7 +76,9 @@
         padding: 10px;
     }
 }
-#mobilebook:hover {
-    background: radial-gradient(50% 895.56% at 47.69% 50%, #db9a1c 0, #d07808 100%) !important;
-    box-shadow: 0 6px 40px #e3a029;
+@media (max-width: 383px) {
+    #pagelabel {
+        white-space: nowrap;
+        padding-right: 50% !important;   
+    }
 }

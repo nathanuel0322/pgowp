@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import { Link, useLocation } from "react-router-dom";
 import '../../assets/css/hamburger.css';
 import '../../assets/css/Navbar.css'
-import { IoReorderThree } from "react-icons/io5";
+import { IoReorderThreeOutline, IoReorderThree } from "react-icons/io5";
 
 const HamburgerNav = ({drawerfunc}) => {
     const [currentpage, setcurrentpage] = useState(null);
@@ -48,7 +48,7 @@ const HamburgerNav = ({drawerfunc}) => {
                 <div id="bbdiv" className='mx-0 text-[0rem] text-right'>
                     <a target="_blank" id='mobilebook' className='px-5 text-[1.45rem]' rel="noopener noreferrer" href="https://ymonerhexbfwnegoml.10to8.com">Book Online</a>
                 </div>
-                <IoReorderThree color='white' size={50} onClick={() => {drawerfunc(true)}} />
+                <IoReorderThreeOutline color='white' size={50} onClick={() => {drawerfunc(true)}} />
             </div>
         </nav>     
   );

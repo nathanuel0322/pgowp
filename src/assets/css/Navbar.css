@@ -24,7 +24,7 @@
   padding: 5px 32px !important;
   border-radius: 100px;
   column-gap: 12px;
-  background: midnightblue;
+  background: darkslategrey;
   display: flex;
   flex-wrap: inherit;
   align-items: center;
@@ -49,7 +49,7 @@
   white-space: nowrap;
 }
 #brand > div {
-  font-family: 'Teko', sans-serif;
+  font-family: 'Manrope', sans-serif;
 }
 #logo {
   position: relative;
@@ -80,31 +80,21 @@
   vertical-align: middle;
 }
 #captionwrap > a {
+  font-size: 1rem;
   line-height: inherit !important;
   font-weight: 500 !important;
   text-decoration: none;
   white-space: normal;
   vertical-align: -4px;
   color: #e3ebf3 !important;
-  font-family: 'Teko', sans-serif;
-  font-size: 1.5rem;
+  font-family: 'Manrope', sans-serif;
   word-break: break-word;
   word-wrap: break-word;
-}
-@media (min-width: 992px) {
-  #linkdiv {
-    display: flex!important;
-    flex-basis: auto;
-  }
-  #linkul {
-    flex-direction: row;
-  }
 }
 #linkdiv {
   justify-content: flex-end;
   margin-left: auto;
   flex-grow: 1;
-  align-items: center;
 }
 #linkul {
   list-style: none;
@@ -123,12 +113,33 @@
   word-wrap: break-word;
 }
 #navli > a, #mobilebook {
-  font-size: 1.125rem;
+  font-size: 1.1rem;
   font-family: 'Manrope';
   font-weight: 500;
 }
 #navli > a:hover {
   color: #b67604 !important;
+}
+@media (min-width: 991px) and (max-width: 1107px) {
+  #logo::before, #captionwrap {
+    display: none;
+  }
+  #logo {
+    margin-right: 0 !important;
+    padding-right: 0 !important;
+  }
+  #navli > a, #mobilebook {
+    font-size: 1rem;
+  }
+}
+@media (min-width: 992px) {
+  #linkdiv {
+    display: flex!important;
+    flex-basis: auto;
+  }
+  #linkul {
+    flex-direction: row;
+  }
 }
 @media (max-width: 991px) {
   #captionwrap {
@@ -138,5 +149,10 @@
 @media (max-width: 815px) {
   .navbar a {
     font-size: 2.7vw;
+  }
+}
+@media (max-width: 360px) {
+  #logoimg {
+    height: 2.5rem;
   }
 }
