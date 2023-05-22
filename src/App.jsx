@@ -15,7 +15,7 @@ import { useMediaQuery } from 'react-responsive';
 import SideDrawer from './components/global/SideDrawer';
 
 function App() {
-  const hamburgerdetector = useMediaQuery({query: '(max-width: 767px)'});
+  const hamburgerdetector = useMediaQuery({query: '(max-width: 991px)'});
   const [drawerOpen, setDrawerOpen] = useState(false);
   return (
     <Router>

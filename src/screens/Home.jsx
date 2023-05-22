@@ -29,7 +29,7 @@ export default function Home(){
         // to prevent memory leaks
         typed.current.destroy();
     }
-  }, [])
+  }, []);
 
   return(
     <div id="homeouterdiv">

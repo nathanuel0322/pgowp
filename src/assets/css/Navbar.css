@@ -1,41 +1,140 @@
-@import url('https://fonts.googleapis.com/css2?family=Teko&display=swap');
+#header {
+  width: 100%;
+  position: fixed;
+  min-height: 70px;
+  transition: .4s all !important;
+  border-bottom: 1px solid transparent;
+  background-color: transparent;
+  padding: 10px 20px !important;
+  border: none !important;
+  display: flex;
+  -webkit-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-align-items: center;
+  align-items: center;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+  z-index: 999;
+  left: 0;
+  right: 0;
+  top: 0;
+}
 
 .navbar {
-  position: fixed;
-  width: 100%;
+  padding: 5px 32px !important;
+  border-radius: 100px;
+  column-gap: 12px;
+  background: midnightblue;
   display: flex;
-  justify-content: space-evenly;
-  top: 0px;
-  left: 0px;
-  list-style-type: none;
-  border-bottom-left-radius: 25px;
-  border-bottom-right-radius: 25px;
-  margin: 0;
+  flex-wrap: inherit;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-right: auto;
+  margin-left: auto;
+}
+#brand {
+  min-height: 46px !important;
+  flex-shrink: 0;
+  align-items: center;
+  margin-right: auto;
   padding: 0;
-  overflow: hidden;
-  background-color: #0000CD;
-  z-index: 10;
+  transition: all 0.3s;
+  word-break: break-word;
+  z-index: 1;
+  font-weight: 500 !important;
+  display: flex;
+  font-size: 1.625rem;
+  text-decoration: none;
+  white-space: nowrap;
+}
+#brand > div {
   font-family: 'Teko', sans-serif;
-  font-size: 150%;
-  overflow-x: hidden;
 }
-
-.lists {
-  float: left;
+#logo {
+  position: relative;
+  margin-right: 0.6rem !important;
+  padding-right: 0.6rem !important;
+  display: flex;
+  transition: margin 0.3s ease-in-out;
 }
-.navbar a {
-  color: white;
-  padding: 1rem;
-  transition: 0.5s;
-  box-sizing: border-box;
-  transition: background-color 0.3s ease-in-out;
+#logo::before {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1px;
+  height: 70%;
+  opacity: 0.8;
+  background-color: #e3ebf3;
 }
-
-.left, .right {
-  background-color: orange !important;
-  padding: 1% 2%;
+#logolink {
+  outline: none;
 }
-
+#logoimg {
+  height: 3rem;
+  width: auto;
+  display: flex;
+  transition: all 0.3s ease-in-out;
+  vertical-align: middle;
+}
+#captionwrap > a {
+  line-height: inherit !important;
+  font-weight: 500 !important;
+  text-decoration: none;
+  white-space: normal;
+  vertical-align: -4px;
+  color: #e3ebf3 !important;
+  font-family: 'Teko', sans-serif;
+  font-size: 1.5rem;
+  word-break: break-word;
+  word-wrap: break-word;
+}
+@media (min-width: 992px) {
+  #linkdiv {
+    display: flex!important;
+    flex-basis: auto;
+  }
+  #linkul {
+    flex-direction: row;
+  }
+}
+#linkdiv {
+  justify-content: flex-end;
+  margin-left: auto;
+  flex-grow: 1;
+  align-items: center;
+}
+#linkul {
+  list-style: none;
+}
+#navli > a {
+  margin: 0 !important;
+  border-radius: 90px;
+  padding: 10px 15px !important;
+  transition: all .4s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #faae26 !important;
+  line-height: 1.5;
+  word-break: break-word;
+  word-wrap: break-word;
+}
+#navli > a, #mobilebook {
+  font-size: 1.125rem;
+  font-family: 'Manrope';
+  font-weight: 500;
+}
+#navli > a:hover {
+  color: #b67604 !important;
+}
+@media (max-width: 991px) {
+  #captionwrap {
+    padding-top: 0.25rem;
+  }
+}
 @media (max-width: 815px) {
   .navbar a {
     font-size: 2.7vw;
