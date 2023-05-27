@@ -91,6 +91,7 @@ export default function Home(){
         <br />
         Make sure at least 5 car spaces are saved for trailer parking!
         <br />
+        Please note: if parking is not available with 30 minutes, you will lose your deposit and your party will be canceled.
         <br />
         For parties in <span id='NJ'>New Jersey</span>, click <a id='triplea' href="https://www.tripleamobilegaming.com/" target="_blank" rel="noreferrer">here</a> to check out our sister company, TripleA.
       </p>
