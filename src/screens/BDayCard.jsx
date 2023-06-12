@@ -1,8 +1,8 @@
 import React, {useState, useEffect, useRef} from 'react';
 import BDayCardPic from '../assets/images/Invites.jpeg';
-import '../assets/css/bdaycard.css';
 import html2canvas from 'html2canvas';
 import { useMediaQuery } from 'react-responsive';
+import '../assets/css/bdaycard.css';
 
 export default function BDayCard() {
     const changetextvw435 = useMediaQuery({query: '(max-width: 435px)'});
@@ -13,7 +13,6 @@ export default function BDayCard() {
     const firstRender = useRef(true);
 
     useEffect(() => {
-        console.log("useeffect ran");
         if (!firstRender.current) {
             exportAsImage();
         }
@@ -21,13 +20,6 @@ export default function BDayCard() {
             firstRender.current = false;
         }
     }, [topdivchanged])
-
-    console.log(changetextvw435, changetextvw400, changetextvw350);
-    // FOR TOP DIV
-    // -14.5 vw on 320-350
-    // -14 vw on 350-400
-    // -13.5 vw on 400-435
-    // -13 vw from 435 px 
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -47,7 +39,7 @@ export default function BDayCard() {
     }
 
   return (
-    <div>
+    <div id='bdaycard'>
         <div id='CardtoSave'>
             <img id="bdayimg" src={BDayCardPic} alt="Rectangle Poster" height="100%" width="100%" />
             <div id='bdaydiv1' style={{marginTop: topdivmargin}}>

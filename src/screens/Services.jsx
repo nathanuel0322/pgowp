@@ -3,8 +3,8 @@ import '../assets/css/services.css';
 
 export default function Services(){
     return(
-        <div className="coaches">
-            <p className='title'>Game Coaches</p>
+        <div id="coaches">
+            <p id='gctitle'>Game Coaches</p>
             <p>
                 Our Game Coaches are there to help, instruct, or even 
                 play with our guests! They are also present in order to ensure 

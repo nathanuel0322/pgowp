@@ -1,3 +1,6 @@
+#bdaycard {
+    margin-top: 15vh;
+}
 .bdayimg {
     margin-top: 6.5%;
 }
@@ -10,7 +13,6 @@
     text-align: center;
     color: red;
 }
-
 .inputs {
     width: 100%; 
     text-align: center; 

@@ -45,9 +45,9 @@ const HamburgerNav = ({drawerfunc}) => {
                         {currentpage}
                     </div>
                 </div>
-                <div id="bbdiv" className='mx-0 text-[0rem] text-right'>
+                {/* <div id="bbdiv" className='mx-0 text-[0rem] text-right'>
                     <a target="_blank" id='mobilebook' className='px-5 text-[1.45rem]' rel="noopener noreferrer" href="https://ymonerhexbfwnegoml.10to8.com">Book Online</a>
-                </div>
+                </div> */}
                 <IoReorderThreeOutline color='white' size={50} onClick={() => {drawerfunc(true)}} />
             </div>
         </nav>     

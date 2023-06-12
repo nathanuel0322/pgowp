@@ -1,5 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Aclonica&display=swap');
-
+#contactparentdiv {
+    margin-top: 15vh;
+}
 #contactimg {
     margin-top: 5.5%;
     opacity: 0.1;
@@ -20,8 +21,6 @@
     font-family: "Dosis", sans-serif;
     font-size: 1rem;
     margin: 0px auto;
-    height: 80vh;
-    padding: 10vh 0px;
 }
 .nameemail {
     display: flex;
@@ -100,7 +99,7 @@ textarea, .neinputs {
 }
 
 textarea {
-    height: 15rem;
+    min-height: 20vh;
     padding: 0.5em 0.6em;
     background-color: white;
 }

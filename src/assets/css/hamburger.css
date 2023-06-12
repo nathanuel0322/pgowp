@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Teko&display=swap');
-
 #mobilenav {
     width: 100%;
     position: fixed;
@@ -18,13 +16,13 @@
     z-index: 1030;
 }
 #headerdiv {
+    min-height: 70px;
     padding: 5px 20px !important;
     border-radius: 0;
     flex-wrap: nowrap;
     column-gap: 12px;
     background: darkslategrey;
     display: flex;
-    flex-wrap: inherit;
     align-items: center;
     justify-content: space-between;
     position: relative;

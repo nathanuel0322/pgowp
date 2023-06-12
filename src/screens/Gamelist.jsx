@@ -1,5 +1,4 @@
 import React, { useEffect, useRef } from 'react';
-import '../assets/css/gamelist.css';
 import PS4Pro from "../assets/images/Ps4Pro.jpg";
 import PSVR from "../assets/images/PSVR.jpg";
 import XboxOneX from "../assets/images/XboxOneX.jpg"
@@ -11,6 +10,7 @@ import InfinityTab from "../assets/images/infinitygame.jpeg";
 import Oculus from "../assets/images/OQ2.png";
 import { useMediaQuery } from 'react-responsive';
 import Typed from "typed.js";
+import '../assets/css/gamelist.css';
 
 export default function Gamelist(){
     // Create reference to store the DOM element containing the animation
@@ -18,30 +18,28 @@ export default function Gamelist(){
     
     // Create reference to store the Typed instance itself
     const typed = useRef(null);
+
+    const options = {
+        strings: ['JUST DANCE'],
+        typeSpeed: 45,
+        backSpeed: 45,
+        loop: true,
+    };
       
     useEffect(() => {
-      const options = {
-          strings: [
-            'JUST DANCE'
-          ],
-          typeSpeed: 45,
-          backSpeed: 45,
-          loop: true,
-      };
-  
-      // elRef refers to the <span> rendered below
-      typed.current = new Typed(el.current, options);
+        // elRef refers to the <span> rendered below
+        typed.current = new Typed(el.current, options);
       
-      return () => {
-          // Make sure to destroy Typed instance during cleanup
-          // to prevent memory leaks
-          typed.current.destroy();
-      }
+        return () => {
+            // Make sure to destroy Typed instance during cleanup
+            // to prevent memory leaks
+            typed.current.destroy();
+        }
     }, [])
 
     const mobile = useMediaQuery({query: '(max-width: 767px)'});
     return(
-        <div>
+        <div id='gamelistdiv'>
             <div>
                 <strong>
                     <p id="gamelisttext">

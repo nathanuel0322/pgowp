@@ -10,24 +10,22 @@ export default function Home(){
   
   // Create reference to store the Typed instance itself
   const typed = useRef(null);
+
+  const options = {
+    strings: ['Voted Best Game Truck in NY!'],
+    typeSpeed: 45,
+    backSpeed: 45,
+    loop: true,
+  };
     
   useEffect(() => {
-    const options = {
-        strings: [
-          'Voted Best Game Truck in NY!'
-        ],
-        typeSpeed: 45,
-        backSpeed: 45,
-        loop: true,
-    };
-
     // elRef refers to the <span> rendered below
     typed.current = new Typed(el.current, options);
     
     return () => {
-        // Make sure to destroy Typed instance during cleanup
-        // to prevent memory leaks
-        typed.current.destroy();
+      // Make sure to destroy Typed instance during cleanup
+      // to prevent memory leaks
+      typed.current.destroy();
     }
   }, []);
 
@@ -111,11 +109,6 @@ export default function Home(){
         <a className="Call" href="tel:7186738529" style={{color: 'chartreuse', textDecoration: 'underline'}}>Click here to call for events!</a>
       </p>
       <ReviewWidget />
-      {/* <div className="10to8-ratings-widget" data-uuid="acc2fe13-9501-4e4b-bf95-de28c1e9324a">
-        <a href="https://app.10to8.com/book/acc2fe13-9501-4e4b-bf95-de28c1e9324a/uuid/" target="_blank" rel="noreferrer">Powered by 10to8</a>
-      </div> */}
-      {/* <div className='mt-20 text-center w-100'>
-      </div> */}
     </div> 
   )
 }

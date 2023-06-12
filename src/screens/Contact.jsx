@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import BackgroundImage from '../assets/images/Rectangle.jpg';
-import '../assets/css/contact.css';
 import emailjs from '@emailjs/browser';
+import '../assets/css/contact.css';
 
 export default function Contact(){
     const [hovering, setHovering] = useState(false);
@@ -26,12 +26,13 @@ export default function Contact(){
         }
     };
     return(
-        <div>
+        <div id='contactparentdiv'>
             <div id="overlay"></div>
             <div id="contactdiv">
-                Click <a href="tel:718-496-1267" style={{color: 'darkturquoise', textDecoration: 'underline'}}>here</a> to call or 
-                <span style={{color: 'darkturquoise'}}> email</span> us using the form below
-                <br />
+                <p id='contacttext' className='px-4'>
+                    Click <a href="tel:718-496-1267" style={{color: 'darkturquoise', textDecoration: 'underline'}}>here</a> to call or 
+                    <span style={{color: 'darkturquoise'}}> email</span> us using the form below
+                </p>
                 {
                     formfilled ? 
                         <div className='formfilled' id="contactme">
