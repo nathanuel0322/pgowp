@@ -41,7 +41,7 @@ const HamburgerNav = ({drawerfunc}) => {
                             <img id='logoimg' src={require('../../assets/images/favicon-96x96.png')} alt="PGOWP Logo" />
                         </Link>
                     </div>
-                    <div id="captionwrap" className='flex text-white pt-1'>
+                    <div id="captionwrap" className='flex text-white'>
                         {currentpage}
                     </div>
                 </div>

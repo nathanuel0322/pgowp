@@ -141,11 +141,8 @@
     flex-direction: row;
   }
 }
-@media (max-width: 991px) {
-  #captionwrap {
-    padding-top: 0.25rem;
-  }
-}
+/* @media (max-width: 991px) {
+} */
 @media (max-width: 815px) {
   .navbar a {
     font-size: 2.7vw;
