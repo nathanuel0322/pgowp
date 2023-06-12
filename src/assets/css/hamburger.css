@@ -64,7 +64,7 @@
 }
 @media (max-width: 768px) {
     #captionwrap, #mobilebook {
-        font-size: calc(0.687 * (1.175rem + (1.5 - 1.175) * ((100vw - 20rem) / (48 - 20))));
+        font-size: calc(0.687 * (1.175rem + (1.5 - 1.175) * ((100vw - 20rem) / (48 - 20))) * 1.25);
     }
 }
 @media (max-width: 575px) {

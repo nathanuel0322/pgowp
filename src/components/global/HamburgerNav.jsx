@@ -41,13 +41,10 @@ const HamburgerNav = ({drawerfunc}) => {
                             <img id='logoimg' src={require('../../assets/images/favicon-96x96.png')} alt="PGOWP Logo" />
                         </Link>
                     </div>
-                    <div id="captionwrap" className='flex text-white pt-1 text-[1.45rem]'>
+                    <div id="captionwrap" className='flex text-white pt-1'>
                         {currentpage}
                     </div>
                 </div>
-                {/* <div id="bbdiv" className='mx-0 text-[0rem] text-right'>
-                    <a target="_blank" id='mobilebook' className='px-5 text-[1.45rem]' rel="noopener noreferrer" href="https://ymonerhexbfwnegoml.10to8.com">Book Online</a>
-                </div> */}
                 <IoReorderThreeOutline color='white' size={50} onClick={() => {drawerfunc(true)}} />
             </div>
         </nav>     
