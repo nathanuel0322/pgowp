@@ -48,13 +48,16 @@ export default function ReviewSlider({reviews}) {
         console.log("slider arr is:", sliderarr)
     }, [sliderarr])
 
-    const AutoplaySlider = withAutoplay(AwesomeSlider);
+    // const AutoplaySlider = withAutoplay(AwesomeSlider);
+
+
     return (
-        <AutoplaySlider
+        // <AutoplaySlider
+        <AwesomeSlider
             className="midslideshow"
             bullets={false}
             play={true}
-            cancelOnInteraction={false} // should stop playing on user interaction
+            cancelOnInteraction={true} // should stop playing on user interaction
             interval={6000}
             media={sliderarr}
             onTransitionStart={(e) => {
@@ -72,6 +75,8 @@ export default function ReviewSlider({reviews}) {
             // animation="cubeAnimation"
             cssModule={FoldOutStyles}
             animation="foldOutAnimation"
+            // if sliderarr is empty, turn off arrows
+            organicArrows={sliderarr.length === 0 ? false : true}
         />
     )
 }

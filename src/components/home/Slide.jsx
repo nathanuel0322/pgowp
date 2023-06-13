@@ -1,10 +1,9 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect, useRef } from 'react';
-import '../../assets/css/slide.css';
 import StarSet from './StarSet';
 import { useMediaQuery } from 'react-responsive';
 import { ReactComponent as GoogleRating } from '../../assets/icons/googlerating.svg';
 import { ReactComponent as YelpRating } from '../../assets/icons/yelprating.svg';
+import '../../assets/css/slide.css';
 
 export default function Slide({name, time, stars, photo, reviewtext, isyelp, readtrigger}) {
     const [localreadvar, setLocalReadVar] = useState(true);
@@ -38,9 +37,14 @@ export default function Slide({name, time, stars, photo, reviewtext, isyelp, rea
             // console.log("combination is:", curcontainer.clientHeight - oldHeight + newHeight)
 
             const slideparentdiv = document.getElementById('slideparent')
-            if (curcontainer.clientHeight < slideparentdiv.clientHeight) {
-                setPersClientHeight(curcontainer.clientHeight)
-                const sumvar = curcontainer.clientHeight + newHeight;
+
+            // change clientheight over to scrollheight
+            // if (curcontainer.clientHeight < slideparentdiv.clientHeight) {
+            if (curcontainer.scrollHeight < slideparentdiv.clientHeight) {
+                // setPersClientHeight(curcontainer.clientHeight)
+                setPersClientHeight(curcontainer.scrollHeight)
+                // const sumvar = curcontainer.clientHeight + newHeight;
+                const sumvar = curcontainer.scrollHeight + newHeight;
                 curcontainer.style.height = (sumvar * (!largerthanmobile ? 
                     ((sumvar > 425) ? 1.16 : 1.09375) : 1)) + "px";
             }

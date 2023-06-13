@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import '../../assets/css/reviewwidget.css';
 import Yelp5Stars from '../../assets/icons/regular_5@3x.png';
 import Star from '../../assets/icons/star.svg';
 import HalfStar from '../../assets/icons/halfstar.svg';
@@ -11,7 +10,8 @@ import { ReactComponent as GoogleIcon } from '../../assets/icons/googleicon.svg'
 import { ReactComponent as YelpIcon } from '../../assets/icons/yelpicon.svg';
 import { ReactComponent as GoogleRating } from '../../assets/icons/googlerating.svg';
 import { ReactComponent as YelpRating } from '../../assets/icons/yelprating.svg';
-// height: 40px;
+import '../../assets/css/reviewwidget.css';
+
 export default function ReviewWidget() {
   const [reviewobj, setReviewObj] = useState({
     allReviewsSelected: true,
@@ -56,17 +56,10 @@ export default function ReviewWidget() {
 
   // awssld__container -> rate: 1.66836475 
 
-  useEffect(() => {
-    console.log("reviewobj modifiied")
-    console.log("allreviewsselected:", reviewobj.allReviewsSelected);
-    console.log("googleselected:", reviewobj.googleSelected);
-    console.log("yelpselected:", reviewobj.yelpSelected);
-  }, [reviewobj.allReviewsSelected, reviewobj.googleSelected, reviewobj.yelpSelected]);
-
   return (
     <div id="parentdiv">
       <p id='reviewsubtitle' className='text-xl font-bold text-white'>Check out our reviews from past customers below!</p>
-      <div id='TopReviewsContainer' className="eyarYd" style={{width: (laptopsize || tablet) && '75%', margin: (laptopsize || tablet) && '1rem auto'}}>
+      <div id='TopReviewsContainer' className="eyarYd my-4" style={{width: (laptopsize || tablet) && '75%', margin: (laptopsize || tablet) && '1rem auto'}}>
         <div id='TabsContainer_Inner' className='eyarYd kaXWRJ cFMrET'>
           <div id='TabsSlider_Inner' className='kWhNOk'>
             <div id='Tab_AllReviews' className='reviewtabs gbMejj'>

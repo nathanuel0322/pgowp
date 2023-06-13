@@ -60,7 +60,7 @@
 }
 @media (min-width: 521px) {
     .awssld__content {
-        padding-inline: 2.5rem;
+        padding-inline: 8vw;
     }
     .awssld__prev {
         left: -0.25rem;
