@@ -25,9 +25,6 @@
 #liul > :first-child {
   text-decoration: underline;
 }
-#liul > :nth-child(3) {
-  font-size: 50%;
-}
 #PLUS {
   font-size: 200%;
   color: orange;
