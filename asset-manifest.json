@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "./static/css/main.62cc7667.css",
-    "main.js": "./static/js/main.92a79b9f.js",
+    "main.css": "./static/css/main.6c0af0fb.css",
+    "main.js": "./static/js/main.eca6fbc0.js",
     "static/media/PrestigiousPoster.jpg": "./static/media/PrestigiousPoster.527b03711e91f951842c.jpg",
     "static/media/Rectangle.jpg": "./static/media/Rectangle.988889785b9e858a3720.jpg",
     "static/media/infinitygame.jpeg": "./static/media/infinitygame.412dc5ad7aec92507ab3.jpeg",
@@ -23,11 +23,11 @@
     "static/media/halfstar.svg": "./static/media/halfstar.e2910c813445fb01e7dc8f0fae338564.svg",
     "static/media/googleicon.svg": "./static/media/googleicon.fc9623f34721f5b548691460f7d073bb.svg",
     "static/media/star.svg": "./static/media/star.b2dcb558140749b1f264ad402ac50a16.svg",
-    "main.62cc7667.css.map": "./static/css/main.62cc7667.css.map",
-    "main.92a79b9f.js.map": "./static/js/main.92a79b9f.js.map"
+    "main.6c0af0fb.css.map": "./static/css/main.6c0af0fb.css.map",
+    "main.eca6fbc0.js.map": "./static/js/main.eca6fbc0.js.map"
   },
   "entrypoints": [
-    "static/css/main.62cc7667.css",
-    "static/js/main.92a79b9f.js"
+    "static/css/main.6c0af0fb.css",
+    "static/js/main.eca6fbc0.js"
   ]
 }
