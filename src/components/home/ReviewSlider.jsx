@@ -1,10 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import AwesomeSlider from 'react-awesome-slider';
-import CubeStyles from 'react-awesome-slider/src/styled/cube-animation/cube-animation.scss';
-import FallStyles from 'react-awesome-slider/src/styled/fall-animation/fall-animation.scss';
 import FoldOutStyles from 'react-awesome-slider/src/styled/fold-out-animation/fold-out-animation.scss';
-import withAutoplay from 'react-awesome-slider/dist/autoplay';
 import 'react-awesome-slider/dist/styles.css';
 import '../../assets/css/reviewslider.css';
 import Slide from "./Slide";
@@ -18,7 +15,7 @@ export default function ReviewSlider({reviews}) {
         console.log("reviews", reviews)
         setSliderArr(reviews.map((review) => {
             return {children: 
-                <Slide name={review.name} time={review.time} stars={review.stars} photo={review.photo} reviewtext={review.reviewtext} 
+                <Slide name={review.name} time={review.time} stars={review.stars > 5 ? 5 : review.stars} photo={review.photo} reviewtext={review.reviewtext} 
                     isyelp={review.yelp} readtrigger={readmoretrigger}
                 />
             }
@@ -30,7 +27,7 @@ export default function ReviewSlider({reviews}) {
         console.log("reviews now", reviews)
         setSliderArr(reviews.map((review) => {
             return {children: 
-                <Slide name={review.name} time={review.time} stars={review.stars} photo={review.photo} reviewtext={review.reviewtext} 
+                <Slide name={review.name} time={review.time} stars={review.stars > 5 ? 5 : review.stars} photo={review.photo} reviewtext={review.reviewtext} 
                     isyelp={review.yelp} readtrigger={readmoretrigger}
                 />
             }
@@ -48,11 +45,7 @@ export default function ReviewSlider({reviews}) {
         console.log("slider arr is:", sliderarr)
     }, [sliderarr])
 
-    // const AutoplaySlider = withAutoplay(AwesomeSlider);
-
-
     return (
-        // <AutoplaySlider
         <AwesomeSlider
             className="midslideshow"
             bullets={false}
@@ -66,13 +59,7 @@ export default function ReviewSlider({reviews}) {
                 document.getElementsByClassName('awssld__container')[0].style.height = "auto";
                 document.getElementsByClassName('readmore')[0].style.display = "inline-block";
             }}
-            onTransitionEnd={(e) => {
-                // setReadMoreTrigger(false)
-            }}
             mobileTouch={true}
-            // organicArrows={false}
-            // cssModule={CubeStyles}
-            // animation="cubeAnimation"
             cssModule={FoldOutStyles}
             animation="foldOutAnimation"
             // if sliderarr is empty, turn off arrows
