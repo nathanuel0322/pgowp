@@ -41,13 +41,18 @@ export default function ReviewWidget() {
             console.log("yelp data:", yelpdata);
             console.log("yelpdata length:", yelpdata.length);
             console.log("googledata length:", googledata.length);
+
+            let starSum = [...yelpdata, ...googledata].reduce((accumulator, currentValue) => {
+              return accumulator + currentValue.stars;
+            }, 0);
+            
             setReviewObj({
               ...reviewobj,
               yelpreviews: yelpdata,
               yelpreviewaverage: Math.round((yelpdata.reduce((accumulator, currentValue) => accumulator + currentValue.rating, 0) / yelpdata.length) * 10) / 10,
               googlereviews: googledata,
               googlereviewavg: Math.round((googledata.reduce((accumulator, currentValue) => accumulator + currentValue.stars, 0) / googledata.length) * 10) / 10,
-              reviewavg: Math.round(([...yelpdata, ...googledata].reduce((accumulator, currentValue) => accumulator + currentValue.stars, 0) / (yelpdata.length + googledata.length)) * 10) / 10 
+              reviewavg: Math.round(((starSum - googledata[googledata.length - 1].stars ) / (yelpdata.length + googledata.length)) * 10) / 10
             });
             setApiLoaded(true);
           })
@@ -159,8 +164,8 @@ export default function ReviewWidget() {
                   />
                 </div>
               :
-                <div title="Rating__Container Header__StyledHeaderRating" className="kqGYQX bJFeVI">
-                  <div title="RatingValue__Container" id='ratingnum' className="bIDTiT font-bold">
+                <div className="kqGYQX bJFeVI">
+                  <div id='ratingnum' className="bIDTiT font-bold">
                     {String(reviewobj.reviewavg).split(".").length > 1 ? reviewobj.reviewavg : reviewobj.reviewavg + ".0"}
                   </div>
                   {reviewobj.yelpSelected ?
