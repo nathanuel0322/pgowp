@@ -25,7 +25,6 @@ export default function ReviewWidget() {
     reviewavg: null
   });
   const [apiLoaded, setApiLoaded] = useState(false);
-  const mobile = useMediaQuery({query: '(min-width: 320px)'});
   const tablet = useMediaQuery({query: '(min-width: 768px)'});
   const laptopsize = useMediaQuery({query: '(min-width: 1024px)'});
 
@@ -64,7 +63,9 @@ export default function ReviewWidget() {
   return (
     <div id="parentdiv">
       <p id='reviewsubtitle' className='text-xl font-bold text-white'>Check out our reviews from past customers below!</p>
-      <div id='TopReviewsContainer' className="eyarYd my-4" style={{width: (laptopsize || tablet) && '75%', margin: (laptopsize || tablet) && '1rem auto'}}>
+      <div id='TopReviewsContainer' className="eyarYd my-4" style={{width: (laptopsize || tablet) && '75%',
+        margin: (laptopsize || tablet) && '1rem auto'
+      }}>
         <div id='TabsContainer_Inner' className='eyarYd kaXWRJ cFMrET'>
           <div id='TabsSlider_Inner' className='kWhNOk'>
             <div id='Tab_AllReviews' className='reviewtabs gbMejj'>
@@ -98,6 +99,7 @@ export default function ReviewWidget() {
               </div>
             </div>
             <div id='Tab_Yelp' className='reviewtabs gbMejj'>
+              {/* clicking on yelp should change reviews to just yelp */}
               <div id='Tab_Container' className="hLJjKZ eSqAQ" onClick={() => {
                 setReviewObj({...reviewobj, googleSelected: false, yelpSelected: true, allReviewsSelected: false})
               }}>

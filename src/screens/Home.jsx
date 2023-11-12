@@ -52,7 +52,7 @@ export default function Home(){
       <div id="outerytdiv">
         <div>
           <div>
-            <iframe title='Youtube' id="youtube" width="100%" height="50%" src="https://www.youtube.com/embed/SvnDdaO3NkE"
+            <iframe title='Youtube' id="youtube" width="100%" height="50%" src="https://www.youtube.com/embed/UNcke329oIc?si=N7vUIopS2oV0Ez4x"
             allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
           </div>
         </div> 
@@ -82,14 +82,17 @@ export default function Home(){
         We're available to come to you in 
         <span id="brooklyn"> Brooklyn! </span>
         <span id="queens"> Queens!</span>
-        <span id="longisland"> Long Island! (Extra $125 if in Suffolk County)</span>
-        <span id="manhattan"> Manhattan! (Extra $100!)</span>
-        <span style={{color: '#F44336'}}> Staten Island! (Extra $200)</span>
+        <span id="longisland"> Long Island!</span>
+        <span id="manhattan"> Manhattan!</span>
+        <span style={{color: '#F44336'}}> Staten Island!</span>
         <span id="Bronx"> and Parts of the Bronx!</span>
         <br />
         Make sure at least 5 car spaces are saved for trailer parking!
         <br />
         Please note: if parking is not available with 30 minutes, you will lose your deposit and your party will be canceled.
+        <br />
+        <span className='text-[#FDB600] underline'>Please note:</span>&nbsp;Due to weak or lack of cell sites in certain areas, it may cause us to have connect a line to your router.
+        <br />
         <br />
         For parties in <span id='NJ'>New Jersey</span>, click <a id='triplea' href="https://www.tripleamobilegaming.com/" target="_blank" rel="noreferrer">here</a> to check out our sister company, TripleA.
       </p>
