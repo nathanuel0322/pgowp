@@ -68,8 +68,7 @@ export default function Home(){
       <span id="yuh"> luxury class </span>
         trailer. 
       </p>
-      <br />
-      <p id="announce">
+      <p id="announce" className='!my-4'>
         We now have the new <span className="blinkingblue"><strong> Playstation 5 </strong></span>
           and the 
         <span className="blinkinggreen">
@@ -77,26 +76,29 @@ export default function Home(){
         </span>
         !!!
       </p>
-      <br />
       <p id="locations">
         We're available to come to you in 
         <span id="brooklyn"> Brooklyn! </span>
         <span id="queens"> Queens!</span>
+        &nbsp;and
         <span id="longisland"> Long Island!</span>
+        <br />
+        <span className='text-[#FDB600] underline'>For an additional surcharge</span>
+        <br />
         <span id="manhattan"> Manhattan!</span>
         <span style={{color: '#F44336'}}> Staten Island!</span>
         <span id="Bronx"> and Parts of the Bronx!</span>
+        <br />
         <br />
         Make sure at least 5 car spaces are saved for trailer parking!
         <br />
         Please note: if parking is not available with 30 minutes, you will lose your deposit and your party will be canceled.
         <br />
-        <span className='text-[#FDB600] underline'>Please note:</span>&nbsp;Due to weak or lack of cell sites in certain areas, it may cause us to have connect a line to your router.
+        <span className='text-[#FDB600] underline'>Please note:</span>&nbsp;Due to weak or lack of cell sites in certain areas, it may cause us to have to connect a line to your router.
         <br />
         <br />
         For parties in <span id='NJ'>New Jersey</span>, click <a id='triplea' href="https://www.tripleamobilegaming.com/" target="_blank" rel="noreferrer">here</a> to check out our sister company, TripleA.
       </p>
-      <br />
       <p id="occasions">
         We do 
         <span id="parties"> Birthday Parties! </span>
