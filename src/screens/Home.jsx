@@ -86,6 +86,8 @@ export default function Home(){
         <span className='text-[#FDB600] underline'>For an additional surcharge</span>
         <br />
         <span id="manhattan"> Manhattan!</span>
+        <span className='text-[rgb(212,175,55)]'> Westchester!</span>
+        <span className='text-[greenyellow]'> Suffolk County!</span>
         <span style={{color: '#F44336'}}> Staten Island!</span>
         <span id="Bronx"> and Parts of the Bronx!</span>
         <br />
