@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "./static/css/main.f79368e9.css",
-    "main.js": "./static/js/main.7e9e9e1d.js",
+    "main.js": "./static/js/main.3fa03f8d.js",
     "static/media/PrestigiousPoster.jpg": "./static/media/PrestigiousPoster.527b03711e91f951842c.jpg",
     "static/media/Rectangle.jpg": "./static/media/Rectangle.988889785b9e858a3720.jpg",
     "static/media/infinitygame.jpeg": "./static/media/infinitygame.06f2e3c912674b858fac.jpeg",
@@ -24,10 +24,10 @@
     "static/media/googleicon.svg": "./static/media/googleicon.fc9623f34721f5b548691460f7d073bb.svg",
     "static/media/star.svg": "./static/media/star.6727511bb6bafffd6dfed7ad8b9ddffd.svg",
     "main.f79368e9.css.map": "./static/css/main.f79368e9.css.map",
-    "main.7e9e9e1d.js.map": "./static/js/main.7e9e9e1d.js.map"
+    "main.3fa03f8d.js.map": "./static/js/main.3fa03f8d.js.map"
   },
   "entrypoints": [
     "static/css/main.f79368e9.css",
-    "static/js/main.7e9e9e1d.js"
+    "static/js/main.3fa03f8d.js"
   ]
 }
