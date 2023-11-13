@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import BackgroundImage from '../assets/images/Rectangle.jpg';
 import emailjs from '@emailjs/browser';
 import '../assets/css/contact.css';
 
