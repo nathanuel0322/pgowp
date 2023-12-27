@@ -8,7 +8,7 @@
 #titlediv {
   color: rgb(255, 140, 0);
 }
-#outertyped {
+.outertyped {
   margin-top: 1%;
   display: flex;
   flex-direction: row;
@@ -278,7 +278,7 @@ and (min-width : 768px) and (max-width : 1024px) {
   #quote, #announce, #locations, #occasions, #reviewsubtitle {
     font-size: 3vw;
   }
-  #outertyped {
+  .outertyped {
     margin-top: 0%;
   }
 }

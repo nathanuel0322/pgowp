@@ -36,9 +36,12 @@ export default function Home(){
         <p id="titlediv" className='text-5xl font-extrabold drop-shadow-2xl shadow-orange-700'>
           PRESTIGIOUS GAMING ON WHEELS PLUS!
         </p>
-        <div id='outertyped'>
+        <div className='outertyped'>
           <span id='typedvote' className='blinkingorange' ref={el} />
         </div>
+        <p className='blinkingorange'>
+          Prices of bookings made in 2023 for 2024 events will remain the same, so book now!
+        </p>
         <p className='blinkinggreen'>
           Gaming Tournaments! 🎮
         </p>
