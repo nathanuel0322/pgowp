@@ -3,6 +3,7 @@ import BDayCardPic from '../assets/images/Invites.jpeg';
 import html2canvas from 'html2canvas';
 import { useMediaQuery } from 'react-responsive';
 import '../assets/css/bdaycard.css';
+import toast from 'react-hot-toast';
 
 export default function BDayCard() {
     const changetextvw435 = useMediaQuery({query: '(max-width: 435px)'});
@@ -13,11 +14,14 @@ export default function BDayCard() {
     const firstRender = useRef(true);
 
     useEffect(() => {
-        if (!firstRender.current) {
-            exportAsImage();
-        }
-        else{
-            firstRender.current = false;
+        if (topdivchanged) {
+            console.log("topdivchanged: ", topdivchanged)
+            if (!firstRender.current) {
+                console.log("Exporting as image");
+                exportAsImage();
+            } else {
+                firstRender.current = false;
+            }
         }
     }, [topdivchanged])
 
@@ -36,6 +40,8 @@ export default function BDayCard() {
         fakeLink.click();
         document.body.removeChild(fakeLink);
         fakeLink.remove();
+        settopdivmargin(!changetextvw435 ? '-14vw' : changetextvw400 ? (changetextvw350 ? '-14.5vw' : '-14vw')  : '-13.5vw');
+        settopdivchanged(null);
     }
 
   return (
@@ -88,8 +94,17 @@ export default function BDayCard() {
             </div>
         </div>
         <div id='bdaybuttondiv'>
-                <input type="submit" value='Save Image' id='bdaybutton'
-                    onClick={() => {
+                <input type="submit" value='Save Image' id='bdaybutton' className='cursor-pointer'
+                    onClick={async() => {
+                        toast("Allow a few seconds for the image to download", {
+                            icon: '📸',
+                            style: {
+                                borderRadius: '10px',
+                                background: '#333',
+                                color: '#fff',
+                                fontSize: '18px',
+                            },
+                        });
                         // MUST FIX TOP DIV MARGIN FOR LARGE SCREENS LATER ON
                         settopdivmargin(!changetextvw435 ? '-14vw' : changetextvw400 ? (changetextvw350 ? '-16.5vw' : '-15vw')  : '-14vw');
                         settopdivchanged(true);

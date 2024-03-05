@@ -13,23 +13,25 @@ import Packages from './screens/Packages';
 import HamburgerNav from './components/global/HamburgerNav';
 import { useMediaQuery } from 'react-responsive';
 import SideDrawer from './components/global/SideDrawer';
+import { Toaster } from 'react-hot-toast';
 
 function App() {
   const hamburgerdetector = useMediaQuery({query: '(max-width: 991px)'});
   const [drawerOpen, setDrawerOpen] = useState(false);
   return (
     <Router>
-        {hamburgerdetector ? <HamburgerNav drawerfunc={setDrawerOpen} /> : <Navbar />}
-        <SideDrawer drawerstate={drawerOpen} drawerfunc={setDrawerOpen} />
-        <Routes>
-          <Route exact path='' element={<Home />} />
-          <Route exact path='/services' element={<Services />}/>
-          <Route exact path='/packages' element={<Packages />} />
-          <Route exact path='/gamelist' element={<Gamelist />} />
-          <Route exact path='/contactus' element={<Contact />} />
-          <Route exact path='/about' element={<About />} />
-          <Route exact path='/e-invites' element={<BDayCard />} />
-        </Routes>
+      {hamburgerdetector ? <HamburgerNav drawerfunc={setDrawerOpen} /> : <Navbar />}
+      <SideDrawer drawerstate={drawerOpen} drawerfunc={setDrawerOpen} />
+      <Routes>
+        <Route exact path='' element={<Home />} />
+        <Route exact path='/services' element={<Services />}/>
+        <Route exact path='/packages' element={<Packages />} />
+        <Route exact path='/gamelist' element={<Gamelist />} />
+        <Route exact path='/contactus' element={<Contact />} />
+        <Route exact path='/about' element={<About />} />
+        <Route exact path='/e-invites' element={<BDayCard />} />
+      </Routes>
+      <Toaster />
     </Router>
   )
 }
