@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, { useState, useEffect } from 'react';
 import BDayCardPic from '../assets/images/Invites.jpeg';
 import html2canvas from 'html2canvas';
 import { useMediaQuery } from 'react-responsive';
@@ -11,17 +11,16 @@ export default function BDayCard() {
     const changetextvw350 = useMediaQuery({query: '(max-width: 350px)'});
     const [topdivmargin, settopdivmargin] = useState(!changetextvw435 ? '-14vw' : changetextvw400 ? (changetextvw350 ? '-14.5vw' : '-14vw')  : '-13.5vw')
     const [topdivchanged, settopdivchanged] = useState(null);
-    const firstRender = useRef(true);
 
     useEffect(() => {
+        // console.log("topdivchanged: ", topdivchanged)
         if (topdivchanged) {
-            console.log("topdivchanged: ", topdivchanged)
-            if (!firstRender.current) {
-                console.log("Exporting as image");
-                exportAsImage();
-            } else {
-                firstRender.current = false;
-            }
+            exportAsImage();
+            // if (!firstRender.current) {
+            //     console.log("Exporting as image");
+            // } else {
+            //     firstRender.current = false;
+            // }
         }
     }, [topdivchanged])
 
@@ -31,15 +30,13 @@ export default function BDayCard() {
 
     const exportAsImage = async () => {
         const canvas = await html2canvas(document.getElementById('CardtoSave'), {scale: 10});
-        const image = canvas.toDataURL("image/png", 1.0);
-        const fakeLink = window.document.createElement("a");
-        fakeLink.style = "display:none;";
-        fakeLink.download = "BirthdayCard";
-        fakeLink.href = image;
-        document.body.appendChild(fakeLink);
-        fakeLink.click();
-        document.body.removeChild(fakeLink);
-        fakeLink.remove();
+        canvas.toBlob(async (blob) => {
+            const url = URL.createObjectURL(blob);
+            window.open(url, '_blank');
+
+            // Release the reference to the blob
+            URL.revokeObjectURL(url);
+        });
         settopdivmargin(!changetextvw435 ? '-14vw' : changetextvw400 ? (changetextvw350 ? '-14.5vw' : '-14vw')  : '-13.5vw');
         settopdivchanged(null);
     }

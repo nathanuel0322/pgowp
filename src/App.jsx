@@ -19,20 +19,22 @@ function App() {
   const hamburgerdetector = useMediaQuery({query: '(max-width: 991px)'});
   const [drawerOpen, setDrawerOpen] = useState(false);
   return (
-    <Router>
-      {hamburgerdetector ? <HamburgerNav drawerfunc={setDrawerOpen} /> : <Navbar />}
-      <SideDrawer drawerstate={drawerOpen} drawerfunc={setDrawerOpen} />
-      <Routes>
-        <Route exact path='' element={<Home />} />
-        <Route exact path='/services' element={<Services />}/>
-        <Route exact path='/packages' element={<Packages />} />
-        <Route exact path='/gamelist' element={<Gamelist />} />
-        <Route exact path='/contactus' element={<Contact />} />
-        <Route exact path='/about' element={<About />} />
-        <Route exact path='/e-invites' element={<BDayCard />} />
-      </Routes>
+    <div>
+      <Router>
+        {hamburgerdetector ? <HamburgerNav drawerfunc={setDrawerOpen} /> : <Navbar />}
+        <SideDrawer drawerstate={drawerOpen} drawerfunc={setDrawerOpen} />
+        <Routes>
+          <Route exact path='' element={<Home />} />
+          <Route exact path='/services' element={<Services />}/>
+          <Route exact path='/packages' element={<Packages />} />
+          <Route exact path='/gamelist' element={<Gamelist />} />
+          <Route exact path='/contactus' element={<Contact />} />
+          <Route exact path='/about' element={<About />} />
+          <Route exact path='/e-invites' element={<BDayCard />} />
+        </Routes>
+      </Router>
       <Toaster />
-    </Router>
+    </div>
   )
 }
 
