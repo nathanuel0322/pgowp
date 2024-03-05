@@ -4,6 +4,9 @@
 .bdayimg {
     margin-top: 6.5%;
 }
+#CardtoSave input::placeholder {
+    color: #9ca3af !important;
+}
 #CardtoSave > div {
     display: flex;
     flex-direction: row;
