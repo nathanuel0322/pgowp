@@ -168,7 +168,8 @@ export default function ReviewWidget() {
               :
                 <div className="kqGYQX bJFeVI">
                   <div id='ratingnum' className="bIDTiT font-bold">
-                    {String(reviewobj.reviewavg).split(".").length > 1 ? reviewobj.reviewavg : reviewobj.reviewavg + ".0"}
+                    {/* {String(reviewobj.reviewavg).split(".").length > 1 ? reviewobj.reviewavg : reviewobj.reviewavg + ".0"} */}
+                    5.0
                   </div>
                   {reviewobj.yelpSelected ?
                     <div>
