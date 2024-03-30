@@ -89,7 +89,9 @@ export default function Home(){
         <span className='text-[rgb(212,175,55)]'> Westchester!</span>
         <span className='text-[greenyellow]'> Suffolk County!</span>
         <span style={{color: '#F44336'}}> Staten Island!</span>
-        <span id="Bronx"> and Parts of the Bronx!</span>
+        <span id="brooklyn">&nbsp;Bronx!</span>
+        <span className='text-[rgb(212,175,55)]'>&nbsp;Parts of Connecticut!</span>
+        <span>&nbsp;and others!</span> 
         <br />
         <br />
         Make sure at least 5 car spaces are saved for trailer parking!
@@ -98,8 +100,6 @@ export default function Home(){
         <br />
         <span className='text-[#FDB600] underline'>Please note:</span>&nbsp;Due to weak or lack of cell sites in certain areas, it may cause us to have to connect a line to your router.
         <br />
-        <br />
-        For parties in <span id='NJ'>New Jersey</span>, click <a id='triplea' href="https://www.tripleamobilegaming.com/" target="_blank" rel="noreferrer">here</a> to check out our sister company, TripleA.
       </p>
       <p id="occasions">
         We do 

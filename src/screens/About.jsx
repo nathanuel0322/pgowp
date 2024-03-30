@@ -43,6 +43,9 @@ export default function About() {
               Click here to download and view our terms and conditions!
             </a>
           </p>
+          <br />
+          For parties in <span id='NJ'>New Jersey</span>, click <a id='triplea' href="https://www.tripleamobilegaming.com/" target="_blank" rel="noreferrer">here</a> to check out our sister company, TripleA.
+          <br />
         </strong>
       </div>
     </div>
