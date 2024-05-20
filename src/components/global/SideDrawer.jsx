@@ -38,7 +38,9 @@ export default function SideDrawer({drawerstate, drawerfunc}) {
                                     </a>
                                 </li>
                             :
-                                <Link id="linka" key={index} to={index === 0 ? '/' : `/${text.split(" ").join("").toLowerCase()}`}
+                                <Link id="linka" key={index} to={text === "E-Invites" ? '/bdaycard'
+                                    : index === 0 ? '/' : `/${text.split(" ").join("").toLowerCase()}`
+                                }
                                     onClick={() => drawerfunc(false)}
                                 >
                                     {text}
