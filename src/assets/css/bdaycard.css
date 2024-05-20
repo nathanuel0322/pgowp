@@ -58,3 +58,18 @@
         margin-top: -14.5vw;
     }
 }
+@media (min-width: 700px) {
+    #CardtoSave > input {
+        max-width: 50vw;
+    }
+    .inputs {
+        font-size: 3vw;
+    }
+    .inputs {
+        line-height: 1.5;
+    }
+    #bdaybutton {
+        width: 20vw;
+        font-size: 3vw;
+    }
+}
