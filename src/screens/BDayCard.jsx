@@ -49,6 +49,7 @@ export default function BDayCard() {
                 <form onSubmit={handleSubmit}>
                     <label>
                         <input 
+                            id='childnameinput'
                             className='inputs'
                             type="text" 
                             name="ChildName" 
@@ -58,7 +59,8 @@ export default function BDayCard() {
                 </form>
                 <form style={{marginLeft: '24%'}}>
                     <label>
-                        <input 
+                        <input
+                            id='locationinput'
                             className='inputs'
                             type="text"
                             name="Location" 
@@ -71,6 +73,7 @@ export default function BDayCard() {
                 <form onSubmit={handleSubmit}>
                     <label>
                         <input 
+                            id='partytimeinput'
                             className='inputs'
                             type="text" 
                             name="Party Time" 
@@ -80,7 +83,8 @@ export default function BDayCard() {
                 </form>
                 <form style={{marginLeft: '24%'}}>
                     <label>
-                        <input 
+                        <input
+                            id='phonenumberinput' 
                             className='inputs'
                             type="text"
                             name="Phone Number" 
