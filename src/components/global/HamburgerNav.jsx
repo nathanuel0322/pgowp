@@ -1,14 +1,17 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import { Link, useLocation } from "react-router-dom";
 import '../../assets/css/hamburger.css';
 import '../../assets/css/Navbar.css'
 import { IoReorderThreeOutline, IoReorderThree } from "react-icons/io5";
+import { AppContext } from '../../App';
 
 const HamburgerNav = ({drawerfunc}) => {
-    const [currentpage, setcurrentpage] = useState(null);
     const location = useLocation();
+    const { currentpage, setcurrentpage } = useContext(AppContext);
+    console.log("currentpage:", currentpage)
 
     useEffect(() => {
+        console.log("location.pathname:", location.pathname)
         if (location.pathname === "/services"){
             setcurrentpage("Services");
         }
@@ -26,14 +29,15 @@ const HamburgerNav = ({drawerfunc}) => {
         }
         else if (location.pathname === "/about"){
             setcurrentpage("About");
-        }
-        else if (location.pathname === "/e-invites"){
+        } else if (location.pathname === "/bdaycard"){
+            setcurrentpage("BDay Card");
+        } else if (location.pathname === "/e-invites"){
             setcurrentpage("E-Invites");
         }
     }, [location.pathname])
 
     return (
-        <nav id='mobilenav'>
+        <nav id='mobilenav' style={{ position: currentpage === "BDay Card" ? 'relative' : 'fixed' }}>
             <div id="headerdiv">
                 <div id='brand'>
                     <div id='logo'>

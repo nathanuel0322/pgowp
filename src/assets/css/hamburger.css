@@ -1,6 +1,5 @@
 #mobilenav {
     width: 100%;
-    position: fixed;
     padding: 0 !important;
     min-height: 70px;
     transition: .4s all !important;

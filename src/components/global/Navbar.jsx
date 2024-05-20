@@ -1,11 +1,16 @@
-import React from 'react';
 import "../../assets/css/Navbar.css"
 import "../../assets/css/hamburger.css"
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 export default function Navbar() {
+    // get the current page
+    const location = useLocation();
+    // console.log("location.pathname:", location.pathname)
+
     return (
-        <div id="header">
+        <div id="header" style={{ position: location.pathname === "/bdaycard" ? 'relative' : 'fixed',
+            display: location.pathname === "/e-invites" ? 'none' : 'flex'
+        }}>
             <div className="navbar">
                 <div id='brand'>
                     <div id='logo'>
@@ -30,7 +35,7 @@ export default function Navbar() {
                             >
                                 Gallery
                             </a>
-                            <Link to="/e-invites">E-Invites</Link>
+                            <Link to="/bdaycard">E-Invites</Link>
                             <Link to="/contactus"className='lists'>Contact</Link>
                             <Link to="/about" className="right">About</Link>
                         </li>

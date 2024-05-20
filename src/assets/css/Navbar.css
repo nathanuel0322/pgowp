@@ -1,13 +1,11 @@
 #header {
   width: 100%;
-  position: fixed;
   min-height: 70px;
   transition: .4s all !important;
   border-bottom: 1px solid transparent;
   background-color: transparent;
   padding: 10px 20px !important;
   border: none !important;
-  display: flex;
   -webkit-flex-wrap: wrap;
   flex-wrap: wrap;
   -webkit-align-items: center;

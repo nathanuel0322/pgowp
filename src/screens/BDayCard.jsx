@@ -1,121 +1,95 @@
-import React, { useState, useEffect } from 'react';
-import BDayCardPic from '../assets/images/Invites.jpeg';
-import html2canvas from 'html2canvas';
-import { useMediaQuery } from 'react-responsive';
 import '../assets/css/bdaycard.css';
 import toast from 'react-hot-toast';
 
 export default function BDayCard() {
-    const changetextvw435 = useMediaQuery({query: '(max-width: 435px)'});
-    const changetextvw400 = useMediaQuery({query: '(max-width: 400px)'});
-    const changetextvw350 = useMediaQuery({query: '(max-width: 350px)'});
-    const [topdivmargin, settopdivmargin] = useState(!changetextvw435 ? '-14vw' : changetextvw400 ? (changetextvw350 ? '-14.5vw' : '-14vw')  : '-13.5vw')
-    const [topdivchanged, settopdivchanged] = useState(null);
-
-    useEffect(() => {
-        // console.log("topdivchanged: ", topdivchanged)
-        if (topdivchanged) {
-            exportAsImage();
-            // if (!firstRender.current) {
-            //     console.log("Exporting as image");
-            // } else {
-            //     firstRender.current = false;
-            // }
-        }
-    }, [topdivchanged])
-
     const handleSubmit = (event) => {
         event.preventDefault();
     }
 
-    const exportAsImage = async () => {
-        const canvas = await html2canvas(document.getElementById('CardtoSave'), {scale: 10});
-        canvas.toBlob(async (blob) => {
-            const url = URL.createObjectURL(blob);
-            window.open(url, '_blank');
-
-            // Release the reference to the blob
-            URL.revokeObjectURL(url);
-        });
-        settopdivmargin(!changetextvw435 ? '-14vw' : changetextvw400 ? (changetextvw350 ? '-14.5vw' : '-14vw')  : '-13.5vw');
-        settopdivchanged(null);
-    }
-
   return (
-    <div id='bdaycard'>
-        <div id='CardtoSave'>
-            <img id="bdayimg" src={BDayCardPic} alt="Rectangle Poster" height="100%" width="100%" />
-            <div id='bdaydiv1' style={{marginTop: topdivmargin}}>
-                <form onSubmit={handleSubmit}>
-                    <label>
-                        <input 
-                            id='childnameinput'
-                            className='inputs'
-                            type="text" 
-                            name="ChildName" 
-                            placeholder="Birthday Child's Name"
-                        />
-                    </label>
-                </form>
-                <form style={{marginLeft: '24%'}}>
-                    <label>
-                        <input
-                            id='locationinput'
-                            className='inputs'
-                            type="text"
-                            name="Location" 
-                            placeholder="Location of Party"
-                        />
-                    </label>
-                </form>            
-            </div>
-            <div id="bdaydiv2" style={{marginTop: !changetextvw435 ? '-3.5vw' : changetextvw400 ? (changetextvw350 ? '-4vw' : '-3.5vw')  : '-3.5vw'}}>
-                <form onSubmit={handleSubmit}>
-                    <label>
-                        <input 
-                            id='partytimeinput'
-                            className='inputs'
-                            type="text" 
-                            name="Party Time" 
-                            placeholder="Party Time"
-                        />
-                    </label>
-                </form>
-                <form style={{marginLeft: '24%'}}>
-                    <label>
-                        <input
-                            id='phonenumberinput' 
-                            className='inputs'
-                            type="text"
-                            name="Phone Number" 
-                            placeholder="Phone #"
-                        />
-                    </label>
-                </form>            
-            </div>
-        </div>
-        <div id='bdaybuttondiv'>
-                <input type="submit" value='Save Image' id='bdaybutton' className='cursor-pointer'
-                    onClick={async() => {
-                        toast("Allow a few seconds for the image to download", {
-                            icon: '📸',
-                            style: {
-                                borderRadius: '10px',
-                                background: '#333',
-                                color: '#fff',
-                                fontSize: '18px',
-                            },
-                        });
-                        // MUST FIX TOP DIV MARGIN FOR LARGE SCREENS LATER ON
-                        settopdivmargin(!changetextvw435 ? '-14vw' : changetextvw400 ? (changetextvw350 ? '-16.5vw' : '-15vw')  : '-14vw');
-                        settopdivchanged(true);
-                        console.log("Export called");
-                    }}
-                />
-        </div>
-        <div id='bdaydisclaimer'>
-            If you need to make any changes after saving image, reload the page first!!!
-        </div>
+    <div id='bdaycard' className='flex flex-col items-center gap-[2vh]'>
+        <form id='CardtoSave' onSubmit={handleSubmit} className='flex flex-col gap-[2vh] items-center w-full'>
+            <input 
+                id='childnameinput'
+                className='inputs'
+                type="text" 
+                name="ChildName" 
+                placeholder="Birthday Child's Name"
+            />
+            <input
+                id='locationinput'
+                className='inputs'
+                type="text"
+                name="Location" 
+                placeholder="Location of Party"
+            />
+            <input 
+                id='partytimeinput'
+                className='inputs'
+                type="text" 
+                name="Party Time" 
+                placeholder="Party Time"
+            />
+            <input
+                id='phonenumberinput' 
+                className='inputs'
+                type="text"
+                name="Phone Number" 
+                placeholder="Phone #"
+            />
+        </form>
+        <input type="submit" value='Save Image' id='bdaybutton' className='cursor-pointer rounded-lg'
+            onClick={async() => {
+                toast("Allow a few seconds for the image to download", {
+                    icon: '📸',
+                    style: {
+                        borderRadius: '10px',
+                        background: '#333',
+                        color: '#fff',
+                        fontSize: '18px',
+                    },
+                });
+                fetch('https://yelpapi.herokuapp.com/bdaycard', {
+                // fetch('http://localhost:3001/bdaycard', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        childname: document.getElementById('childnameinput').value,
+                        location: document.getElementById('locationinput').value,
+                        partytime: document.getElementById('partytimeinput').value,
+                        phonenumber: document.getElementById('phonenumberinput').value
+                    }),
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        console.log('Success:', data);
+                        // const imgsrc= "data:image/png;base64," + data;
+                        // setimgsrc(imgsrc);
+
+                        // Create a blob from the base64 data
+                        const byteCharacters = atob(data);
+                        const byteNumbers = new Array(byteCharacters.length);
+                        for (let i = 0; i < byteCharacters.length; i++) {
+                            byteNumbers[i] = byteCharacters.charCodeAt(i);
+                        }
+                        const byteArray = new Uint8Array(byteNumbers);
+                        const blob = new Blob([byteArray], {type: 'image/png'});
+
+                        // Create a link element
+                        const url = URL.createObjectURL(blob);
+                        const link = document.createElement('a');
+                        link.href = url;
+                        link.download = 'BirthdayCard.png';
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                        URL.revokeObjectURL(url);
+                    })
+            }}
+        />
+        {/* <img src={imgsrc} alt="Saved Image" id='savedimg' /> */}
     </div>
   )
 }

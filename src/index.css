@@ -32,3 +32,6 @@ a {
   opacity: 0.0625;
   z-index: -1;
 }
+.customshadow {
+  box-shadow: 0px 0px 8px 4px rgba(0, 0, 0, 0.1);
+}
