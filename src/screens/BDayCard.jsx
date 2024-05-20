@@ -8,7 +8,7 @@ export default function BDayCard() {
 
   return (
     <div id='bdaycard' className='flex flex-col items-center gap-[2vh]'>
-        <form id='CardtoSave' onSubmit={handleSubmit} className='flex flex-col gap-[2vh] items-center w-full'>
+        <form id='CardtoSave' onSubmit={handleSubmit} className='flex flex-col gap-[2vh] items-center w-full !p-0'>
             <input 
                 id='childnameinput'
                 className='inputs'
@@ -27,8 +27,8 @@ export default function BDayCard() {
                 id='partytimeinput'
                 className='inputs'
                 type="text" 
-                name="Party Time" 
-                placeholder="Party Time"
+                name="Party Date and Time" 
+                placeholder="Party Date and Time"
             />
             <input
                 id='phonenumberinput' 
@@ -64,7 +64,6 @@ export default function BDayCard() {
                 })
                     .then((response) => response.json())
                     .then((data) => {
-                        console.log('Success:', data);
                         // const imgsrc= "data:image/png;base64," + data;
                         // setimgsrc(imgsrc);
 
@@ -89,7 +88,6 @@ export default function BDayCard() {
                     })
             }}
         />
-        {/* <img src={imgsrc} alt="Saved Image" id='savedimg' /> */}
     </div>
   )
 }
