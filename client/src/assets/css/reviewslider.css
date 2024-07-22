@@ -21,4 +21,6 @@
 .awssld__container {
     transition: all 0.5s ease 0s;
     min-height: 220px;
+    padding-bottom: inherit !important;
+    height: auto !important;
 }

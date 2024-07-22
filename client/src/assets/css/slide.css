@@ -38,10 +38,10 @@
 
 #slideparent {
     background-color: transparent;
-    display:flex;
+    display: flex;
     flex-direction: column;
     /* align-items: center; */
-    justify-content:center;
+    justify-content: center;
     /* position: absolute;
     top: 3rem;
     left: 1rem; */
@@ -52,6 +52,8 @@
     background-color: transparent;
     padding-inline: 1.5rem;
     justify-content: start;
+    position: relative !important;
+    height: fit-content !important;
 }
 @media (min-width: 320px) {
     .awssld__content {
@@ -100,7 +102,8 @@
     color: rgba(17, 17, 17, 0.5);
 }
 .awssld--active {
-    /* height: 100% !important; */
+    height: fit-content !important;
+    position: relative !important;
 }
 
 #slidestars {
@@ -113,6 +116,13 @@
     flex-direction: row;
     align-items: center;
     max-width: 100%;
+}
+@media (max-width: 366px) {
+    #starsnname {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75vh;
+    }
 }
 #reviewtextbox {
     display: flex;
