@@ -209,15 +209,15 @@ app.get("/fetchreviews", async (req, res) => {
     try {
         const data = await openPageAndScroll();
         const reviews = await Review.find();
-        data.forEach((review) => {
+        for (const review of data) {
             const newReview = new Review(review);
             const existingReview = reviews.find(
                 (r) => r.name === newReview.name && r.time === newReview.time && r.reviewtext === newReview.reviewtext
             );
             if (!existingReview) {
-                newReview.save();
+                await newReview.save();
             }
-        });
+        }
         res.json({ message: "reviews added to database" });
     } catch (error) {
         console.error("Error adding reviews to database: ", error);
