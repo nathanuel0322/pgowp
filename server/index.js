@@ -1,8 +1,7 @@
 const puppeteer = require("puppeteer");
 const express = require("express");
-const mongoose = require("mongoose");
-const Review = require("./Review");
 const dotenv = require("dotenv");
+const { supabase } = require("./supabase");
 dotenv.config();
 
 const app = express();
@@ -19,12 +18,6 @@ app.use((req, res, next) => {
     }
     next();
 });
-
-const uri = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.ovpx1ss.mongodb.net/pgowp?retryWrites=true&w=majority&appName=Cluster0`;
-mongoose
-    .connect(uri)
-    .then(() => console.log("Connected to MongoDB Atlas"))
-    .catch((error) => console.error("Error connecting to MongoDB Atlas:", error));
 
 const autoScroll = async (page) => {
     let scrollable_section = ".m6QErb.DxyBCb";
@@ -111,38 +104,76 @@ const getYelpData = async (page) => {
             // return a value to const dataholder
             resolve(await fetchYelpReviews());
 
-            async function fetchYelpReviews() {
-                // review__09f24__oHr9V
-                const data = [];
-                // iterate through each ul element
-                document.querySelectorAll("ul").forEach((el, index) => {
-                    // console.log("el: ", el, "index: ", index);
-                    if (el.children.length > 9 && el.textContent.includes("Tricia")) {
-                        // console.log(el, index);
-                        for (let i = 0; i < el.children.length; i++) {
-                            const element = el.children[i];
-                            //   console.log("element at index: ", i, "is: ", element);
-                            // Use querySelectorAll with attribute selector to find elements with role="img"
-                            const imgElements = element.querySelector('[role="img"][aria-label*="rating"]');
-                            //   console.log("img:", imgElements);
-                            const dataObject = {
-                                // set name equal to the text within the div with class .d4r55
-                                name: element.querySelector("a:not(:has(*))").innerText,
-                                time: element.innerText.match(
-                                    /(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s\d{1,2},\s\d{4}/
-                                )[0],
-                                // set stars equal to the number of elements with class .hCCjke.vzX5Ic
-                                stars: imgElements.children.length,
-                                photo: element.querySelector("a > img").src,
-                                reviewtext: element.querySelector("p").innerText,
-                                yelp: true,
-                            };
-                            //   console.log("dataObject: ", dataObject);
-                            data.push(dataObject);
-                        }
+            async function findYelpUl(ulElement) {
+                let data = [];
+                for (let i = 0; i < ulElement.children.length; i++) {
+                    const element = ulElement.children[i];
+                    // if element doesnt have child nodes, skip it
+                    if (!element.children.length) {
+                        continue;
                     }
-                });
-                // console.log("data: ", data);
+                    // console.log("element at index: ", i, "is: ", element);
+                    // Use querySelectorAll with attribute selector to find elements with role="img"
+                    const imgElements = element.querySelector('[role="img"][aria-label*="rating"]');
+                    // console.log("img:", imgElements);
+                    const dataObject = {
+                        // set name equal to the text within the div with class .d4r55
+                        name: element.querySelector("a:not(:has(*))").innerText,
+                        time: element.innerText.match(
+                            /(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s\d{1,2},\s\d{4}/
+                        )[0],
+                        // set stars equal to the number of elements with class .hCCjke.vzX5Ic
+                        stars: imgElements.children.length,
+                        photo: element.querySelector("a > img").src,
+                        reviewtext: element.querySelector("p").innerText,
+                        yelp: true,
+                    };
+                    // console.log("dataObject: ", dataObject);
+                    data.push(dataObject);
+                }
+                return data;
+            }
+
+            async function fetchYelpReviews() {
+                // scroll to the bottom of the page
+                // wait for 500ms before continuing
+                window.scrollTo(0, document.body.scrollHeight);
+                function waitForUlElement() {
+                    return new Promise((resolve) => {
+                        const interval = setInterval(() => {
+                            const ulElement = Array.from(document.querySelectorAll("ul")).find(
+                                (el) =>
+                                    el.textContent.includes("Helpful") &&
+                                    el.textContent.includes("Thanks") &&
+                                    el.textContent.includes("Love this") &&
+                                    el.textContent.includes("Oh no")
+                            );
+                            if (ulElement) {
+                                clearInterval(interval);
+                                resolve(ulElement);
+                            }
+                        }, 100);
+                    });
+                }
+
+                const ulElement = await waitForUlElement();
+                // console.log("ul element: ", ulElement);
+
+                let data = await findYelpUl(ulElement);
+                // get the sibling of the ul, which is a div containing the pagination buttons
+                const paginationDiv = ulElement.nextElementSibling;
+                // last child of paginationDiv tells us how many pages there are
+                const lastPage = paginationDiv.lastElementChild.innerText;
+                // will say x of y, so we split by space and get the last element
+                const lastPageNumber = lastPage.split(" ")[2];
+                // we need to click the next button lastPageNumber - 1 times in total
+                for (let i = 0; i < parseInt(lastPageNumber) - 1; i++) {
+                    // press the last child of paginationDiv's first child
+                    paginationDiv.firstElementChild.lastElementChild.lastElementChild.firstChild.firstChild.click();
+                    const ulElement2 = await waitForUlElement();
+                    data = [...data, ...(await findYelpUl(ulElement2))];
+                }
+                // console.log("finaldata: ", data);
                 return data;
             }
         });
@@ -169,19 +200,8 @@ const screenshotTaker = async (page, input) => {
     return screenshotBase64;
 };
 
-const openPageAndScroll = async (type, input) => {
-    const browser = await puppeteer.launch({
-        headless: true,
-        // headless: false,
-        args: ["--no-sandbox"],
-    });
-
-    const page = await browser.newPage();
-    await page.goto(
-        type === "BdayCard"
-            ? "https://www.prestigiousgamingonwheelsplus.com/#/e-invites"
-            : "https://www.google.com/maps/place/Prestigious+Gaming+On+Wheels+Plus/@40.6718162,-73.7834512,21z/data=!4m7!3m6!1s0x89c267ef4ab3d5c7:0x77d90889fb9bc7fc!8m2!3d40.671612!4d-73.7834759!9m1!1b1"
-    );
+const openPageAndScroll = async ({ type, input, google_site, yelp_site }, page) => {
+    await page.goto(type === "BdayCard" ? "https://www.prestigiousgamingonwheelsplus.com/#/e-invites" : google_site);
     await page.setViewport({
         width: 1200,
         height: 800,
@@ -189,50 +209,62 @@ const openPageAndScroll = async (type, input) => {
     let data;
     if (type === "BdayCard") {
         data = await screenshotTaker(page, input);
-        await browser.close();
     } else {
-        let googledata = await autoScroll(page);
-        // console.log("Google returned: ", googledata);
-        data = [...googledata];
-        await page.goto("https://www.yelp.com/biz/prestigious-gaming-on-wheels-plus-queens");
-        let yelpdata = await getYelpData(page);
-        // console.log("Yelp returned: ", yelpdata);
-        data = [...data, ...yelpdata];
+        if (google_site) {
+            let googledata = await autoScroll(page);
+            // console.log("Google returned: ", googledata);
+            data = [...googledata];
+        }
+        if (yelp_site) {
+            await page.goto(yelp_site);
+            let yelpdata = await getYelpData(page);
+            // console.log("Yelp returned: ", yelpdata);
+            // save yelpdata to a file called yelpdata.json
+            // fs.writeFileSync("yelpdata.json", JSON.stringify(yelpdata, null, 2), "utf-8");
+            data = [...data, ...yelpdata];
+        }
         // console.log("final data: ", data);
-        await browser.close();
     }
     // console.log("data: ", data);
     return data;
 };
 
 app.get("/fetchreviews", async (req, res) => {
-    try {
-        const data = await openPageAndScroll();
-        const reviews = await Review.find();
-        for (const review of data) {
-            const newReview = new Review(review);
-            const existingReview = reviews.find(
-                (r) => r.name === newReview.name && r.time === newReview.time && r.reviewtext === newReview.reviewtext
-            );
-            if (!existingReview) {
-                await newReview.save();
-            }
-        }
-        res.json({ message: "reviews added to database" });
-    } catch (error) {
-        console.error("Error adding reviews to database: ", error);
-        res.status(500).json({ message: error.message });
-    }
-});
+    // Send immediate response to the client
+    res.json({ message: "Request received, processing reviews in the background" });
+    const browser = await puppeteer.launch({
+        // headless: true,
+        headless: false,
+        args: ["--no-sandbox"],
+    });
 
-app.get("/getreviews", async (req, res) => {
-    try {
-        const reviews = await Review.find();
-        res.json(reviews);
-    } catch (error) {
-        console.error("Error getting reviews: ", error);
-        res.status(500).json({ message: error.message });
+    const page = await browser.newPage();
+    // await openPageAndScroll();
+
+    // get all active widgets from supabase, then look through each
+    const { data, error } = await supabase.from("widgets").select("*").eq("status", "active");
+    if (error) {
+        console.error("Error fetching widgets:", error);
+        return;
     }
+    // console.log("data: ", data);
+    // eliminate all widgets that have null for both google_site and yelp_site
+    for (const widget of data.filter((widget) => widget.google_site || widget.yelp_site)) {
+        // console.log("widget is: ", widget);
+        const data = await openPageAndScroll({ google_site: widget.google_site, yelp_site: widget.yelp_site }, page);
+        // console.log("data: ", data);
+        let googlereviews = data.filter((review) => !review.yelp);
+        let yelpreviews = data.filter((review) => review.yelp);
+        // save reviews to supabase
+        const { error: reviewerror } = await supabase
+            .from("widgets")
+            .update({ googlereviews, yelpreviews })
+            .eq("id", widget.id);
+        if (reviewerror) {
+            console.error("Error updating widget with reviews:", reviewerror);
+        }
+    }
+    await browser.close();
 });
 
 app.post("/bdaycard", async (req, res) => {
