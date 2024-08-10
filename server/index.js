@@ -233,8 +233,8 @@ app.get("/fetchreviews", async (req, res) => {
     // Send immediate response to the client
     res.json({ message: "Request received, processing reviews in the background" });
     const browser = await puppeteer.launch({
-        // headless: true,
-        headless: false,
+        headless: true,
+        // headless: false,
         args: ["--no-sandbox"],
     });
 
