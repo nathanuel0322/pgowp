@@ -132,7 +132,11 @@ export default function Home() {
                     Click here to call for events!
                 </a>
             </p>
-            <div id="widgie" widget-id="88bfbcb1-5060-4dca-914c-33788e9850c2"></div>
+            <div
+                id="widgie"
+                widget-id="88bfbcb1-5060-4dca-914c-33788e9850c2"
+                bg-color="linear-gradient(135deg, rgb(255,165,0) 0%, rgb(134,197,218) 100%)"
+            ></div>
         </div>
     );
 }
