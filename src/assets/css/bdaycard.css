@@ -1,12 +1,8 @@
 #bdaycard {
     margin-top: 5vh;
-    padding-bottom: 4vh;
 }
 .bdayimg {
     margin-top: 6.5%;
-}
-#CardtoSave {
-    padding-bottom: 5vh;
 }
 #CardtoSave input::placeholder {
     color: #9ca3af !important;
@@ -14,15 +10,17 @@
 #CardtoSave > div {
     display: flex;
     flex-direction: row;
-    margin-left: 13.5%;
+    align-items: center;
+    justify-content: flex-start;
+    margin-left: 138px;
 }
-.inputs ::placeholder{
+.inputs ::placeholder {
     text-align: center;
     color: red;
 }
 .inputs {
-    text-align: center; 
-    font-family: 'Teko', sans-serif;
+    text-align: center;
+    font-family: "Teko", sans-serif;
     color: black;
     font-size: 5vw;
     background: transparent;
@@ -50,12 +48,21 @@
     font-size: 6vw;
     font-family: Teko, sans-serif;
 }
-
+.bdaydivs {
+    gap: 180px;
+}
+.bdaydivs > * {
+    width: 333px;
+}
+.bdaydivs > :first-child {
+    margin-left: 0;
+}
+.bdaydivs > :nth-child(2) {
+    /* margin-left: 211px; */
+}
 @media (max-width: 435px) {
-
 }
 @media (max-width: 400px) {
-
 }
 @media (max-width: 350px) {
     #bdaydiv1 {
