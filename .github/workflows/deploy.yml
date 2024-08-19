@@ -21,13 +21,13 @@ jobs:
             - name: Install dependencies
               run: npm install -f
 
-            - name: Build project
-              run: npm run build
-
             - name: Configure Git
               run: |
                   git config --global user.email "nathan0322@hotmail.com"
                   git config --global user.name "Nathanuel Dixon"
+
+            - name: Set up remote with password
+              run: git remote set-url origin https://nathanuel0322:${{ secrets.GH_PASSWORD }}@github.com/nathanuel0322/pgowp.git
 
             - name: Deploy
               run: npm run deploy
