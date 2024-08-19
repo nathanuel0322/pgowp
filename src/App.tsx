@@ -4,7 +4,7 @@ import { Routes, Route } from "react-router-dom";
 import { HashRouter as Router } from "react-router-dom";
 import Navbar from "./components/global/Navbar";
 import Home from "./screens/Home";
-import Services from "./screens/Services";
+import Services from "./screens/Services.tsx";
 import Gamelist from "./screens/Gamelist";
 import Contact from "./screens/Contact";
 import About from "./screens/About";
