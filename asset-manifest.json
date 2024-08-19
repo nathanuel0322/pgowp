@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "./static/css/main.9e01fb19.css",
-    "main.js": "./static/js/main.63f5fdb7.js",
+    "main.js": "./static/js/main.bc5954fa.js",
     "static/media/PrestigiousPoster.jpg": "./static/media/PrestigiousPoster.527b03711e91f951842c.jpg",
     "static/media/Rectangle.jpg": "./static/media/Rectangle.988889785b9e858a3720.jpg",
     "static/media/infinitygame.jpeg": "./static/media/infinitygame.06f2e3c912674b858fac.jpeg",
@@ -17,10 +17,10 @@
     "static/media/ps5.jpg": "./static/media/ps5.adb29a4d4bfed6d5e5b4.jpg",
     "index.html": "./index.html",
     "main.9e01fb19.css.map": "./static/css/main.9e01fb19.css.map",
-    "main.63f5fdb7.js.map": "./static/js/main.63f5fdb7.js.map"
+    "main.bc5954fa.js.map": "./static/js/main.bc5954fa.js.map"
   },
   "entrypoints": [
     "static/css/main.9e01fb19.css",
-    "static/js/main.63f5fdb7.js"
+    "static/js/main.bc5954fa.js"
   ]
 }
