@@ -3,8 +3,8 @@
 }
 
 #book-div h1 {
-    font-weight: 600;
-    font-size: 3vw;
+    font-weight: 700;
+    font-size: 2.063rem;
     margin: 0 0 1rem 0;
 }
 
@@ -30,7 +30,7 @@
     text-decoration: none;
     color: #a8a8a8;
     margin-bottom: 0.5rem;
-    font-size: 2vw;
+    font-size: 1rem;
     align-items: center;
 }
 
@@ -39,8 +39,8 @@
     color: #748182;
 }
 
-#book-div li p {
-    display: inline-block;
+#book-div li {
+    margin-bottom: 1rem;
 }
 
 #book-services-div > div > div > h2 {
@@ -106,13 +106,21 @@
     margin-bottom: 1rem;
 }
 
-#book-services-div > div > div > div > div > :last-child {
+#book-services-div > div > div > div > div > :last-child:not(.expanded-service-box-text) {
     display: grid;
     grid-auto-flow: column;
     grid-template-columns: 1fr 1fr;
     grid-gap: 1rem;
     direction: rtl;
     margin-top: auto;
+}
+
+@media screen and (max-width: 427px) {
+    #book-services-div > div > div > div > div > :last-child:not(.expanded-service-box-text) {
+        grid-auto-flow: row;
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto;
+    }
 }
 
 #book-services-div > div > div > div > div > :last-child > button {
@@ -134,6 +142,7 @@
     justify-content: center;
     -ms-flex-align: center;
     align-items: center;
+    transition: all 0.3s;
 }
 
 #book-services-div > div > div > div > div > :last-child > :first-child {
@@ -144,6 +153,11 @@
     -ms-flex-preferred-size: auto;
     flex-basis: auto;
     margin: 0;
+}
+
+#book-services-div > div > div > div > div > :last-child > :first-child:hover {
+    background-color: #1ea630;
+    filter: none;
 }
 
 #book-services-div > div > div > div > div > :last-child > :last-child {
@@ -157,6 +171,11 @@
     -ms-flex-preferred-size: auto;
     flex-basis: auto;
     margin: 0;
+}
+
+#book-services-div > div > div > div > div > :last-child > :last-child:hover {
+    background: #d1d5db;
+    color: black;
 }
 
 #book-services-div > div > div > div > div > :last-child > :last-child > svg {
@@ -196,4 +215,51 @@
     font-size: 1.25rem;
     font-weight: 700;
     margin-left: 0.8rem;
+}
+
+.selected-card {
+    border-color: #50e063 !important;
+}
+
+.selected-card::before {
+    border-bottom: 0.8rem solid white;
+}
+
+.selected-card::before,
+.selected-card::after {
+    content: "";
+    position: absolute;
+    bottom: -19px;
+    left: 3pc;
+    left: 3rem;
+    width: 0;
+    height: 0;
+    z-index: 3;
+    background-color: transparent;
+    border-top: 0;
+    border-right: 9pt solid transparent;
+    border-right: 0.8rem solid transparent;
+    border-left: 9pt solid transparent;
+    border-left: 0.8rem solid transparent;
+    border-bottom: 9pt solid #fff;
+    border-bottom: 0.8rem solid #fff;
+}
+
+.selected-card::after {
+    content: "";
+    z-index: -1;
+    bottom: -18px;
+    color: transparent;
+    border-bottom-color: #50e063;
+}
+
+.expanded-service-box {
+    padding: 1rem;
+    -ms-flex-order: 1;
+    order: 1;
+    position: relative;
+    z-index: 0;
+    grid-column-start: start;
+    grid-column-end: end;
+    border: 1px solid #3ba2dc;
 }

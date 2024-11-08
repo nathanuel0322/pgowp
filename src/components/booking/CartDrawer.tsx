@@ -4,18 +4,23 @@ import "../../assets/css/sidedrawer.css";
 import { Link } from "react-router-dom";
 import { IconButton } from "@mui/material";
 
-export default function SideDrawer({
-    drawerOpen,
-    setDrawerOpen,
+export default function CartDrawer({
+    cartDrawerOpen,
+    setCartDrawerOpen,
 }: {
-    drawerOpen: boolean;
-    setDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    cartDrawerOpen: boolean;
+    setCartDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
     return (
-        <SwipeableDrawer anchor={"right"} open={drawerOpen} onOpen={() => {}} onClose={() => setDrawerOpen(false)}>
+        <SwipeableDrawer
+            anchor={"right"}
+            open={cartDrawerOpen}
+            onOpen={() => {}}
+            onClose={() => setCartDrawerOpen(false)}
+        >
             <div>
                 <div>
-                    <IconButton onClick={() => setDrawerOpen(false)} sx={{ justifyContent: "flex-start" }}>
+                    <IconButton onClick={() => setCartDrawerOpen(false)} sx={{ justifyContent: "flex-start" }}>
                         <CloseIcon fontSize="small" sx={{ width: 1 / 4, height: 1 / 4, color: "white" }} />
                     </IconButton>
                 </div>
@@ -32,7 +37,7 @@ export default function SideDrawer({
                         "Book Online",
                     ].map((text, index) =>
                         index === 8 ? (
-                            <li id="booknowli" key={index} onClick={() => setDrawerOpen(false)}>
+                            <li id="booknowli" key={index} onClick={() => setCartDrawerOpen(false)}>
                                 {import.meta.env.PROD ? (
                                     <a
                                         target="_blank"
@@ -46,7 +51,7 @@ export default function SideDrawer({
                                 )}
                             </li>
                         ) : index === 4 ? (
-                            <li key={index} id="galleryli" onClick={() => setDrawerOpen(false)}>
+                            <li key={index} id="galleryli" onClick={() => setCartDrawerOpen(false)}>
                                 <a
                                     target="_blank"
                                     rel="noopener noreferrer"
@@ -66,7 +71,7 @@ export default function SideDrawer({
                                         ? "/"
                                         : `/${text.split(" ").join("").toLowerCase()}`
                                 }
-                                onClick={() => setDrawerOpen(false)}
+                                onClick={() => setCartDrawerOpen(false)}
                             >
                                 {text}
                             </Link>

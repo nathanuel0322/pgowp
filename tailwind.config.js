@@ -7,6 +7,7 @@ export default {
                 mobiles: "320px",
                 mobilem: "375px",
                 mobilel: "425px",
+                atleast600: "600px",
                 atleast769: "769px",
                 under769: { max: "768px" },
             },

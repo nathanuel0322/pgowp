@@ -5,31 +5,30 @@ import "../../assets/css/Navbar.css";
 import { IoReorderThreeOutline } from "react-icons/io5";
 import { AppContext } from "../../App.tsx";
 import PGOWPLogo from "../../assets/images/favicon-96x96.png";
+import { MdShoppingCart } from "react-icons/md";
 
-const HamburgerNav = ({ drawerfunc }: { drawerfunc: React.Dispatch<React.SetStateAction<boolean>> }) => {
+const HamburgerNav = ({
+    setDrawerOpen,
+    setCartDrawerOpen,
+}: {
+    setDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    setCartDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
     const location = useLocation();
     const { currentpage, setcurrentpage } = useContext(AppContext);
     console.log("currentpage:", currentpage);
 
     useEffect(() => {
         console.log("location.pathname:", location.pathname);
-        if (location.pathname === "/services") {
-            setcurrentpage("Services");
-        } else if (location.pathname === "/packages") {
-            setcurrentpage("Packages");
-        } else if (location.pathname === "/") {
-            setcurrentpage("Home");
-        } else if (location.pathname === "/gamelist") {
-            setcurrentpage("Game List");
-        } else if (location.pathname === "/contactus") {
-            setcurrentpage("Contact Us");
-        } else if (location.pathname === "/about") {
-            setcurrentpage("About");
-        } else if (location.pathname === "/bdaycard") {
-            setcurrentpage("BDay Card");
-        } else if (location.pathname === "/e-invites") {
-            setcurrentpage("E-Invites");
-        }
+        if (location.pathname === "/services") setcurrentpage("Services");
+        else if (location.pathname === "/packages") setcurrentpage("Packages");
+        else if (location.pathname === "/") setcurrentpage("Home");
+        else if (location.pathname === "/gamelist") setcurrentpage("Game List");
+        else if (location.pathname === "/contactus") setcurrentpage("Contact Us");
+        else if (location.pathname === "/about") setcurrentpage("About");
+        else if (location.pathname === "/bdaycard") setcurrentpage("BDay Card");
+        else if (location.pathname === "/e-invites") setcurrentpage("E-Invites");
+        else if (location.pathname === "/book") setcurrentpage("Book");
     }, [location.pathname]);
 
     return (
@@ -45,12 +44,15 @@ const HamburgerNav = ({ drawerfunc }: { drawerfunc: React.Dispatch<React.SetStat
                         {currentpage}
                     </div>
                 </div>
+                {currentpage === "Book" && (
+                    <button id="cartbtn" type="button" onClick={() => setCartDrawerOpen(true)} title="Cart">
+                        <MdShoppingCart color="white" size={30} />
+                    </button>
+                )}
                 <IoReorderThreeOutline
                     color="white"
                     size={50}
-                    onClick={() => {
-                        drawerfunc(true);
-                    }}
+                    onClick={() => setDrawerOpen(true)}
                     className="cursor-pointer"
                 />
             </div>

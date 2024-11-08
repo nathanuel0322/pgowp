@@ -14,15 +14,22 @@ import EInvites from "../../screens/EInvites";
 import BDayCard from "../../screens/BDayCard";
 import Book from "../../screens/Book";
 import "../../assets/css/routing.css";
+import CartDrawer from "../booking/CartDrawer";
 
 export default function Routing() {
     const hamburgerdetector = useMediaQuery({ query: "(max-width: 991px)" });
     const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
+    const [cartDrawerOpen, setCartDrawerOpen] = useState<boolean>(false);
 
     return (
         <div id="routing-div" className="px-[5vw]">
-            {hamburgerdetector ? <HamburgerNav drawerfunc={setDrawerOpen} /> : <Navbar />}
-            <SideDrawer drawerstate={drawerOpen} drawerfunc={setDrawerOpen} />
+            {hamburgerdetector ? (
+                <HamburgerNav setDrawerOpen={setDrawerOpen} setCartDrawerOpen={setCartDrawerOpen} />
+            ) : (
+                <Navbar />
+            )}
+            <SideDrawer drawerOpen={drawerOpen} setDrawerOpen={setDrawerOpen} />
+            <CartDrawer cartDrawerOpen={cartDrawerOpen} setCartDrawerOpen={setCartDrawerOpen} />
             <Routes>
                 <Route path="" element={<Home />} />
                 <Route path="/services" element={<Services />} />
@@ -32,7 +39,7 @@ export default function Routing() {
                 <Route path="/about" element={<About />} />
                 <Route path="/e-invites" element={<EInvites />} />
                 <Route path="/bdaycard" element={<BDayCard />} />
-                <Route path="/book" element={<Book />} />
+                <Route path="/book" element={<Book cartDrawerOpen={cartDrawerOpen} />} />
             </Routes>
         </div>
     );

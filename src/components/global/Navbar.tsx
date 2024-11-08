@@ -2,6 +2,7 @@ import "../../assets/css/Navbar.css";
 import "../../assets/css/hamburger.css";
 import { Link, useLocation } from "react-router-dom";
 import PGOWPLogo from "../../assets/images/favicon-96x96.png";
+import { MdShoppingCart } from "react-icons/md";
 
 export default function Navbar() {
     // get the current page
@@ -68,6 +69,11 @@ export default function Navbar() {
                     )}
                 </div>
             </div>
+            {location.pathname === "/book" && (
+                <button id="cartbutton" type="button" title="Cart" className="bg-white p-3 rounded-full ml-4">
+                    <MdShoppingCart size={35} />
+                </button>
+            )}
         </div>
     );
 }
