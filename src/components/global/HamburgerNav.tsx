@@ -4,8 +4,9 @@ import "../../assets/css/hamburger.css";
 import "../../assets/css/Navbar.css";
 import { IoReorderThreeOutline } from "react-icons/io5";
 import { AppContext } from "../../App.tsx";
+import PGOWPLogo from "../../assets/images/favicon-96x96.png";
 
-const HamburgerNav = ({ drawerfunc }) => {
+const HamburgerNav = ({ drawerfunc }: { drawerfunc: React.Dispatch<React.SetStateAction<boolean>> }) => {
     const location = useLocation();
     const { currentpage, setcurrentpage } = useContext(AppContext);
     console.log("currentpage:", currentpage);
@@ -37,7 +38,7 @@ const HamburgerNav = ({ drawerfunc }) => {
                 <div id="brand">
                     <div id="logo">
                         <Link to="/" id="logolink">
-                            <img id="logoimg" src={require("../../assets/images/favicon-96x96.png")} alt="PGOWP Logo" />
+                            <img id="logoimg" src={PGOWPLogo} alt="PGOWP Logo" />
                         </Link>
                     </div>
                     <div id="captionwrap" className="flex text-white">
@@ -50,6 +51,7 @@ const HamburgerNav = ({ drawerfunc }) => {
                     onClick={() => {
                         drawerfunc(true);
                     }}
+                    className="cursor-pointer"
                 />
             </div>
         </nav>
