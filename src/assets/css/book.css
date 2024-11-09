@@ -123,7 +123,8 @@
     }
 }
 
-#book-services-div > div > div > div > div > :last-child > button {
+#book-services-div > div > div > div > div > :last-child > button,
+.checkout-button {
     background-color: #50e063;
     color: black;
     border-radius: 0.5rem;
@@ -155,7 +156,8 @@
     margin: 0;
 }
 
-#book-services-div > div > div > div > div > :last-child > :first-child:hover {
+#book-services-div > div > div > div > div > :last-child > :first-child:hover,
+.checkout-button:hover {
     background-color: #1ea630;
     filter: none;
 }

@@ -6,7 +6,7 @@ import { AppContext } from "../App";
 
 export interface CartItem {
     title: string;
-    price?: string;
+    price?: number;
     time?: string;
     details?: string;
     text?: string;
@@ -25,7 +25,7 @@ export default function Book({ cartDrawerOpen }: { cartDrawerOpen: boolean }) {
             boxes: [
                 {
                     title: "VR- Virtual Reality- 10 yrs+",
-                    price: "$80",
+                    price: 80,
                     time: "2 hr",
                     details: `VR- Virtual Reality for ages 10 and up.\n$20 off if booked the same time with party = $80 / $100 on-site`,
                 },
@@ -36,19 +36,19 @@ export default function Book({ cartDrawerOpen }: { cartDrawerOpen: boolean }) {
                 },
                 {
                     title: "Photobooth without Prints",
-                    price: "$100",
+                    price: 100,
                     time: "2 hr",
                     details: `Photobooth usage-take photos with our Photoboot,choose different picture boarders, add sticker. Images to photos and share to your phone or email etc.`,
                 },
                 {
                     title: 'Photobooth with 2" x 3" Sticker Printouts',
-                    price: "$125",
+                    price: 125,
                     time: "2 hr",
                     details: `Photobooth usage for duration of party.. (max print outs 15), unlimited digital uploads.`,
                 },
                 {
                     title: "Karaoke",
-                    price: "$75",
+                    price: 75,
                     time: "2 hr",
                     details: `Karaoke- 4 mics for duration of party.`,
                 },
@@ -73,25 +73,25 @@ export default function Book({ cartDrawerOpen }: { cartDrawerOpen: boolean }) {
             boxes: [
                 {
                     title: "2 Hr. Gaming Party",
-                    price: "$275",
+                    price: 275,
                     time: "2 hr",
                     details: `Consist of 2 hours of gaming in our Gorgeous New climate controlled Prestigious game trailer. ($550) Package includes all the latest games, FORTNITE at no extra fee, game coaches available to help choose games, change games, etc.. Free wrist bands to all partygoers, a Free Tshirt and gift for the guest of honor. Also up to 25 complimentary cardstock invites on request. Max 24 kids, each additional $10/child.`,
                 },
                 {
                     title: "3 Hour Gaming Party",
-                    price: "$350",
+                    price: 350,
                     time: "3 hr",
                     details: `Consist of 3 hours of gaming in our Gorgeous New climate controlled Prestigious game trailer. ($700) Package includes all the latest games, FORTNITE at no extra fee, game coaches available to help choose games, change games, etc.. Free wrist bands to all partygoers, a Free Tshirt and gift for the guest of honor. Also up to 25 complimentary cardstock invites on request. Max 24 kids, each add'l child/$10.`,
                 },
                 {
                     title: "4 Hour Gaming Party",
-                    price: "$525",
+                    price: 525,
                     time: "4 hr",
                     details: `Consist of 4 hours of gaming in our Gorgeous New climate controlled Prestigious game trailer. ($1050) Package includes all the latest games, FORTNITE at no extra fee, game coaches available to help choose games, change games, etc.. Free wrist bands to all partygoers, a Free Tshirt and gift for the guest of honor. Also up to 25 complimentary cardstock invites on request.`,
                 },
                 {
                     title: "Additional Time- Full Amount",
-                    price: "$150",
+                    price: 150,
                     time: "1 hr",
                     details: `Additional time can be added to your package prior to or during event if available. Each additional/Hr`,
                 },
@@ -102,24 +102,24 @@ export default function Book({ cartDrawerOpen }: { cartDrawerOpen: boolean }) {
             boxes: [
                 {
                     title: "Popcorn Machine",
-                    price: "$175",
+                    price: 175,
                     time: "1 hr 30 mins",
                     details: `Serving of Popcorn for each party goer.`,
                 },
                 {
                     title: "Cotton Candy Machine",
-                    price: "$225",
+                    price: 225,
                     time: "1 hr 30 mins",
                     details: `One Serving of cotton candy for each party goer.`,
                 },
                 {
                     title: "Sno Cone",
-                    price: "$125",
+                    price: 125,
                     time: "2 hr",
                 },
                 {
                     title: "Large Hot Dog Grill",
-                    price: "$150",
+                    price: 150,
                     time: "4 hr",
                     details: `Use of Hot Dog grill only-Must supply your own Hotdogs.`,
                 },
@@ -135,7 +135,7 @@ export default function Book({ cartDrawerOpen }: { cartDrawerOpen: boolean }) {
                 },
                 {
                     title: "$200 Deposit required for Stand Alone Laser Tag Party",
-                    price: "$200",
+                    price: 200,
                     time: "2 hr",
                     details: `1.30 hr of Professional Arena Style Laser Tag $700 for up to 20 kids`,
                 },
@@ -146,13 +146,13 @@ export default function Book({ cartDrawerOpen }: { cartDrawerOpen: boolean }) {
             boxes: [
                 {
                     title: "Movie and Gaming Combo",
-                    price: "$437.50",
+                    price: 437.5,
                     time: "2 hr",
                     details: `Movie Package from above with 2 hr. Of gaming at the end of movie. ($875)`,
                 },
                 {
                     title: "Movie Party",
-                    price: "$250",
+                    price: 250,
                     time: "3 hr",
                     details: `Your movie party will consist of 2 hrs of time in the trailer to watch a movie of your choice provided by you on 7 TV screens and the large projector screen. ($500)Movie can be a DVD, blue Ray or streamed from your personal device ex: iPad, tablet, phone etc. you can view movie from all angles. Included with your party will be 1 serving of popcorn and juice pack, along with FreeTshirt for Guest of Honor and bands.`,
                 },
@@ -163,19 +163,19 @@ export default function Book({ cartDrawerOpen }: { cartDrawerOpen: boolean }) {
             boxes: [
                 {
                     title: "2 Extra Large Connect 4",
-                    price: "$145",
+                    price: 145,
                     time: "2 hr",
                     details: `Two Extra Large size Connect 4`,
                 },
                 {
                     title: "Extra large yard Jenga",
-                    price: "$60",
+                    price: 60,
                     time: "1 hr 30 mins",
                     details: `Use of Jumbo Jenga yard game,for duration of party.`,
                 },
                 {
                     title: "Extra Large Connect 4",
-                    price: "$80",
+                    price: 80,
                     time: "2 hr",
                     details: `Use of Extra Large Connect 4 for duration of Party.`,
                 },
@@ -219,19 +219,19 @@ export default function Book({ cartDrawerOpen }: { cartDrawerOpen: boolean }) {
             boxes: [
                 {
                     title: "Projector",
-                    price: "$250",
+                    price: 250,
                     time: "4 hr",
                     details: `Rental use of Projector Only- Delivery fee included. Discount provided with rental of Projector screen. $100 Deposit will be refunded once equipment is returned In good working condition as received.`,
                 },
                 {
                     title: "Projector & Screen Combo",
-                    price: "$400",
+                    price: 400,
                     time: "4 hr",
                     details: `Rental Combo for Projector and projector screen with a $150 Deposit will be refunded once equipment is returned In good working condition as received.`,
                 },
                 {
                     title: "Stage - 4 x 4'",
-                    price: "$150",
+                    price: 150,
                     time: "4 hr",
                     details: `Stage rental - Add an additional $50 for delivery and pickup. $150 Deposit will be refunded once equipment is returned In good working condition as received.`,
                 },
@@ -364,7 +364,9 @@ export default function Book({ cartDrawerOpen }: { cartDrawerOpen: boolean }) {
                                             >
                                                 <div>
                                                     <div>{box.title}</div>
-                                                    {box.price && <span className="service-price">{box.price}</span>}
+                                                    {box.price && (
+                                                        <span className="service-price">${box.price.toFixed(2)}</span>
+                                                    )}
                                                 </div>
                                                 {box.time && <span>{box.time}</span>}
                                                 <div>

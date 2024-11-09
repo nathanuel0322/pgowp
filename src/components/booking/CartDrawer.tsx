@@ -1,8 +1,10 @@
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import CloseIcon from "@mui/icons-material/Close";
-import "../../assets/css/sidedrawer.css";
 import { Link } from "react-router-dom";
 import { IconButton } from "@mui/material";
+import "../../assets/css/cartdrawer.css";
+import { useContext } from "react";
+import { AppContext } from "../../App";
 
 export default function CartDrawer({
     cartDrawerOpen,
@@ -11,74 +13,45 @@ export default function CartDrawer({
     cartDrawerOpen: boolean;
     setCartDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
+    const { cart } = useContext(AppContext);
+
     return (
         <SwipeableDrawer
             anchor={"right"}
             open={cartDrawerOpen}
             onOpen={() => {}}
             onClose={() => setCartDrawerOpen(false)}
+            id="cartdrawer"
         >
             <div>
-                <div>
-                    <IconButton onClick={() => setCartDrawerOpen(false)} sx={{ justifyContent: "flex-start" }}>
-                        <CloseIcon fontSize="small" sx={{ width: 1 / 4, height: 1 / 4, color: "white" }} />
-                    </IconButton>
-                </div>
-                <div id="sidedrawerdiv">
-                    {[
-                        "Home",
-                        "Services",
-                        "Packages",
-                        "Game List",
-                        "Gallery",
-                        "E-Invites",
-                        "Contact Us",
-                        "About",
-                        "Book Online",
-                    ].map((text, index) =>
-                        index === 8 ? (
-                            <li id="booknowli" key={index} onClick={() => setCartDrawerOpen(false)}>
-                                {import.meta.env.PROD ? (
-                                    <a
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        href="https://app.10to8.com/book/ymonerhexbfwnegoml/"
-                                    >
-                                        Book Now
-                                    </a>
-                                ) : (
-                                    <Link to="/book">Book Now</Link>
-                                )}
-                            </li>
-                        ) : index === 4 ? (
-                            <li key={index} id="galleryli" onClick={() => setCartDrawerOpen(false)}>
-                                <a
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    href="https://www.google.com/maps/place/Prestigious+Gaming+On+Wheels+Plus/@40.6717448,-73.7831725,3a,98y,90t/data=!3m8!1e2!3m6!1sAF1QipNxsYt_rIckjjQfRaQBWaA0pEgAJ_zCm3qYyVA!2e10!3e12!6shttps:%2F%2Flh5.googleusercontent.com%2Fp%2FAF1QipNxsYt_rIckjjQfRaQBWaA0pEgAJ_zCm3qYyVA%3Dw203-h114-k-no!7i800!8i450!4m7!3m6!1s0x89c267ef4ab3d5c7:0x77d90889fb9bc7fc!8m2!3d40.671612!4d-73.7834759!14m1!1BCgIgAQ#"
-                                >
-                                    Gallery
-                                </a>
-                            </li>
-                        ) : (
-                            <Link
-                                id="linka"
-                                key={index}
-                                to={
-                                    text === "E-Invites"
-                                        ? "/bdaycard"
-                                        : index === 0
-                                        ? "/"
-                                        : `/${text.split(" ").join("").toLowerCase()}`
-                                }
-                                onClick={() => setCartDrawerOpen(false)}
-                            >
-                                {text}
-                            </Link>
-                        )
-                    )}
-                </div>
+                <IconButton onClick={() => setCartDrawerOpen(false)} sx={{ justifyContent: "flex-start" }}>
+                    <CloseIcon fontSize="small" sx={{ width: 1 / 4, height: 1 / 4, color: "white" }} />
+                </IconButton>
             </div>
+            {cart.length > 0 ? (
+                <div className="text-xl flex flex-col gap-[2vh]">
+                    {cart.map((item, index) => (
+                        <div key={index} className="text-[#141229] bg-white p-2 rounded-lg">
+                            <div>
+                                <h4>{item.title}</h4>
+                                {item.price && <p>Price: ${item.price.toFixed(2)}</p>}
+                            </div>
+                        </div>
+                    ))}
+                    <h4 className="text-2xl">
+                        Total: $
+                        {cart
+                            .filter((item) => item.price)
+                            .reduce((acc, item) => acc + (item.price as number), 0)
+                            .toFixed(2)}
+                    </h4>
+                    <Link to="/checkout" className="checkout-button !text-2xl">
+                        Checkout
+                    </Link>
+                </div>
+            ) : (
+                <h4 id="empty-cart">Your cart is empty</h4>
+            )}
         </SwipeableDrawer>
     );
 }
