@@ -46,7 +46,7 @@ export default function CartDrawer({
                             .toFixed(2)}
                     </h4>
                     <Link to="/checkout" className="checkout-button !text-2xl">
-                        Checkout
+                        Checkout Now
                     </Link>
                 </div>
             ) : (
