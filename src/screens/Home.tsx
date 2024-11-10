@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import "../assets/css/home.css";
 import PrestigiousPoster from "../assets/images/PrestigiousPoster.jpg";
 import Typed from "typed.js";
@@ -8,7 +8,7 @@ export default function Home() {
     const el = useRef(null);
 
     // Create reference to store the Typed instance itself
-    const typed = useRef(null);
+    const typed = useRef<Typed | null>(null);
 
     const options = {
         strings: ["Voted Best Game Truck in NY!"],
@@ -24,15 +24,16 @@ export default function Home() {
         script.async = true;
         script.defer = true;
         // console.log("home outer div", document.getElementById("homeouterdiv"));
-        document.getElementById("homeouterdiv").appendChild(script);
+        document.getElementById("homeouterdiv")?.appendChild(script);
 
         // elRef refers to the <span> rendered below
+        if (!el.current) return;
         typed.current = new Typed(el.current, options);
 
         return () => {
             // Make sure to destroy Typed instance during cleanup
             // to prevent memory leaks
-            typed.current.destroy();
+            typed.current?.destroy();
         };
     }, []);
 

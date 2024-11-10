@@ -1,9 +1,8 @@
-import React from "react";
 import "../assets/css/bdaycard.css";
 import { toastPromise } from "../GlobalFunctions.ts";
 
 export default function BDayCard() {
-    const handleSubmit = (event) => {
+    const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault();
     };
 
