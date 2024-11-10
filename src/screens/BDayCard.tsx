@@ -47,7 +47,7 @@ export default function BDayCard() {
                                 ?.value;
 
                             fetch(
-                                process.env.NODE_ENV === "development"
+                                import.meta.env.DEV
                                     ? "http://localhost:3001/bdaycard"
                                     : "https://widgie-34c32488147a.herokuapp.com/bdaycard",
                                 {
