@@ -1,9 +1,17 @@
 {
-    "homepage": ".",
     "name": "pgowp",
     "version": "0.1.0",
-    "private": true,
-    "author": "Nathanuel Dixon",
+    "type": "module",
+    "scripts": {
+        "start": "concurrently \"npm run start:client\" \"npm run start:worker\"",
+        "start:client": "npm run dev",
+        "start:worker": "npx wrangler dev ./public/_worker.js --env dev",
+        "dev": "vite",
+        "build": "tsc -b && vite build",
+        "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+        "preview": "vite preview",
+        "test": "vitest"
+    },
     "dependencies": {
         "@emailjs/browser": "^3.10.0",
         "@emotion/react": "^11.10.5",
@@ -13,46 +21,28 @@
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
         "react-hot-toast": "^2.4.1",
-        "react-icons": "^4.4.0",
+        "react-icons": "^4.12.0",
         "react-responsive": "^9.0.0-beta.10",
         "react-router-dom": "^6.3.0",
-        "react-scripts": "^5.0.1",
         "typed.js": "^2.0.132"
-    },
-    "scripts": {
-        "predeploy": "npm run build",
-        "deploy": "gh-pages -d build",
-        "start": "react-scripts start",
-        "build": "CI=false && react-scripts build",
-        "test": "react-scripts test",
-        "eject": "react-scripts eject"
-    },
-    "eslintConfig": {
-        "extends": [
-            "react-app",
-            "react-app/jest"
-        ]
-    },
-    "browserslist": {
-        "production": [
-            ">0.2%",
-            "not dead",
-            "not op_mini all"
-        ],
-        "development": [
-            "last 1 chrome version",
-            "last 1 firefox version",
-            "last 1 safari version"
-        ]
     },
     "devDependencies": {
         "@types/react": "^18.3.3",
         "@types/react-dom": "^18.3.0",
+        "@types/typed.js": "^2.0.0",
+        "@vitejs/plugin-react-swc": "^3.7.1",
         "autoprefixer": "^10.4.7",
         "gh-pages": "^4.0.0",
         "postcss": "^8.4.14",
         "sass": "^1.57.1",
         "tailwindcss": "^3.3.2",
-        "typescript": "^5.5.4"
-    }
+        "typescript": "^5.5.4",
+        "vite": "^5.4.10",
+        "vite-plugin-svgr": "^4.3.0"
+    },
+    "overrides": {
+        "@types/node": "20.8.3"
+    },
+    "private": true,
+    "author": "Nathanuel Dixon"
 }

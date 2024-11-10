@@ -24,3 +24,10 @@ yarn-error.log*
 
 # api keys
 .env
+
+node_modules
+wrangler.toml
+.wrangler/**
+wranglerdist/**
+dist/**
+tsconfig.tsbuildinfo
