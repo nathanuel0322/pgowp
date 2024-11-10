@@ -1,4 +1,4 @@
-import { MdLocalPhone, MdEmail, MdSchedule, MdInfoOutline, MdClose, MdAddShoppingCart } from "react-icons/md";
+import { MdLocalPhone, MdEmail, MdInfoOutline, MdClose, MdAddShoppingCart } from "react-icons/md";
 import { FaSquareInstagram } from "react-icons/fa6";
 import "../assets/css/book.css";
 import { useContext, useEffect, useState } from "react";
@@ -18,6 +18,8 @@ export default function Book({ cartDrawerOpen }: { cartDrawerOpen: boolean }) {
         boxindex: null,
         itemindex: null,
     });
+
+    console.log("cartDrawerOpen", cartDrawerOpen);
 
     const [items, setItems] = useState<{ title: string; boxes: CartItem[] }[]>([
         {
