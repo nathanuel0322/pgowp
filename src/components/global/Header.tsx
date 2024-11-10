@@ -1,10 +1,14 @@
-import "../../assets/css/Navbar.css";
+import "../../assets/css/header.css";
 import "../../assets/css/hamburger.css";
 import { Link, useLocation } from "react-router-dom";
 import PGOWPLogo from "../../assets/images/favicon-96x96.png";
 import { MdShoppingCart } from "react-icons/md";
 
-export default function Navbar() {
+export default function Header({
+    setCartDrawerOpen,
+}: {
+    setCartDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
     // get the current page
     const location = useLocation();
     // console.log("location.pathname:", location.pathname)
@@ -70,7 +74,13 @@ export default function Navbar() {
                 </div>
             </div>
             {location.pathname === "/book" && (
-                <button id="cartbutton" type="button" title="Cart" className="bg-white p-3 rounded-full ml-4">
+                <button
+                    id="cartbutton"
+                    type="button"
+                    title="Cart"
+                    className="bg-white p-3 rounded-full ml-4"
+                    onClick={() => setCartDrawerOpen(true)}
+                >
                     <MdShoppingCart size={35} />
                 </button>
             )}

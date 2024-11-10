@@ -1,7 +1,6 @@
 import { useMediaQuery } from "react-responsive";
 import HamburgerNav from "./HamburgerNav";
 import { useState } from "react";
-import Navbar from "./Navbar";
 import SideDrawer from "./SideDrawer";
 import { Route, Routes } from "react-router-dom";
 import Home from "../../screens/Home";
@@ -15,6 +14,7 @@ import BDayCard from "../../screens/BDayCard";
 import Book from "../../screens/Book";
 import "../../assets/css/routing.css";
 import CartDrawer from "../booking/CartDrawer";
+import Header from "./Header";
 
 export default function Routing() {
     const hamburgerdetector = useMediaQuery({ query: "(max-width: 991px)" });
@@ -26,7 +26,7 @@ export default function Routing() {
             {hamburgerdetector ? (
                 <HamburgerNav setDrawerOpen={setDrawerOpen} setCartDrawerOpen={setCartDrawerOpen} />
             ) : (
-                <Navbar />
+                <Header setCartDrawerOpen={setCartDrawerOpen} />
             )}
             <SideDrawer drawerOpen={drawerOpen} setDrawerOpen={setDrawerOpen} />
             <CartDrawer cartDrawerOpen={cartDrawerOpen} setCartDrawerOpen={setCartDrawerOpen} />
@@ -40,6 +40,7 @@ export default function Routing() {
                 <Route path="/e-invites" element={<EInvites />} />
                 <Route path="/bdaycard" element={<BDayCard />} />
                 <Route path="/book" element={<Book cartDrawerOpen={cartDrawerOpen} />} />
+                {/* <Route path="/checkout"  */}
             </Routes>
         </div>
     );

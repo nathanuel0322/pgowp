@@ -1,7 +1,6 @@
 import React, { useEffect, useContext } from "react";
 import { Link, useLocation } from "react-router-dom";
 import "../../assets/css/hamburger.css";
-import "../../assets/css/Navbar.css";
 import { IoReorderThreeOutline } from "react-icons/io5";
 import { AppContext } from "../../App.tsx";
 import PGOWPLogo from "../../assets/images/favicon-96x96.png";

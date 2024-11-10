@@ -45,8 +45,8 @@ export default function CartDrawer({
                             .reduce((acc, item) => acc + (item.price as number), 0)
                             .toFixed(2)}
                     </h4>
-                    <Link to="/checkout" className="checkout-button !text-2xl">
-                        Checkout Now
+                    <Link to="/checkout" className="checkout-button !text-2xl" onClick={() => setCartDrawerOpen(false)}>
+                        Checkout
                     </Link>
                 </div>
             ) : (
