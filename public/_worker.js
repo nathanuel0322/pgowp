@@ -123,119 +123,6 @@ async function authenticateToken(request, env) {
     }
 }
 
-// async function handleDeleteUser(request: AuthRequest, env: Env, supabase: SupabaseClient): Promise<Response> {
-async function handleDeleteUser(request, env, supabase) {
-    await authenticateToken(request, env);
-
-    // const { error } = await supabase.auth.admin.deleteUser(request.user?.sub as string);
-    const { error } = await supabase.auth.admin.deleteUser(request.user?.sub);
-    if (error) {
-        console.error("Error deleting user:", error);
-        return jsonResponse({ body: "Internal Server Error", status: 500 });
-    }
-    return jsonResponse({ body: null, status: 204 });
-}
-
-// async function handleLinkTikTok(request: AuthRequest, env: Env): Promise<Response> {
-async function handleLinkTikTok(request, env) {
-    await authenticateToken(request, env);
-    const csrfState = Math.random().toString(36).substring(2);
-
-    const params = new URLSearchParams({
-        client_key: env.TIKTOK_CLIENT,
-        scope: "user.info.basic,user.info.profile,user.info.stats,video.list",
-        response_type: "code",
-        redirect_uri: "https://abimpact.co/creatorsettings",
-        state: csrfState,
-    });
-
-    const url = `https://www.tiktok.com/v2/auth/authorize/?${params.toString()}`;
-
-    return jsonResponse({
-        body: url,
-        status: 200,
-        request,
-        added_headers: new Headers({
-            "Set-Cookie": `csrfState=${csrfState}; Max-Age=60000; Path=/; SameSite=None; Secure`,
-        }),
-    });
-}
-
-async function handleFetchToken(request, env) {
-    await authenticateToken(request, env);
-    const { code } = await request.json();
-
-    try {
-        const response = await fetch("https://open.tiktokapis.com/v2/oauth/token/", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-                "Cache-Control": "no-cache",
-            },
-            body: new URLSearchParams({
-                client_key: env.TIKTOK_CLIENT,
-                client_secret: env.TIKTOK_SECRET,
-                code,
-                grant_type: "authorization_code",
-                redirect_uri: "https://abimpact.co/creatorsettings",
-            }),
-        });
-        const data = await response.json();
-        // take access_token, expires_in, refresh_token, refresh_expires_in
-        console.log("data:", data);
-        if (data.error) {
-            return jsonResponse({ body: data, status: 400 });
-        }
-
-        // Calculate the expiration timestamp
-        const expires_in = Date.now() + data.expires_in * 1000;
-        const refresh_expires_in = Date.now() + data.refresh_expires_in * 1000;
-
-        return jsonResponse({
-            body: {
-                access_token: data.access_token,
-                expires_in,
-                refresh_token: data.refresh_token,
-                refresh_expires_in,
-            },
-        });
-    } catch (err) {
-        console.error("Error fetching token:", err);
-        return jsonResponse({ body: "Internal Server Error", status: 500 });
-    }
-}
-
-async function handleRefreshToken(request, env) {
-    const { refresh_token } = await request.json();
-
-    const response = await fetch("https://open.tiktokapis.com/v2/oauth/token/", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-            "Cache-Control": "no-cache",
-        },
-        body: new URLSearchParams({
-            client_key: env.TIKTOK_CLIENT,
-            client_secret: env.TIKTOK_SECRET,
-            grant_type: "refresh_token",
-            refresh_token,
-        }),
-    });
-    const data = await response.json();
-    console.log("data:", data);
-    if (data.error) {
-        return jsonResponse({ body: data, status: 400 });
-    }
-    return jsonResponse({
-        body: {
-            access_token: data.access_token,
-            expires_in: data.expires_in,
-            refresh_token: data.refresh_token,
-            refresh_expires_in: data.refresh_expires_in,
-        },
-    });
-}
-
 // function setCommonHeaders(headers: Headers, request?: Request): Headers {
 function setCommonHeaders(headers, request) {
     // console.log("request:", request);
@@ -317,17 +204,6 @@ export default {
             // console.log("url:", url, "\n\nrequest:", request);
             // console.log("request.method:", request.method, "\n\nurl.pathname:", url.pathname);
 
-            if (request.method === "POST") {
-                if (url.pathname === "/api/delete-user") {
-                    return handleDeleteUser(request, env, supabase);
-                } else if (url.pathname === "/api/link-tiktok") {
-                    return handleLinkTikTok(request, env);
-                } else if (url.pathname === "/api/refresh-token") {
-                    return handleRefreshToken(request, env);
-                } else if (url.pathname === "/api/fetch-token") {
-                    return handleFetchToken(request, env);
-                }
-            }
             return jsonResponse({ body: "Not Found", status: 404 });
         } else {
             return env.ASSETS?.fetch(request);
