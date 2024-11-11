@@ -332,7 +332,7 @@
         margin: 1rem 0;
     }
 }
-.select-slot__weekViewDaySlotsHeader___rxuJJ {
+.select-slot-view-day-slots-header {
     margin-bottom: 8px;
     margin-bottom: 0.5rem;
     white-space: nowrap;
@@ -344,32 +344,32 @@
     border-top: 1px solid #d1d5db;
     border-bottom: 1px solid #d1d5db;
 }
-.select-slot__weekViewDaySlotsHeader___rxuJJ > div {
+.select-slot-view-day-slots-header > div {
     padding: 8px 0;
     padding: 0.5rem 0;
 }
-.select-slot__todayWeekViewSlotsHeader___Px8wU {
+.select-slot-view-day-slots-header {
     padding-bottom: 2px !important;
     padding-bottom: 0.13rem !important;
 }
-.select-slot__weekViewDaySlotsHeaderShort___1-XC5 {
+.select-slot-week-view-day-slots-header-short {
     font-weight: 600;
     display: none;
 }
-.select-slot__weekViewDaySlotsHeaderLong___etvZA {
+.select-slot-week-view-day-slots-header-long {
     font-weight: 600;
     display: block;
 }
-.select-slot__weekViewDaySlotsHeaderDate___2w6W1 {
+.select-slot-week-view-day-slots-header-date {
     font-weight: 700;
     font-size: 30px;
     font-size: 1.875rem;
     position: relative;
 }
-.select-slot__todayMarker___2aEw1 {
+.select-slot-week-view-day-slots-header-date {
     color: #50e063;
 }
-.select-slot__todayMarker___2aEw1:after {
+.select-slot-week-view-day-slots-header-date:after {
     content: "Today";
     font-size: 11px;
     font-size: 0.7rem;
@@ -404,7 +404,7 @@
     font-size: 0.9rem;
 }
 
-.select-slot__dayInWeek___3Oreh {
+.day-view-container {
     -ms-flex-positive: 1;
     flex-grow: 1;
     -ms-flex-negative: 1;
@@ -417,7 +417,7 @@
 .select-slot__wednesday___33qQs {
     min-width: auto;
 }
-.select-slot__slots___2lXNn {
+.day-view-container ol {
     max-height: 100%;
 }
 .select-slot__slotMorningEvening___1hHht {
@@ -445,7 +445,7 @@
     color: #000;
     background-color: transparent;
 }
-.select-slot__noAvailableSlots___3QO5R {
+.day-view-container li {
     padding: 8px;
     padding: 0.5rem;
     color: #939393;
@@ -459,7 +459,7 @@
     margin-top: 3pc !important;
     margin-top: 3rem !important;
 }
-.select-slot__noAvailableSlots___3QO5R,
+.day-view-container li,
 .select-slot__slotLinkBox___2pBq7 {
     display: block;
     margin: 0 auto 8px;
@@ -627,27 +627,27 @@
     color: #8b2328;
 }
 @media screen and (max-width: 1200px) {
-    .select-slot__weekViewDaySlotsHeaderLong___etvZA {
+    .select-slot-week-view-day-slots-header-long {
         display: block;
     }
 }
 @media screen and (max-width: 1490px) {
-    .select-slot__dayInWeek___3Oreh .select-slot__slotLinkBox___2pBq7 {
+    .day-view-container .select-slot__slotLinkBox___2pBq7 {
         white-space: initial;
     }
-    .select-slot__dayInWeek___3Oreh .select-slot__slotSeparator___3b9pP {
+    .day-view-container .select-slot__slotSeparator___3b9pP {
         line-height: 0.6rem;
         display: block;
     }
-    .select-slot__dayInWeek___3Oreh .select-slot__slotTimeAndMeridiem___i0TOa {
+    .day-view-container .select-slot__slotTimeAndMeridiem___i0TOa {
         display: block;
     }
 }
 @media screen and (max-width: 800px) {
-    .select-slot__weekViewDaySlotsHeaderShort___1-XC5 {
+    .select-slot-week-view-day-slots-header-short {
         display: block;
     }
-    .select-slot__weekViewDaySlotsHeaderLong___etvZA {
+    .select-slot-week-view-day-slots-header-long {
         display: none;
     }
 }
@@ -802,7 +802,7 @@
         background-color: #e5e7eb;
         border-radius: 0.5rem;
     }
-    .select-slot__todayMarker___2aEw1:after {
+    .select-slot-week-view-day-slots-header-date:after {
         content: "";
     }
     .select-slot__mobileViewHeadingContainer___1E-cL {
@@ -828,7 +828,7 @@
     .select-slot__slotLinkBox___2pBq7 {
         font-size: 1.4rem;
     }
-    .select-slot__noAvailableSlots___3QO5R {
+    .day-view-container li {
         font-size: 1.4rem;
         padding: 0.5rem 0;
     }
@@ -872,7 +872,7 @@
     .select-slot__headerContent___12YHx {
         padding: 0.5rem;
     }
-    .select-slot__weekViewDaySlotsHeaderShort___1-XC5 {
+    .select-slot-week-view-day-slots-header-short {
         font-size: 0.9rem;
         font-weight: 500;
     }
