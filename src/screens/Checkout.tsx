@@ -1,10 +1,28 @@
 import { useEffect, useState } from "react";
-import { MdCalendarMonth, MdChevronLeft, MdOutlineLocationOn } from "react-icons/md";
+import { MdCalendarMonth, MdChevronLeft, MdChevronRight, MdOutlineLocationOn } from "react-icons/md";
 import "../assets/css/checkout.css";
+import PuffLoader from "react-spinners/PuffLoader";
+import { supabase } from "../supabase";
+import { toastError } from "../GlobalFunctions";
+import { UUID } from "crypto";
+
+export interface Party {
+    id: UUID;
+    created_at: string;
+    customer_name: string;
+    date: string;
+    start_time: string;
+    end_time: string;
+    location: string;
+    customer_email: string;
+    customer_phone: string;
+}
 
 export default function Checkout() {
     const [date, setDate] = useState<Date | null>(null);
     const [weekDates, setWeekDates] = useState<Date[]>([]);
+    const [parties, setParties] = useState<Party[]>([]);
+    const [isloading, setIsLoading] = useState(true);
 
     useEffect(() => {
         const today = new Date();
@@ -14,6 +32,10 @@ export default function Checkout() {
         const recentSunday = new Date(today);
         recentSunday.setDate(today.getDate() - today.getDay());
 
+        // Calculate the upcoming Saturday
+        const upcomingSaturday = new Date(recentSunday);
+        upcomingSaturday.setDate(recentSunday.getDate() + 6);
+
         // Generate dates for the week starting from the most recent Sunday
         const dates = [];
         for (let i = 0; i < 7; i++) {
@@ -22,16 +44,38 @@ export default function Checkout() {
             dates.push(date);
         }
         setWeekDates(dates);
+
+        supabase
+            .from("parties")
+            .select("*")
+            .gte("date", recentSunday.toISOString())
+            .lte("date", upcomingSaturday.toISOString())
+            .then(({ data, error }) => {
+                if (error) {
+                    console.error("Error loading parties:", error);
+                    toastError("Error loading calendar, please try again later.");
+                    return;
+                }
+                console.log("parties:", data);
+                setParties(data);
+                setIsLoading(false);
+            });
     }, []);
 
+    if (isloading) {
+        return <PuffLoader color={"#5D87FF"} loading={true} size={150} id="loader" />;
+    }
+
     return (
-        <div>
+        <div id="checkout-div">
             <div className="flex justify-between gap-4">
                 <div id="inner-slots-div">
                     <div id="inner-slots-header">
                         <div className="text-center relative">
                             <div className="slot-heading standard-header slot-clickable">
-                                <span>{date?.toLocaleDateString("en-US", { month: "long", year: "numeric" })}</span>
+                                <span className="text-white">
+                                    {date?.toLocaleDateString("en-US", { month: "long", year: "numeric" })}
+                                </span>
                                 <button
                                     name="date-picker"
                                     aria-expanded="false"
@@ -285,9 +329,7 @@ export default function Checkout() {
                                 </div>
                             </div>
                             <a aria-label="Next week" className="select-slot-nav-button">
-                                <i aria-hidden="true" className="material-icons">
-                                    chevron_right
-                                </i>
+                                <MdChevronRight />
                             </a>
                         </div>
                     </div>

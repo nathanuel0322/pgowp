@@ -1,4 +1,36 @@
-import toast from "react-hot-toast";
+import toast, { ToastPosition } from "react-hot-toast";
+
+const successStyle = {
+    position: "top-center" as ToastPosition,
+    style: {
+        background: "#61d345",
+        color: "#fff",
+    },
+    iconTheme: {
+        primary: "#fff",
+        secondary: "#61d345",
+    },
+};
+
+const errorStyle = {
+    position: "top-center" as ToastPosition,
+    style: {
+        background: "red",
+        color: "#fff",
+    },
+    iconTheme: {
+        primary: "#fff",
+        secondary: "red",
+    },
+};
+
+export function toastSuccess(message: string) {
+    toast.success(message, successStyle);
+}
+
+export function toastError(message: string) {
+    toast.error(message, errorStyle);
+}
 
 export async function toastPromise(promisefunc: Promise<void>, loading: string, success: string) {
     try {

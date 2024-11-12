@@ -31,3 +31,4 @@ wrangler.toml
 wranglerdist/**
 dist/**
 tsconfig.tsbuildinfo
+notes.txt
