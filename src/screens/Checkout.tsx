@@ -24,6 +24,8 @@ export default function Checkout() {
     const [parties, setParties] = useState<Party[]>([]);
     const [isloading, setIsLoading] = useState(true);
 
+    console.log("parties:", parties);
+
     useEffect(() => {
         const today = new Date();
         setDate(today);
