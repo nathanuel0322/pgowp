@@ -1,5 +1,5 @@
 import { MdLocalPhone, MdEmail, MdInfoOutline, MdClose, MdAddShoppingCart } from "react-icons/md";
-import { FaSquareInstagram } from "react-icons/fa6";
+import { FaSquareInstagram, FaTrash } from "react-icons/fa6";
 import "../assets/css/book.css";
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../App";
@@ -71,7 +71,7 @@ export default function Book({ cartDrawerOpen }: { cartDrawerOpen: boolean }) {
             ],
         },
         {
-            title: "50%  GAMING DEPOSITS",
+            title: "50% GAMING DEPOSITS",
             boxes: [
                 {
                     title: "2 Hr. Gaming Party",
@@ -347,7 +347,15 @@ export default function Book({ cartDrawerOpen }: { cartDrawerOpen: boolean }) {
                                                 </p>
                                             </div>
                                         );
-                                    else
+                                    else {
+                                        const isGamingPartyInCart = cart.some((cartitem) =>
+                                            [
+                                                "2 Hr. Gaming Party",
+                                                "3 Hour Gaming Party",
+                                                "4 Hour Gaming Party",
+                                            ].includes(cartitem.title)
+                                        );
+
                                         return (
                                             <div
                                                 style={{
@@ -372,23 +380,8 @@ export default function Book({ cartDrawerOpen }: { cartDrawerOpen: boolean }) {
                                                 </div>
                                                 {box.time && <span>{box.time}</span>}
                                                 <div>
-                                                    {box.title !== "Block Party" && (
-                                                        <button
-                                                            type="button"
-                                                            onClick={() => {
-                                                                if (isitemincart)
-                                                                    setCart((prev) =>
-                                                                        prev.filter(
-                                                                            (cartitem) => cartitem.title !== box.title
-                                                                        )
-                                                                    );
-                                                                else setCart((prev) => [...prev, box]);
-                                                            }}
-                                                        >
-                                                            {isitemincart ? "Remove from Cart" : "Add to Cart"}
-                                                            {!isitemincart && <MdAddShoppingCart />}
-                                                        </button>
-                                                    )}
+                                                    {/* this button will be hidden in the 50% Gaming deposits section if any of the items besides
+                                                    "Additional Time- Full Amount" are in the cart */}
                                                     {boxindex === details.boxindex &&
                                                     itemindex === details.itemindex ? (
                                                         <button
@@ -398,8 +391,8 @@ export default function Book({ cartDrawerOpen }: { cartDrawerOpen: boolean }) {
                                                                 setDetails({ boxindex: null, itemindex: null })
                                                             }
                                                         >
-                                                            Close
                                                             <MdClose />
+                                                            Close
                                                         </button>
                                                     ) : (
                                                         <button
@@ -408,13 +401,40 @@ export default function Book({ cartDrawerOpen }: { cartDrawerOpen: boolean }) {
                                                             onClick={() => setDetails({ boxindex, itemindex })}
                                                             className={!box.details ? "!hidden" : ""}
                                                         >
-                                                            Details
                                                             <MdInfoOutline />
+                                                            Details
                                                         </button>
                                                     )}
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => {
+                                                            if (isitemincart)
+                                                                setCart((prev) =>
+                                                                    prev.filter(
+                                                                        (cartitem) => cartitem.title !== box.title
+                                                                    )
+                                                                );
+                                                            else setCart((prev) => [...prev, box]);
+                                                        }}
+                                                        className={`${
+                                                            isitemincart ? "!bg-red-700 !text-white" : "bg-[#50e063]"
+                                                        } ${
+                                                            (box.title !== "Block Party" &&
+                                                                box.title !== "Additional Time- Full Amount" &&
+                                                                !isGamingPartyInCart) ||
+                                                            (box.title === "Additional Time- Full Amount" &&
+                                                                isGamingPartyInCart)
+                                                                ? ""
+                                                                : "!hidden"
+                                                        }`}
+                                                    >
+                                                        {!isitemincart && <MdAddShoppingCart className="shrink-0" />}
+                                                        {isitemincart ? "Remove from Cart" : "Add to Cart"}
+                                                    </button>
                                                 </div>
                                             </div>
                                         );
+                                    }
                                 })}
                             </div>
                         </div>

@@ -111,7 +111,6 @@
     grid-auto-flow: column;
     grid-template-columns: 1fr 1fr;
     grid-gap: 1rem;
-    direction: rtl;
     margin-top: auto;
 }
 
@@ -125,7 +124,7 @@
 
 #book-services-div > div > div > div > div > :last-child > button,
 .checkout-button {
-    background-color: #50e063;
+    background-color: #e5e7eb;
     color: black;
     border-radius: 0.5rem;
     transition: none;
@@ -158,12 +157,12 @@
 
 #book-services-div > div > div > div > div > :last-child > :first-child:hover,
 .checkout-button:hover {
-    background-color: #1ea630;
-    filter: none;
+    background: #d1d5db;
+    color: black;
 }
 
 #book-services-div > div > div > div > div > :last-child > :last-child {
-    background-color: #e5e7eb;
+    background-color: #50e063;
     border: none;
     color: black;
     -ms-flex-positive: 0;
@@ -176,8 +175,8 @@
 }
 
 #book-services-div > div > div > div > div > :last-child > :last-child:hover {
-    background: #d1d5db;
-    color: black;
+    background-color: #1ea630;
+    filter: none;
 }
 
 #book-services-div > div > div > div > div > :last-child > :last-child > svg {

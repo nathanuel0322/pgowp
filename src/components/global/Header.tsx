@@ -3,6 +3,8 @@ import "../../assets/css/hamburger.css";
 import { Link, useLocation } from "react-router-dom";
 import PGOWPLogo from "../../assets/images/favicon-96x96.png";
 import { MdShoppingCart } from "react-icons/md";
+import { useContext } from "react";
+import { AppContext } from "../../App";
 
 export default function Header({
     setCartDrawerOpen,
@@ -11,6 +13,7 @@ export default function Header({
 }) {
     // get the current page
     const location = useLocation();
+    const { cart } = useContext(AppContext);
     // console.log("location.pathname:", location.pathname)
 
     return (
@@ -78,10 +81,13 @@ export default function Header({
                     id="cartbutton"
                     type="button"
                     title="Cart"
-                    className="bg-white p-3 rounded-full ml-4"
+                    className={`bg-white rounded-full ml-4 relative ${cart.length > 0 ? "p-4" : "p-3"}`}
                     onClick={() => setCartDrawerOpen(true)}
                 >
                     <MdShoppingCart size={35} />
+                    {cart.length > 0 && (
+                        <p className="absolute text-black text-xl bottom-2 right-3 font-bold w-fit">{cart.length}</p>
+                    )}
                 </button>
             )}
         </div>

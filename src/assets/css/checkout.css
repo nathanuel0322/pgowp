@@ -346,10 +346,6 @@
     padding: 8px 0;
     padding: 0.5rem 0;
 }
-.select-slot-view-day-slots-header {
-    padding-bottom: 2px !important;
-    padding-bottom: 0.13rem !important;
-}
 .select-slot-week-view-day-slots-header-short {
     font-weight: 600;
     display: none;
@@ -357,6 +353,7 @@
 .select-slot-week-view-day-slots-header-long {
     font-weight: 600;
     display: block;
+    color: white;
 }
 .select-slot-week-view-day-slots-header-date {
     font-weight: 700;
