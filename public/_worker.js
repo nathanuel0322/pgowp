@@ -129,8 +129,8 @@ function setCommonHeaders(headers, request) {
     if (request) {
         const allowedOrigins = [
             "http://localhost:5173",
-            "https://prestigiousgamingonwheelsplus.com/",
-            "https://www.prestigiousgamingonwheelsplus.com/",
+            "https://prestigiousgamingonwheelsplus.com",
+            "https://www.prestigiousgamingonwheelsplus.com",
         ];
 
         const origin = request.headers.get("Origin");
