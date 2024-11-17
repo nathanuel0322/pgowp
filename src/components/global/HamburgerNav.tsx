@@ -22,10 +22,10 @@ const HamburgerNav = ({
         if (location.pathname === "/services") setcurrentpage("Services");
         else if (location.pathname === "/packages") setcurrentpage("Packages");
         else if (location.pathname === "/") setcurrentpage("Home");
-        else if (location.pathname === "/gamelist") setcurrentpage("Game List");
-        else if (location.pathname === "/contactus") setcurrentpage("Contact Us");
+        else if (location.pathname === "/game-list") setcurrentpage("Game List");
+        else if (location.pathname === "/contact-us") setcurrentpage("Contact Us");
         else if (location.pathname === "/about") setcurrentpage("About");
-        else if (location.pathname === "/bdaycard") setcurrentpage("BDay Card");
+        else if (location.pathname === "/bday-card") setcurrentpage("BDay Card");
         else if (location.pathname === "/e-invites") setcurrentpage("E-Invites");
         else if (location.pathname === "/book") setcurrentpage("Book");
     }, [location.pathname]);

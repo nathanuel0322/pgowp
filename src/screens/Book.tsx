@@ -1,5 +1,5 @@
 import { MdLocalPhone, MdEmail, MdInfoOutline, MdClose, MdAddShoppingCart } from "react-icons/md";
-import { FaSquareInstagram, FaTrash } from "react-icons/fa6";
+import { FaSquareInstagram } from "react-icons/fa6";
 import "../assets/css/book.css";
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../App";
@@ -53,20 +53,6 @@ export default function Book({ cartDrawerOpen }: { cartDrawerOpen: boolean }) {
                     price: 75,
                     time: "2 hr",
                     details: `Karaoke- 4 mics for duration of party.`,
-                },
-                {
-                    title: "School Event - 4 Hrs.",
-                    time: "4 hr",
-                },
-                {
-                    title: "Block Party",
-                    time: "2 hr",
-                    details: `Block Party-Please call for cost. Thanks`,
-                },
-                {
-                    title: "Laser Tag for Events",
-                    time: "2 hr",
-                    details: `Events - 2 hrs of live Scoring Laser Tag`,
                 },
             ],
         },
@@ -197,6 +183,10 @@ export default function Book({ cartDrawerOpen }: { cartDrawerOpen: boolean }) {
                     details: `Depends upon the amount of student class rotations.`,
                 },
                 {
+                    title: "School Event - 4 Hrs.",
+                    time: "4 hr",
+                },
+                {
                     title: "5 Hour Gaming Party for School Events",
                     time: "5 hr",
                     details: `5 hrs of Fun Day School events. Includes all yard games,Popcorn, Cotton Candy, and hot Dog grill(only, we do not supply food).`,
@@ -213,6 +203,16 @@ export default function Book({ cartDrawerOpen }: { cartDrawerOpen: boolean }) {
                     title: "Corp. Events - 4 hrs",
                     time: "4 hr",
                     details: `4 hrs of unlimited gaming, VR, Live online scoring Arena style Laser Tag, Popcorn, cotton candy, hot dog grill and yard games.`,
+                },
+                {
+                    title: "Block Party",
+                    time: "2 hr",
+                    details: `Block Party-Please call for cost. Thanks`,
+                },
+                {
+                    title: "Laser Tag for Events",
+                    time: "2 hr",
+                    details: `Events - 2 hrs of live Scoring Laser Tag`,
                 },
             ],
         },
@@ -355,6 +355,11 @@ export default function Book({ cartDrawerOpen }: { cartDrawerOpen: boolean }) {
                                                 "4 Hour Gaming Party",
                                             ].includes(cartitem.title)
                                         );
+                                        const shouldShowAddToCartButton =
+                                            (box.title !== "Block Party" &&
+                                                box.title !== "Additional Time- Full Amount" &&
+                                                !isGamingPartyInCart) ||
+                                            (box.title === "Additional Time- Full Amount" && isGamingPartyInCart);
 
                                         return (
                                             <div
@@ -416,20 +421,20 @@ export default function Book({ cartDrawerOpen }: { cartDrawerOpen: boolean }) {
                                                                 );
                                                             else setCart((prev) => [...prev, box]);
                                                         }}
+                                                        disabled={item.title === "Add Ons" && !isGamingPartyInCart}
                                                         className={`${
                                                             isitemincart ? "!bg-red-700 !text-white" : "bg-[#50e063]"
-                                                        } ${
-                                                            (box.title !== "Block Party" &&
-                                                                box.title !== "Additional Time- Full Amount" &&
-                                                                !isGamingPartyInCart) ||
-                                                            (box.title === "Additional Time- Full Amount" &&
-                                                                isGamingPartyInCart)
-                                                                ? ""
-                                                                : "!hidden"
-                                                        }`}
+                                                        } ${shouldShowAddToCartButton ? "" : "!hidden"}`}
                                                     >
                                                         {!isitemincart && <MdAddShoppingCart className="shrink-0" />}
-                                                        {isitemincart ? "Remove from Cart" : "Add to Cart"}
+                                                        {item.title === "Add Ons"
+                                                            ? // if adds on and gaming party is in cart, show "Add to Cart" button, else show "Must add Gaming Party to Cart"
+                                                              isGamingPartyInCart
+                                                                ? "Add to Cart"
+                                                                : "Must add Gaming Party to Cart"
+                                                            : isitemincart
+                                                            ? "Remove from Cart"
+                                                            : "Add to Cart"}
                                                     </button>
                                                 </div>
                                             </div>

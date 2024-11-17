@@ -1,5 +1,9 @@
 import toast, { ToastPosition } from "react-hot-toast";
 
+export const apilink = import.meta.env.DEV
+    ? "http://127.0.0.1:8787/api"
+    : "https://prestigiousgamingonwheelsplus.com/api";
+
 const successStyle = {
     position: "top-center" as ToastPosition,
     style: {

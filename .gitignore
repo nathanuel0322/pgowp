@@ -32,3 +32,4 @@ wranglerdist/**
 dist/**
 tsconfig.tsbuildinfo
 notes.txt
+emailtemplate.html

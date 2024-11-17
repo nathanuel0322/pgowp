@@ -23,7 +23,8 @@ export default function Checkout() {
     const [weekDates, setWeekDates] = useState<Date[]>([]);
     const [parties, setParties] = useState<Party[]>([]);
     //
-    const [weekParties, setWeekParties] = useState<Party[][]>([]);
+    const weekParties: Party[][] = [];
+    // const [weekParties, setWeekParties] = useState<Party[][]>([]);
     const [isloading, setIsLoading] = useState(true);
 
     console.log("parties:", parties);

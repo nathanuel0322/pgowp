@@ -20,7 +20,7 @@ export default function Header({
         <div
             id="header"
             style={{
-                position: location.pathname === "/bdaycard" ? "relative" : "fixed",
+                position: location.pathname === "/bday-card" ? "relative" : "fixed",
                 display: location.pathname === "/e-invites" ? "none" : "flex",
             }}
         >
@@ -40,7 +40,7 @@ export default function Header({
                         <li id="navli" className="flex justify-center flex-wrap">
                             <Link to="/services">Services</Link>
                             <Link to="/packages">Packages</Link>
-                            <Link to="/gamelist">Game List</Link>
+                            <Link to="/game-list">Game List</Link>
                             <a
                                 target="_blank"
                                 rel="noopener noreferrer"
@@ -48,8 +48,8 @@ export default function Header({
                             >
                                 Gallery
                             </a>
-                            <Link to="/bdaycard">E-Invites</Link>
-                            <Link to="/contactus" className="lists">
+                            <Link to="/bday-card">E-Invites</Link>
+                            <Link to="/contact-us" className="lists">
                                 Contact
                             </Link>
                             <Link to="/about" className="right">

@@ -1,9 +1,6 @@
 {
-  "extends": [
-    "development"
-  ],
-  "hints": {
-    "detect-css-reflows/layout": "off",
-    "no-inline-styles": "off"
-  }
+    "extends": ["development"],
+    "hints": {
+        "detect-css-reflows/layout": "off"
+    }
 }

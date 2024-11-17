@@ -61,7 +61,7 @@ export default function SideDrawer({
                                 key={index}
                                 to={
                                     text === "E-Invites"
-                                        ? "/bdaycard"
+                                        ? "/bday-card"
                                         : index === 0
                                         ? "/"
                                         : `/${text.split(" ").join("").toLowerCase()}`

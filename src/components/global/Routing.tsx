@@ -35,11 +35,11 @@ export default function Routing() {
                 <Route path="" element={<Home />} />
                 <Route path="/services" element={<Services />} />
                 <Route path="/packages" element={<Packages />} />
-                <Route path="/gamelist" element={<Gamelist />} />
-                <Route path="/contactus" element={<Contact />} />
+                <Route path="/game-list" element={<Gamelist />} />
+                <Route path="/contact-us" element={<Contact />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/e-invites" element={<EInvites />} />
-                <Route path="/bdaycard" element={<BDayCard />} />
+                <Route path="/bday-card" element={<BDayCard />} />
                 <Route path="/book" element={<Book cartDrawerOpen={cartDrawerOpen} />} />
                 <Route path="/checkout" element={<Checkout />} />
             </Routes>
