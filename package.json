@@ -6,7 +6,7 @@
         "start": "concurrently \"npm run start:client\" \"npm run start:worker\"",
         "start:client": "npm run dev",
         "start:worker": "npx wrangler dev ./public/_worker.js --env dev",
-        "dev": "vite",
+        "dev": "vite --host",
         "build": "tsc -b && vite build",
         "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
         "preview": "vite preview",

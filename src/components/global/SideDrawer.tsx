@@ -64,7 +64,7 @@ export default function SideDrawer({
                                         ? "/bday-card"
                                         : index === 0
                                         ? "/"
-                                        : `/${text.split(" ").join("").toLowerCase()}`
+                                        : `/${text.split(" ").join("-").toLowerCase()}`
                                 }
                                 onClick={() => setDrawerOpen(false)}
                             >
