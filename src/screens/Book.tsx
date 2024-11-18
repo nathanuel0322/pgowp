@@ -348,18 +348,23 @@ export default function Book({ cartDrawerOpen }: { cartDrawerOpen: boolean }) {
                                             </div>
                                         );
                                     else {
+                                        const gamingPartyTitles = [
+                                            "2 Hr. Gaming Party",
+                                            "3 Hour Gaming Party",
+                                            "4 Hour Gaming Party",
+                                        ];
+
                                         const isGamingPartyInCart = cart.some((cartitem) =>
-                                            [
-                                                "2 Hr. Gaming Party",
-                                                "3 Hour Gaming Party",
-                                                "4 Hour Gaming Party",
-                                            ].includes(cartitem.title)
+                                            gamingPartyTitles.includes(cartitem.title)
                                         );
+                                        console.log("box:", box, "\nisGamingPartyInCart:", isGamingPartyInCart);
+                                        // show hide add cart button if title is Block Party or Additional Time- Full Amount (only show if Gaming Party is in cart)
                                         const shouldShowAddToCartButton =
-                                            (box.title !== "Block Party" &&
-                                                box.title !== "Additional Time- Full Amount" &&
-                                                !isGamingPartyInCart) ||
-                                            (box.title === "Additional Time- Full Amount" && isGamingPartyInCart);
+                                            box.title !== "Block Party" &&
+                                            (box.title !== "Additional Time- Full Amount" || isGamingPartyInCart) &&
+                                            (!gamingPartyTitles.includes(box.title) ||
+                                                !isGamingPartyInCart ||
+                                                isitemincart);
 
                                         return (
                                             <div

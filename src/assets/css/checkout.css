@@ -330,18 +330,18 @@
         margin: 1rem 0;
     }
 }
+
 .select-slot-view-day-slots-header {
-    margin-bottom: 8px;
     margin-bottom: 0.5rem;
     white-space: nowrap;
     text-align: center;
-    font-size: 1pc;
     font-size: 1.05rem;
-    padding: 1pc 0 !important;
-    padding: 1rem 0 !important;
+    padding: 1rem 0;
     border-top: 1px solid #d1d5db;
     border-bottom: 1px solid #d1d5db;
+    padding-bottom: 1.14rem;
 }
+
 .select-slot-view-day-slots-header > div {
     padding: 8px 0;
     padding: 0.5rem 0;
@@ -361,12 +361,8 @@
     font-size: 1.875rem;
     position: relative;
 }
-.select-slot-week-view-day-slots-header-date {
-    color: #50e063;
-}
-.select-slot-week-view-day-slots-header-date:after {
+.select-slot-week-view-day-slots-header-current-date:after {
     content: "Today";
-    font-size: 11px;
     font-size: 0.7rem;
     display: block;
     color: #9ca3af;
@@ -943,7 +939,7 @@
     padding-bottom: 0;
     cursor: pointer;
     vertical-align: middle;
-    font-size: 1.25rem;
+    font: normal normal 600 1rem Figtree, sans-serif;
 }
 
 #loader {
@@ -951,4 +947,101 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+}
+
+.booking-details-summary {
+    background-color: white;
+    color: black;
+    box-shadow: rgb(52 48 79 / 15%) 0px 4px 12px;
+    border-color: #00000012;
+    border-radius: 0.5rem;
+    margin-top: 0px !important;
+    display: flex;
+    width: 19.75rem;
+    min-width: 11rem;
+    padding: 1.25rem;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -ms-flex-align: start;
+    align-items: flex-start;
+    gap: 1.25rem;
+    border-radius: 0.8125rem;
+    margin: 1.25rem;
+    font-family: Figtree;
+}
+
+.summaryHeading {
+    color: black;
+    -ms-flex-item-align: stretch;
+    align-self: stretch;
+    font-size: 1.75rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+.summary-section-title {
+    color: black;
+    font-family: Inter;
+    font-size: 0.875rem;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 1.125rem;
+    letter-spacing: 0.04375rem;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-align: center;
+    align-items: center;
+    gap: 0.25rem;
+    text-transform: capitalize;
+}
+
+.booking-details-price-summary {
+    -ms-flex-item-align: stretch;
+    align-self: stretch;
+    color: #4b5563;
+    font-family: Figtree;
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+.booking-details-booking-summary {
+    margin-top: 0;
+    display: -ms-flexbox;
+    display: flex;
+    padding: 0.5rem;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -ms-flex-align: center;
+    align-items: center;
+    gap: 1rem;
+    -ms-flex-item-align: stretch;
+    align-self: stretch;
+    border-radius: 0.8125rem;
+    border: 1px solid rgba(0, 0, 0, 0.18);
+}
+
+.booking-details-booking-summary > h2 {
+    text-align: center;
+    font-family: Poppins;
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
+.booking-details-booking-summary > p {
+    -ms-flex-item-align: stretch;
+    align-self: stretch;
+    color: rgba(0, 0, 0, 0.48);
+    text-align: center;
+    font-family: Poppins;
+    font-size: 0.875rem;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
 }

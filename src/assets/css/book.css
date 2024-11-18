@@ -122,8 +122,7 @@
     }
 }
 
-#book-services-div > div > div > div > div > :last-child > button,
-.checkout-button {
+#book-services-div > div > div > div > div > :last-child > button {
     background-color: #e5e7eb;
     color: black;
     border-radius: 0.5rem;
@@ -155,10 +154,31 @@
     margin: 0;
 }
 
-#book-services-div > div > div > div > div > :last-child > :first-child:hover,
-.checkout-button:hover {
+#book-services-div > div > div > div > div > :last-child > :first-child:hover {
     background: #d1d5db;
     color: black;
+}
+
+.checkout-button {
+    background-color: #50e063;
+    color: black;
+    border-radius: 0.5rem;
+    transition: none;
+    padding: 0.4rem 0.8rem;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+    font-size: 1.25rem;
+    font-weight: 500;
+    align-items: center;
+    gap: 0.25rem;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -ms-flex-align: center;
+    align-items: center;
+    transition: all 0.3s;
 }
 
 #book-services-div > div > div > div > div > :last-child > :last-child {
@@ -174,7 +194,8 @@
     margin: 0;
 }
 
-#book-services-div > div > div > div > div > :last-child > :last-child:hover {
+#book-services-div > div > div > div > div > :last-child > :last-child:hover,
+.checkout-button:hover {
     background-color: #1ea630;
     filter: none;
 }
