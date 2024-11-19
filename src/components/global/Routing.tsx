@@ -2,7 +2,7 @@ import { useMediaQuery } from "react-responsive";
 import HamburgerNav from "./HamburgerNav";
 import { useState } from "react";
 import SideDrawer from "./SideDrawer";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import Home from "../../screens/Home";
 import Services from "../../screens/Services";
 import Packages from "../../screens/Packages";
@@ -21,9 +21,10 @@ export default function Routing() {
     const hamburgerdetector = useMediaQuery({ query: "(max-width: 991px)" });
     const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
     const [cartDrawerOpen, setCartDrawerOpen] = useState<boolean>(false);
+    const location = useLocation();
 
     return (
-        <div id="routing-div" className="px-[5vw]">
+        <div id="routing-div" className={`${location.pathname === "/checkout" ? "px-[2%]" : "px-[5vw]"}`}>
             {hamburgerdetector ? (
                 <HamburgerNav setDrawerOpen={setDrawerOpen} setCartDrawerOpen={setCartDrawerOpen} />
             ) : (

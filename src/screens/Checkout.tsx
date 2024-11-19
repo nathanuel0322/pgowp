@@ -6,6 +6,11 @@ import { supabase } from "../supabase";
 import { toastError } from "../GlobalFunctions";
 import { UUID } from "crypto";
 import { AppContext } from "../App";
+import { Link } from "react-router-dom";
+import { Popover } from "@mui/material";
+import Calendar from "react-calendar";
+import "react-calendar/dist/Calendar.css";
+import { useMediaQuery } from "react-responsive";
 
 export interface Party {
     id: UUID;
@@ -18,27 +23,64 @@ export interface Party {
     customer_phone: string;
 }
 
+interface PartySlot {
+    date: Date;
+    range: string;
+    day_period: string;
+}
+
+type ValuePiece = Date | null;
+
+type Value = ValuePiece | [ValuePiece, ValuePiece];
+
 export default function Checkout() {
-    const [date, setDate] = useState<Date | null>(null);
     const [weekDates, setWeekDates] = useState<Date[]>([]);
     const [parties, setParties] = useState<Party[]>([]);
     //
     // const [weekParties, setWeekParties] = useState<Party[][]>([]);
     const [isloading, setIsLoading] = useState(true);
     const { cart } = useContext(AppContext);
-    const [availableslots, setAvailableSlots] = useState<
-        {
-            date: Date;
-            range: string;
-            day_period: string;
-        }[]
-    >([]);
+    const [availableslots, setAvailableSlots] = useState<{
+        [key: string]: PartySlot[];
+    }>({});
     const weekParties: Party[][] = Array(7).fill([]);
+    const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+    const openpopover = Boolean(anchorEl);
+    const id = openpopover ? "simple-popover" : undefined;
+    const [date, setDate] = useState<Value>(new Date());
+    // 833px and under will display mobile display
+    const isunder834 = useMediaQuery({ query: "(max-width: 833px)" });
+    const [availrows, setAvailRows] = useState<any[]>([]);
+    const [slotsofdaymobile, setSlotsofDayMobile] = useState<PartySlot[]>();
+    const [mobileslots, setMobileSlots] = useState<{
+        morningslots?: PartySlot[];
+        afternoonslots?: PartySlot[];
+        eveningslots?: PartySlot[];
+    }>({});
+
+    const today = new Date();
+    const startOfWeek = new Date(today);
+    startOfWeek.setDate(today.getDate() - today.getDay()); // Set to Sunday of the current week
+    const endOfWeek = new Date(startOfWeek);
+    endOfWeek.setDate(startOfWeek.getDate() + 6); // Set to Saturday of the current week
 
     console.log("parties:", parties, "\n\ncart:", cart);
 
+    const isSameWeek = (date: Date) => {
+        return date >= startOfWeek && date <= endOfWeek;
+    };
+
+    useEffect(() => {
+        console.log("date changed to:", date);
+        handleClose();
+    }, [date]);
+
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+
     const parseTime = (time: string) => {
-        console.log("time is:", time);
+        // console.log("time is:", time);
         const [timePart, period] = time.split(/(AM|PM)/i);
         let [hours, minutes] = timePart.split(":").map(Number);
 
@@ -52,14 +94,25 @@ export default function Checkout() {
     };
 
     useEffect(() => {
-        if (!cart.length) return;
+        (async () => {
+            const { data: availdata, error: availerror } = await supabase.from("availability").select("*");
+            if (availerror) {
+                console.error("Error loading availability:", availerror);
+                toastError("Error loading calendar, please try again later.");
+                return;
+            }
+            // console.log("availdata:", availdata);
+            setAvailRows(availdata);
+        })();
+    }, []);
 
-        const today = new Date();
-        setDate(today);
+    useEffect(() => {
+        if (!cart.length || !date || !availrows.length) return;
+        setAvailableSlots({});
 
         // Calculate the most recent Sunday
-        const recentSunday = new Date(today);
-        recentSunday.setDate(today.getDate() - today.getDay());
+        const recentSunday = new Date(date as Date);
+        recentSunday.setDate((date as Date).getDate() - (date as Date).getDay());
 
         // Calculate the upcoming Saturday
         const upcomingSaturday = new Date(recentSunday);
@@ -86,13 +139,6 @@ export default function Checkout() {
                 }
                 console.log("parties:", data);
                 setParties(data);
-                const { data: availdata, error: availerror } = await supabase.from("availability").select("*");
-                if (availerror) {
-                    console.error("Error loading availability:", availerror);
-                    toastError("Error loading calendar, please try again later.");
-                    return;
-                }
-                console.log("availdata:", availdata);
 
                 for (const party of data) {
                     const partyDate = new Date(party.start_time);
@@ -118,7 +164,7 @@ export default function Checkout() {
                     );
                     return total + hours * 60 + minutes;
                 }, 0);
-                console.log("totalTimeRequired:", totalTimeRequired);
+                // console.log("totalTimeRequired:", totalTimeRequired);
 
                 // morning is 10-12PM, afternoon is 12-5PM, evening is 5-10:30PM
 
@@ -137,7 +183,7 @@ export default function Checkout() {
                     const day = dates[i];
 
                     // dayavaildata is id, day, and hours for the day of the week
-                    const dayAvailData = availdata.find(
+                    const dayAvailData = availrows.find(
                         (avail) => avail.day === day.toLocaleDateString("en-US", { weekday: "long" })
                     );
                     // console.log("dayAvailData:", dayAvailData);
@@ -161,7 +207,7 @@ export default function Checkout() {
                     dayEnd.setMinutes(endTime.minutes);
 
                     // dayslots is an array of slots for the day
-                    const daySlots: { date: Date; range: string; day_period: string }[] = [];
+                    const daySlots: PartySlot[] = [];
 
                     // currentSlotStart and currentSlotEnd will initially be the start of the day
                     let currentSlotStart = new Date(dayStart);
@@ -212,18 +258,57 @@ export default function Checkout() {
                         currentSlotEnd = new Date(currentSlotStart);
                         // console.log("currentSlotStart now:", currentSlotStart, "\ncurrentSlotEnd now:", currentSlotEnd);
                     }
-                    console.log("setting available slots to:", [...availableslots, ...daySlots]);
-                    setAvailableSlots((prev) => [...prev, ...daySlots]);
+                    console.log("setting available slots to:", {
+                        ...availableslots,
+                        [day.toLocaleDateString("en-US", { weekday: "long" })]: daySlots,
+                    });
+                    // setAvailableSlots((prev) => [...prev, ...daySlots]);
+                    setAvailableSlots((prev) => ({
+                        ...prev,
+                        [day.toLocaleDateString("en-US", { weekday: "long" })]: daySlots,
+                    }));
                 }
 
                 // after loop, calculate available slots for the day
                 // for example, if user's cart is 2 hours long, find spaces, with 1 hour gap between other available slots and taken slots, for 2 hours each
 
                 // there are many conditions to consider. It is important to first have the sum of hours for the user's cart
+                if (isunder834) {
+                    const temp_slotsofdaymobile =
+                        availableslots[(date as Date).toLocaleDateString("en-US", { weekday: "long" })];
+                    console.log("setting slotsofdaymobile to:", slotsofdaymobile);
+                    setSlotsofDayMobile(temp_slotsofdaymobile);
+                    // group the slots by time of day, morning, afternoon, evening
+
+                    const { morningslots, afternoonslots, eveningslots } = (temp_slotsofdaymobile || []).reduce(
+                        (
+                            acc: {
+                                morningslots: PartySlot[];
+                                afternoonslots: PartySlot[];
+                                eveningslots: PartySlot[];
+                            },
+                            slot
+                        ) => {
+                            if (slot.day_period === "morning") acc.morningslots.push(slot);
+                            if (slot.day_period === "afternoon") acc.afternoonslots.push(slot);
+                            if (slot.day_period === "evening") acc.eveningslots.push(slot);
+                            return acc;
+                        },
+                        { morningslots: [], afternoonslots: [], eveningslots: [] }
+                    );
+
+                    console.log("setting mobile slots to:", { morningslots, afternoonslots, eveningslots });
+
+                    setMobileSlots({
+                        morningslots,
+                        afternoonslots,
+                        eveningslots,
+                    });
+                }
 
                 setIsLoading(false);
             });
-    }, [cart]);
+    }, [cart, date, availrows]);
 
     useEffect(() => {
         console.log("available slots set to:", availableslots);
@@ -235,72 +320,231 @@ export default function Checkout() {
 
     return (
         <div id="checkout-div">
-            <div className="flex justify-between gap-4">
+            <div className="flex justify-between gap-4 items-center">
                 <div id="inner-slots-div" className="font-[Figtree]">
                     <div id="inner-slots-header">
                         <div className="text-center relative">
                             <div className="slot-heading standard-header slot-clickable">
                                 <span className="text-white">
-                                    {date?.toLocaleDateString("en-US", { month: "long", year: "numeric" })}
+                                    {isunder834
+                                        ? (date as Date)?.toLocaleDateString("en-US", {
+                                              weekday: "long",
+                                              month: "short",
+                                              day: "numeric",
+                                              year: "numeric",
+                                          })
+                                        : (date as Date)?.toLocaleDateString("en-US", {
+                                              month: "long",
+                                              year: "numeric",
+                                          })}
                                 </span>
                                 <button
+                                    type="button"
                                     name="date-picker"
                                     aria-expanded="false"
                                     className="slot-datepicker-button"
                                     aria-label="Change date"
+                                    onClick={(event) => {
+                                        setAnchorEl(event.currentTarget);
+                                    }}
                                 >
                                     <MdCalendarMonth color="#50E063" />
                                 </button>
+                                <Popover
+                                    className=""
+                                    id={id}
+                                    open={openpopover}
+                                    anchorEl={anchorEl}
+                                    onClose={handleClose}
+                                    anchorOrigin={{
+                                        vertical: "bottom",
+                                        horizontal: "left",
+                                    }}
+                                    transformOrigin={{
+                                        vertical: "top",
+                                        horizontal: "left",
+                                    }}
+                                    classes={{ paper: "popoverPaper" }} // Add this line to target the popover with a custom class
+                                >
+                                    <Calendar onChange={setDate} value={date} minDate={new Date()} />
+                                </Popover>
                             </div>
                             <div id="select-header-nav-controls">
-                                <button className="select-slot-nav-button secondary">Today</button>
-                                <button className="select-slot-nav-button secondary">First Slot</button>
+                                <button
+                                    type="button"
+                                    className="select-slot-nav-button secondary"
+                                    onClick={() => setDate(new Date())}
+                                >
+                                    Today
+                                </button>
+                                <button type="button" className="select-slot-nav-button secondary">
+                                    First Slot
+                                </button>
                             </div>
                         </div>
                     </div>
                     <div id="select-slot-week-view">
                         <div id="select-slot-days-week">
-                            <a aria-label="Previous week" className="select-slot-nav-button">
-                                <MdChevronLeft />
-                            </a>
+                            {/* if date is in the same week as new Date(), dont allow going back */}
+                            {date && !isSameWeek(date as Date) && (
+                                <button
+                                    title="Previous Week"
+                                    className="select-slot-nav-button !rounded-[50%]"
+                                    type="button"
+                                    onClick={() =>
+                                        setDate((prev) => {
+                                            const newDate = new Date(prev as Date);
+                                            newDate.setDate(newDate.getDate() - 7);
+                                            return newDate;
+                                        })
+                                    }
+                                >
+                                    <MdChevronLeft />
+                                </button>
+                            )}
                             {weekDates.map((weekDate, index) => {
-                                const istoday = date?.getDate() === weekDate.getDate();
+                                const istoday =
+                                    (date as Date).getDate() === today.getDate() &&
+                                    (date as Date).getDate() === weekDate.getDate();
+                                const slotsofday =
+                                    availableslots[weekDate.toLocaleDateString("en-US", { weekday: "long" })];
+                                // group the slots by time of day, morning, afternoon, evening
+
+                                const { morningslots, afternoonslots, eveningslots } = (slotsofday || []).reduce(
+                                    (
+                                        acc: {
+                                            morningslots: PartySlot[];
+                                            afternoonslots: PartySlot[];
+                                            eveningslots: PartySlot[];
+                                        },
+                                        slot
+                                    ) => {
+                                        if (slot.day_period === "morning") acc.morningslots.push(slot);
+                                        if (slot.day_period === "afternoon") acc.afternoonslots.push(slot);
+                                        if (slot.day_period === "evening") acc.eveningslots.push(slot);
+                                        return acc;
+                                    },
+                                    { morningslots: [], afternoonslots: [], eveningslots: [] }
+                                );
+
                                 return (
                                     <div className="day-view-container text-white" key={index}>
-                                        <h2
-                                            className={`select-slot-view-day-slots-header ${
-                                                istoday ? "!pb-[.13rem]" : ""
-                                            }`}
+                                        <button
+                                            type="button"
+                                            className={`select-slot-view-day-slots-header w-full ${
+                                                istoday && !isunder834 ? "!pb-[.13rem]" : ""
+                                            } ${isunder834 ? "" : "mb-2"}`}
+                                            // disabled={!isunder834}
+                                            onClick={() => setDate(weekDate)}
                                         >
-                                            <span className="select-slot-week-view-day-slots-header-long">
-                                                {weekDate.toLocaleDateString("en-US", { weekday: "long" })}
-                                            </span>
-                                            <span className="select-slot-week-view-day-slots-header-short">
-                                                {weekDate.toLocaleDateString("en-US", { weekday: "short" })}
+                                            <span
+                                                className={`${
+                                                    isunder834
+                                                        ? "select-slot-week-view-day-slots-header-short"
+                                                        : "select-slot-week-view-day-slots-header-long"
+                                                }`}
+                                            >
+                                                {weekDate.toLocaleDateString("en-US", {
+                                                    weekday: isunder834 ? "short" : "long",
+                                                })}
                                             </span>
                                             <span
                                                 className={`select-slot-week-view-day-slots-header-date ${
-                                                    date?.getDate() === weekDate.getDate()
+                                                    istoday
                                                         ? "text-[#50E063] select-slot-week-view-day-slots-header-current-date"
                                                         : ""
                                                 }`}
                                             >
                                                 {weekDate.getDate()}
                                             </span>
-                                        </h2>
-                                        <ol>
-                                            <li>No available slots</li>
-                                        </ol>
+                                        </button>
+                                        {!isunder834 && (
+                                            <ol>
+                                                {slotsofday?.length ? (
+                                                    <>
+                                                        {morningslots.length > 0 && (
+                                                            <SlotSection
+                                                                title="Morning"
+                                                                slots={morningslots}
+                                                                isunder834={isunder834}
+                                                            />
+                                                        )}
+                                                        {afternoonslots.length > 0 && (
+                                                            <SlotSection
+                                                                title="Afternoon"
+                                                                slots={afternoonslots}
+                                                                isunder834={isunder834}
+                                                            />
+                                                        )}
+                                                        {eveningslots.length > 0 && (
+                                                            <SlotSection
+                                                                title="Evening"
+                                                                slots={eveningslots}
+                                                                isunder834={isunder834}
+                                                            />
+                                                        )}
+                                                    </>
+                                                ) : (
+                                                    <li className="select-slot-no-available-slots">
+                                                        No available slots
+                                                    </li>
+                                                )}
+                                            </ol>
+                                        )}
                                     </div>
                                 );
                             })}
-                            <a aria-label="Next week" className="select-slot-nav-button">
+                            <button
+                                title="Next Week"
+                                className="select-slot-nav-button !rounded-[50%]"
+                                type="button"
+                                onClick={() =>
+                                    setDate((prev) => {
+                                        const newDate = new Date(prev as Date);
+                                        newDate.setDate(newDate.getDate() + 7);
+                                        return newDate;
+                                    })
+                                }
+                            >
                                 <MdChevronRight />
-                            </a>
+                            </button>
                         </div>
                     </div>
+                    {isunder834 && (
+                        <ol className="max-h-full">
+                            {slotsofdaymobile?.length ? (
+                                <>
+                                    {mobileslots.morningslots && mobileslots.morningslots.length > 0 && (
+                                        <SlotSection
+                                            title="Morning"
+                                            slots={mobileslots.morningslots}
+                                            isunder834={isunder834}
+                                        />
+                                    )}
+                                    {mobileslots.afternoonslots && mobileslots.afternoonslots.length > 0 && (
+                                        <SlotSection
+                                            title="Afternoon"
+                                            slots={mobileslots.afternoonslots}
+                                            isunder834={isunder834}
+                                        />
+                                    )}
+                                    {mobileslots.eveningslots && mobileslots.eveningslots.length > 0 && (
+                                        <SlotSection
+                                            title="Evening"
+                                            slots={mobileslots.eveningslots}
+                                            isunder834={isunder834}
+                                        />
+                                    )}
+                                </>
+                            ) : (
+                                <li className="select-slot-no-available-slots select-slot-no-available-slots-mobile">
+                                    No available slots
+                                </li>
+                            )}
+                        </ol>
+                    )}
                 </div>
-                <div className="booking-details-summary material">
+                <div className="booking-details-summary material h-fit">
                     <h1 className="summaryHeading">Summary</h1>
                     <div className="booking-details__leftSection___WRazR w-full">
                         <span className="summary-section-title">Booking</span>
@@ -330,3 +574,46 @@ export default function Checkout() {
         </div>
     );
 }
+
+const SlotSection = ({ title, slots, isunder834 }: { title: string; slots: PartySlot[]; isunder834: boolean }) => (
+    <div>
+        <h6 className="text-center m-[0.85rem] text-white">{title}</h6>
+        <ol>
+            {slots.length ? (
+                slots.map((slot, index) => {
+                    const split_slot = slot.range.split(" - ");
+                    const [hours, minutes] = split_slot[0].split(":");
+                    const start_time = `${hours}:${minutes}`;
+                    const timeofday1 = split_slot[0].split(" ")[1];
+                    const [end_hours, end_minutes] = split_slot[1].split(":");
+                    const end_time = `${end_hours}:${end_minutes}`;
+                    const timeofday2 = split_slot[1].split(" ")[1];
+
+                    return (
+                        <li key={index}>
+                            <Link
+                                to="/checkout-details"
+                                state={{ slot }}
+                                className={`select-slot-link-box material ${
+                                    isunder834 ? "whitespace-nowrap text-2xl" : "whitespace-[initial]"
+                                }`}
+                            >
+                                <span className="select-slot-slot-time">
+                                    <span>{start_time}</span>
+                                    <span className="select-slot-meridiem">{timeofday1}</span>
+                                </span>
+                                <span className="select-slot-slot-separator"> - </span>
+                                <span className="select-slot-slot-time">
+                                    <span>{end_time}</span>
+                                    <span className="select-slot-meridiem">{timeofday2}</span>
+                                </span>
+                            </Link>
+                        </li>
+                    );
+                })
+            ) : (
+                <li>No available slots</li>
+            )}
+        </ol>
+    </div>
+);

@@ -51,12 +51,14 @@
     padding-bottom: 24px;
     padding-bottom: 1.5rem;
 }
+
 #select-slot-week-view {
     display: block;
     width: 100%;
     margin-top: 20px;
     margin-top: 1.25rem;
 }
+
 .select-slot__weekViewHeader___1THtz {
     display: block;
 }
@@ -137,8 +139,7 @@
 .slot-datepicker-button:focus,
 .select-slot__headerNavigationControlArrows___M9DXg button:focus,
 #select-header-nav-controls button:focus,
-.select-slot__showMore___2m7pe:focus,
-.select-slot__slotLinkBox___2pBq7:focus {
+.select-slot__showMore___2m7pe:focus {
     outline-style: dashed;
     outline-width: 2px;
     outline-offset: 1px;
@@ -302,23 +303,7 @@
     margin-right: 4px;
     margin-right: 0.3rem;
 }
-.select-slot-nav-button {
-    width: 3pc;
-    width: 3rem;
-    height: 3pc;
-    height: 3rem;
-    -ms-flex-pack: center;
-    justify-content: center;
-    -ms-flex-align: center;
-    align-items: center;
-    display: -ms-flexbox;
-    display: flex;
-    border-radius: 50% !important;
-    margin: 1pc 0;
-    margin: 1rem 0;
-    background-color: #e5e7eb;
-    cursor: pointer;
-}
+
 .select-slot-nav-button > * {
     color: inherit;
     margin: 0;
@@ -332,7 +317,6 @@
 }
 
 .select-slot-view-day-slots-header {
-    margin-bottom: 0.5rem;
     white-space: nowrap;
     text-align: center;
     font-size: 1.05rem;
@@ -346,27 +330,28 @@
     padding: 8px 0;
     padding: 0.5rem 0;
 }
+
+.select-slot-week-view-day-slots-header-long,
 .select-slot-week-view-day-slots-header-short {
-    font-weight: 600;
-    display: none;
-}
-.select-slot-week-view-day-slots-header-long {
     font-weight: 600;
     display: block;
     color: white;
 }
+
 .select-slot-week-view-day-slots-header-date {
     font-weight: 700;
     font-size: 30px;
     font-size: 1.875rem;
     position: relative;
 }
+
 .select-slot-week-view-day-slots-header-current-date:after {
     content: "Today";
     font-size: 0.7rem;
     display: block;
     color: #9ca3af;
 }
+
 .select-slot__openDayHeader___swtt6 {
     padding: 1pc;
     padding: 1rem;
@@ -436,24 +421,23 @@
     color: #000;
     background-color: transparent;
 }
-.day-view-container li {
-    padding: 8px;
+
+.select-slot-no-available-slots {
     padding: 0.5rem;
     color: #939393;
     color: #000;
     background-color: #e5e7eb;
-    font-size: 1pc;
     font-size: 1rem;
     font-weight: 400;
     box-shadow: none;
     border-radius: 0.5rem;
-    margin-top: 3pc !important;
     margin-top: 3rem !important;
 }
-.day-view-container li,
-.select-slot__slotLinkBox___2pBq7 {
+
+.select-slot-no-available-slots,
+.select-slot-no-available-slots-mobile,
+.select-slot-link-box {
     display: block;
-    margin: 0 auto 8px;
     margin: 0 auto 0.5rem;
     text-align: center;
     text-decoration: none;
@@ -461,17 +445,7 @@
     width: 90%;
     max-width: 450px;
 }
-.select-slot__slotLinkBox___2pBq7 {
-    cursor: pointer;
-    outline: 1px solid transparent;
-    padding: 8px 0;
-    padding: 0.5rem 0;
-    color: #000;
-}
-.select-slot__slotLinkBox___2pBq7:hover {
-    border-style: solid;
-    outline: 2px solid #1b6e9d;
-}
+
 .select-slot__showMore___2m7pe {
     color: #1b6e9d;
     text-decoration: none;
@@ -479,9 +453,7 @@
 .select-slot__slotMeridiem___tonF7 {
     font-size: 0.8em;
 }
-.select-slot__slotLinkBox___2pBq7 {
-    white-space: nowrap;
-}
+
 .select-slot__noSlotsHelpPopup___dtkhp {
     opacity: 0;
     pointer-events: none;
@@ -617,15 +589,8 @@
 .DayPicker-Day--outside {
     color: #8b2328;
 }
-@media screen and (max-width: 1200px) {
-    .select-slot-week-view-day-slots-header-long {
-        display: block;
-    }
-}
+
 @media screen and (max-width: 1490px) {
-    .day-view-container .select-slot__slotLinkBox___2pBq7 {
-        white-space: initial;
-    }
     .day-view-container .select-slot__slotSeparator___3b9pP {
         line-height: 0.6rem;
         display: block;
@@ -634,14 +599,7 @@
         display: block;
     }
 }
-@media screen and (max-width: 800px) {
-    .select-slot-week-view-day-slots-header-short {
-        display: block;
-    }
-    .select-slot-week-view-day-slots-header-long {
-        display: none;
-    }
-}
+
 .select-slot__locationName___3OUPe,
 .select-slot__serviceName___14MHL,
 .select-slot__staffName___7XsaJ {
@@ -672,6 +630,12 @@
     width: 1px !important;
     overflow: hidden;
 }
+
+.select-slot-no-available-slots-mobile {
+    font-size: 1.4rem;
+    padding: 0.5rem 0;
+}
+
 @media screen and (max-width: 800px) {
     .select-slot__cart___1msNd {
         margin-left: 0;
@@ -785,10 +749,7 @@
     .select-slot__dayView___2QHji {
         display: block;
     }
-    .select-slot__weekViewHeader___1THtz,
-    #select-slot-week-view {
-        display: none;
-    }
+
     .select-slot__selectedDayMarker___3XdPh > div {
         background-color: #e5e7eb;
         border-radius: 0.5rem;
@@ -816,13 +777,12 @@
     .select-slot__weekViewTimezone___3AjIl {
         font-size: 1.2rem;
     }
-    .select-slot__slotLinkBox___2pBq7 {
-        font-size: 1.4rem;
-    }
+
     .day-view-container li {
         font-size: 1.4rem;
         padding: 0.5rem 0;
     }
+
     .slot-heading {
         text-align: center;
     }
@@ -835,7 +795,12 @@
     .select-slot__headerContainer___1MhcB {
         display: none;
     }
+
+    .select-slot-link-box {
+        font-size: 1.4rem;
+    }
 }
+
 @media screen and (max-width: 400px) {
     .select-slot__largeMobileHeader___3XrOG {
         display: none;
@@ -851,35 +816,6 @@
     }
     .select-slot__dayViewHeaderDayDateShort___1FvcI {
         font-size: 1.25rem;
-    }
-}
-@media screen and (max-width: 359px) {
-    .slot-heading {
-        font-size: 1.6rem;
-    }
-    .select-slot__navigationChevron___1YAIw {
-        border: 1.6rem;
-    }
-    .select-slot__headerContent___12YHx {
-        padding: 0.5rem;
-    }
-    .select-slot-week-view-day-slots-header-short {
-        font-size: 0.9rem;
-        font-weight: 500;
-    }
-    .select-slot__weekViewTimezone___3AjIl {
-        font-size: 0.8rem;
-    }
-    .select-slot-nav-button {
-        width: 1.5rem;
-        height: 1.5rem;
-    }
-    .select-slot-nav-button > * {
-        font-size: 1.5rem;
-    }
-    .select-slot__mobileViewHeadingContainer___1E-cL h2 {
-        margin-left: 0.033rem;
-        margin-right: 0.033rem;
     }
 }
 .select-slot__slotsSectionContainer___N1lwo {
@@ -910,13 +846,12 @@
     }
 }
 
-#checkout-div button {
+#checkout-div button:not(.select-slot-view-day-slots-header) {
     background-color: #e5e7eb;
     border: none;
     color: black;
-    border-radius: 0.5rem !important;
+    border-radius: 0.5rem;
     transition: none;
-    transition: all 0.3s;
 }
 
 #checkout-div button:hover {
@@ -949,6 +884,51 @@
     transform: translate(-50%, -50%);
 }
 
+.select-slot-nav-button {
+    width: 3rem;
+    height: 3rem;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -ms-flex-align: center;
+    align-items: center;
+    display: -ms-flexbox;
+    display: flex;
+    border-radius: 50%;
+    margin: 1rem 0;
+    background-color: #e5e7eb;
+    cursor: pointer;
+}
+
+@media screen and (max-width: 359px) {
+    .slot-heading {
+        font-size: 1.6rem;
+    }
+    .select-slot__navigationChevron___1YAIw {
+        border: 1.6rem;
+    }
+    .select-slot__headerContent___12YHx {
+        padding: 0.5rem;
+    }
+    .select-slot-week-view-day-slots-header-short {
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+    .select-slot__weekViewTimezone___3AjIl {
+        font-size: 0.8rem;
+    }
+    .select-slot-nav-button {
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+    .select-slot-nav-button > * {
+        font-size: 1.5rem;
+    }
+    .select-slot__mobileViewHeadingContainer___1E-cL h2 {
+        margin-left: 0.033rem;
+        margin-right: 0.033rem;
+    }
+}
+
 .booking-details-summary {
     background-color: white;
     color: black;
@@ -968,6 +948,15 @@
     border-radius: 0.8125rem;
     margin: 1.25rem;
     font-family: Figtree;
+}
+
+@media screen and (max-width: 1010px) {
+    .booking-details-summary {
+        display: none;
+        -ms-flex-item-align: center;
+        align-self: center;
+        width: 90%;
+    }
 }
 
 .summaryHeading {
@@ -1044,4 +1033,45 @@
     font-style: normal;
     font-weight: 500;
     line-height: normal;
+}
+
+.material {
+    background-color: white;
+    color: black;
+    box-shadow: rgb(52 48 79 / 15%) 0px 4px 12px;
+    border-color: #00000012;
+    border-radius: 0.5rem;
+}
+
+.select-slot-link-box {
+    cursor: pointer;
+    outline: 1px solid transparent;
+    padding: 0.5rem 0;
+    white-space: nowrap;
+    transition: none;
+}
+
+.select-slot-link-box:hover {
+    border-style: solid;
+    outline: 2px solid red;
+}
+
+@media (min-width: 834px) {
+    .select-slot-slot-time,
+    .select-slot-slot-separator {
+        display: block;
+    }
+
+    .select-slot-slot-separator {
+        line-height: 0.6rem;
+    }
+}
+
+.select-slot-meridiem {
+    font-size: 0.8em;
+}
+
+.react-calendar {
+    font-family: inherit !important;
+    font-size: 1.25rem !important;
 }
