@@ -43,7 +43,7 @@ export default function Checkout() {
     const [availableslots, setAvailableSlots] = useState<{
         [key: string]: PartySlot[];
     }>({});
-    const weekParties: Party[][] = Array(7).fill([]);
+    const weekParties: Party[][] = Array.from({ length: 7 }, () => []);
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
     const openpopover = Boolean(anchorEl);
     const id = openpopover ? "simple-popover" : undefined;
@@ -109,6 +109,7 @@ export default function Checkout() {
     useEffect(() => {
         if (!cart.length || !date || !availrows.length) return;
         setAvailableSlots({});
+        setIsLoading(true);
 
         // Calculate the most recent Sunday
         const recentSunday = new Date(date as Date);
@@ -131,6 +132,7 @@ export default function Checkout() {
             .from("parties")
             .select("*")
             .or(`start_time.gte.${recentSunday.toISOString()},end_time.lte.${upcomingSaturday.toISOString()}`)
+            .order("start_time", { ascending: false })
             .then(async ({ data, error }) => {
                 if (error) {
                     console.error("Error loading parties:", error);
@@ -140,7 +142,9 @@ export default function Checkout() {
                 console.log("parties:", data);
                 setParties(data);
 
+                // console.log("weekParties before:", weekParties);
                 for (const party of data) {
+                    // console.log("current party:", party);
                     const partyDate = new Date(party.start_time);
                     const dayIndex = partyDate.getDay();
                     if (!weekParties[dayIndex]) {
@@ -148,7 +152,7 @@ export default function Checkout() {
                     }
                     weekParties[dayIndex].push(party);
                 }
-                console.log("weekParties:", weekParties);
+                // console.log("weekParties after:", weekParties);
 
                 // Calculate the total time required based on the items in the cart
                 const totalTimeRequired = cart.reduce((total, item) => {
@@ -174,9 +178,13 @@ export default function Checkout() {
                 // if there are no parties, just begin from the start of the day and end at the end of the day
 
                 for (let i = 0; i < 7; i++) {
+                    // Create a new Date object for the start of today (midnight)
+                    const startOfToday = new Date(today);
+                    startOfToday.setHours(0, 0, 0, 0);
+
                     // if the date is in the past, skip it
-                    if (dates[i] < today) {
-                        console.log("skipping date:", dates[i]);
+                    if (dates[i] < startOfToday) {
+                        // console.log("skipping date:", dates[i]);
                         continue;
                     }
                     // day is the date object for this iteration
@@ -196,9 +204,31 @@ export default function Checkout() {
 
                     // dayStart will be the start of the day
                     const dayStart = new Date(day);
-                    const startTime = parseTime(dayAvailData.hours.split(" - ")[0]);
-                    dayStart.setHours(startTime.hours);
-                    dayStart.setMinutes(startTime.minutes);
+                    const { hours: availhours, minutes: availmins } = parseTime(dayAvailData.hours.split(" - ")[0]);
+                    dayStart.setHours(availhours, availmins);
+
+                    console.log("Initial dayStart:", dayStart.toLocaleTimeString());
+
+                    // if there are any parties on the day, check to see if their slot time +- 1.5 hours overlaps with daystart
+                    // if it does, set daystart to the end of the party + 1.5 hours
+                    for (const party of weekParties[day.getDay()]) {
+                        const partyStart = new Date(party.start_time);
+                        const partyEnd = new Date(party.end_time);
+
+                        if (dayStart >= partyStart && dayStart < partyEnd) {
+                            console.log("Overlapping party detected. Adjusting dayStart...");
+                            console.log(
+                                "dayStart before partyStart:",
+                                dayStart.toLocaleTimeString(),
+                                "\npartyEnd:",
+                                partyEnd.toLocaleTimeString()
+                            );
+                            dayStart.setHours(partyEnd.getHours(), partyEnd.getMinutes());
+                            console.log("dayStart after partyEnd:", dayStart.toLocaleTimeString());
+                            dayStart.setMinutes(dayStart.getMinutes() + 90); // Add 1.5 hours
+                            console.log("Updated dayStart:", dayStart.toLocaleTimeString());
+                        }
+                    }
 
                     // dayEnd will be the end of the day
                     const dayEnd = new Date(day);
@@ -212,12 +242,14 @@ export default function Checkout() {
                     // currentSlotStart and currentSlotEnd will initially be the start of the day
                     let currentSlotStart = new Date(dayStart);
                     let currentSlotEnd = new Date(dayStart);
-                    // console.log(
-                    //     "initial currentSlotStart:",
-                    //     currentSlotStart,
-                    //     "\ninitial currentSlotEnd:",
-                    //     currentSlotEnd
-                    // );
+                    console.log(
+                        "initial currentSlotStart:",
+                        currentSlotStart.toLocaleTimeString(),
+                        "\ninitial currentSlotEnd:",
+                        currentSlotEnd.toLocaleTimeString(),
+                        "\ndayEnd:",
+                        dayEnd.toLocaleTimeString()
+                    );
 
                     // while the current slot end is earlier than the end of the day
                     while (currentSlotEnd < dayEnd) {
@@ -235,8 +267,12 @@ export default function Checkout() {
                         // Calculate the duration of the slot
                         const slotDuration = (currentSlotEnd.getTime() - currentSlotStart.getTime()) / (1000 * 60);
 
+                        // Check for conflicts with existing parties
+                        const dayIndex = day.getDay();
+
                         // Only add the slot if the duration is at least the total time required
                         if (slotDuration >= totalTimeRequired) {
+                            console.log("current slot start:", currentSlotStart, "\ncurrent slot end:", currentSlotEnd);
                             const currentSlotRange = `${currentSlotStart.toLocaleTimeString()} - ${currentSlotEnd.toLocaleTimeString()}`;
                             const currentSlotDayPeriod =
                                 currentSlotStart.getHours() < 12
@@ -244,11 +280,50 @@ export default function Checkout() {
                                     : currentSlotStart.getHours() < 17
                                     ? "afternoon"
                                     : "evening";
-                            daySlots.push({
-                                date: new Date(currentSlotStart),
-                                range: currentSlotRange,
-                                day_period: currentSlotDayPeriod,
+
+                            const hasConflict = weekParties[dayIndex]?.some((party) => {
+                                const partyStart = new Date(party.start_time);
+                                const partyEnd = new Date(party.end_time);
+                                // if the current slot starts at the same time as booked party AND ends before the end of the party,
+                                // or if the current slot ends after the start of the party AND ends before or at the same time as the booked party,
+                                // or if the current slot starts before or at the same time as the booked party AND ends after or at the same time as the booked party
+                                // return true
+                                // console.log(
+                                //     "conflict for party:",
+                                //     party,
+                                //     "\nwith slot:",
+                                //     {
+                                //         currentSlotStart,
+                                //         currentSlotEnd,
+                                //         partyStart,
+                                //         partyEnd,
+                                //     },
+                                //     "\nis:",
+                                //     (currentSlotStart >= partyStart && currentSlotStart < partyEnd) ||
+                                //         (currentSlotEnd > partyStart && currentSlotEnd <= partyEnd) ||
+                                //         (currentSlotStart <= partyStart && currentSlotEnd >= partyEnd)
+                                // );
+
+                                return (
+                                    (currentSlotStart >= partyStart && currentSlotStart < partyEnd) ||
+                                    (currentSlotEnd > partyStart && currentSlotEnd <= partyEnd) ||
+                                    (currentSlotStart <= partyStart && currentSlotEnd >= partyEnd)
+                                );
                             });
+
+                            if (!hasConflict) {
+                                console.log("adding to daySlots:", {
+                                    date: new Date(currentSlotStart),
+                                    range: currentSlotRange,
+                                    day_period: currentSlotDayPeriod,
+                                });
+
+                                daySlots.push({
+                                    date: new Date(currentSlotStart),
+                                    range: currentSlotRange,
+                                    day_period: currentSlotDayPeriod,
+                                });
+                            }
                         }
 
                         // Move currentSlotStart to the end of the current slot plus 1 hour and 30 minutes
@@ -257,6 +332,17 @@ export default function Checkout() {
                         currentSlotStart.setMinutes(currentSlotStart.getMinutes() + 30);
                         currentSlotEnd = new Date(currentSlotStart);
                         // console.log("currentSlotStart now:", currentSlotStart, "\ncurrentSlotEnd now:", currentSlotEnd);
+
+                        // Adjust currentSlotStart if it overlaps with a party
+                        for (const party of weekParties[dayIndex]) {
+                            const partyEnd = new Date(party.end_time);
+                            if (currentSlotStart < partyEnd) {
+                                currentSlotStart = new Date(partyEnd);
+                                currentSlotStart.setHours(currentSlotStart.getHours() + 1);
+                                currentSlotStart.setMinutes(currentSlotStart.getMinutes() + 30);
+                                currentSlotEnd = new Date(currentSlotStart);
+                            }
+                        }
                     }
                     console.log("setting available slots to:", {
                         ...availableslots,

@@ -854,11 +854,6 @@
     transition: none;
 }
 
-#checkout-div button:hover {
-    background: #d1d5db;
-    color: black;
-}
-
 #select-header-nav-controls > button {
     text-transform: uppercase;
     min-width: 5.5rem;
@@ -1066,6 +1061,13 @@
         line-height: 0.6rem;
     }
 }
+/* 
+@media (max-width: 833px) {
+    #checkout-div button:hover {
+        background: #d1d5db;
+        color: black;
+    }
+} */
 
 .select-slot-meridiem {
     font-size: 0.8em;

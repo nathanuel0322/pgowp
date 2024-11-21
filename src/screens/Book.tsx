@@ -28,7 +28,6 @@ export default function Book({ cartDrawerOpen }: { cartDrawerOpen: boolean }) {
                 {
                     title: "VR- Virtual Reality- 10 yrs+",
                     price: 80,
-                    time: "2 hr",
                     details: `VR- Virtual Reality for ages 10 and up.\n$20 off if booked the same time with party = $80 / $100 on-site`,
                 },
                 {
@@ -39,19 +38,16 @@ export default function Book({ cartDrawerOpen }: { cartDrawerOpen: boolean }) {
                 {
                     title: "Photobooth without Prints",
                     price: 100,
-                    time: "2 hr",
                     details: `Photobooth usage-take photos with our Photoboot,choose different picture boarders, add sticker. Images to photos and share to your phone or email etc.`,
                 },
                 {
                     title: 'Photobooth with 2" x 3" Sticker Printouts',
                     price: 125,
-                    time: "2 hr",
                     details: `Photobooth usage for duration of party.. (max print outs 15), unlimited digital uploads.`,
                 },
                 {
                     title: "Karaoke",
                     price: 75,
-                    time: "2 hr",
                     details: `Karaoke- 4 mics for duration of party.`,
                 },
             ],
@@ -91,24 +87,20 @@ export default function Book({ cartDrawerOpen }: { cartDrawerOpen: boolean }) {
                 {
                     title: "Popcorn Machine",
                     price: 175,
-                    time: "1 hr 30 mins",
                     details: `Serving of Popcorn for each party goer.`,
                 },
                 {
                     title: "Cotton Candy Machine",
                     price: 225,
-                    time: "1 hr 30 mins",
                     details: `One Serving of cotton candy for each party goer.`,
                 },
                 {
                     title: "Sno Cone",
                     price: 125,
-                    time: "2 hr",
                 },
                 {
                     title: "Large Hot Dog Grill",
                     price: 150,
-                    time: "4 hr",
                     details: `Use of Hot Dog grill only-Must supply your own Hotdogs.`,
                 },
             ],
@@ -364,7 +356,16 @@ export default function Book({ cartDrawerOpen }: { cartDrawerOpen: boolean }) {
                                             (box.title !== "Additional Time- Full Amount" || isGamingPartyInCart) &&
                                             (!gamingPartyTitles.includes(box.title) ||
                                                 !isGamingPartyInCart ||
-                                                isitemincart);
+                                                isitemincart) &&
+                                            !(
+                                                ([
+                                                    "$200 Deposit required for Stand Alone Laser Tag Party",
+                                                    "Movie and Gaming Combo",
+                                                    "Movie Party",
+                                                ].includes(box.title) ||
+                                                    item.title === "Schools and Corporate Events") &&
+                                                isGamingPartyInCart
+                                            );
 
                                         return (
                                             <div
