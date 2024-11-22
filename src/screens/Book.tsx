@@ -31,9 +31,9 @@ export default function Book({ cartDrawerOpen }: { cartDrawerOpen: boolean }) {
                     details: `VR- Virtual Reality for ages 10 and up.\n$20 off if booked the same time with party = $80 / $100 on-site`,
                 },
                 {
-                    title: "Add on - Two .15 min laser Tag Session",
+                    title: "Add on - Two 15 min laser Tag Session",
                     time: "45 mins",
-                    details: `Add On- Fun Fun Fun! Arena style live scoring Laser Tag. Once you have the space, we will setup our obstacles and let the fun begin!! $22 per child for Two .15 min Sessions. Very important - Please keep in mind Weather Permitting. If rain is present, it has to be canceled to protect our Equipment. Thank you`,
+                    details: `Add On- Fun Fun Fun! Arena style live scoring Laser Tag. Once you have the space, we will setup our obstacles and let the fun begin!! $22 per child for Two 15 min Sessions. Very important - Please keep in mind Weather Permitting. If rain is present, it has to be canceled to protect our Equipment. Thank you`,
                 },
                 {
                     title: "Photobooth without Prints",
@@ -109,9 +109,9 @@ export default function Book({ cartDrawerOpen }: { cartDrawerOpen: boolean }) {
             title: "Professional Arena Style Laser Tag for up to 18 players",
             boxes: [
                 {
-                    title: "Add on - Two .15 min laser Tag Session",
+                    title: "Add on - Two 15 min laser Tag Session",
                     time: "45 mins",
-                    details: `Add On- Fun Fun Fun! Arena style live scoring Laser Tag. Once you have the space, we will setup our obstacles and let the fun begin!! $22 per child for Two .15 min Sessions. Very important - Please keep in mind Weather Permitting. If rain is present, it has to be canceled to protect our Equipment. Thank you`,
+                    details: `Add On- Fun Fun Fun! Arena style live scoring Laser Tag. Once you have the space, we will setup our obstacles and let the fun begin!! $22 per child for Two 15 min Sessions. Very important - Please keep in mind Weather Permitting. If rain is present, it has to be canceled to protect our Equipment. Thank you`,
                 },
                 {
                     title: "$200 Deposit required for Stand Alone Laser Tag Party",
@@ -144,19 +144,16 @@ export default function Book({ cartDrawerOpen }: { cartDrawerOpen: boolean }) {
                 {
                     title: "2 Extra Large Connect 4",
                     price: 145,
-                    time: "2 hr",
                     details: `Two Extra Large size Connect 4`,
                 },
                 {
                     title: "Extra large yard Jenga",
                     price: 60,
-                    time: "1 hr 30 mins",
                     details: `Use of Jumbo Jenga yard game,for duration of party.`,
                 },
                 {
                     title: "Extra Large Connect 4",
                     price: 80,
-                    time: "2 hr",
                     details: `Use of Extra Large Connect 4 for duration of Party.`,
                 },
             ],
@@ -358,15 +355,13 @@ export default function Book({ cartDrawerOpen }: { cartDrawerOpen: boolean }) {
                                                 !isGamingPartyInCart ||
                                                 isitemincart) &&
                                             !(
-                                                ([
+                                                [
                                                     "$200 Deposit required for Stand Alone Laser Tag Party",
                                                     "Movie and Gaming Combo",
                                                     "Movie Party",
-                                                ].includes(box.title) ||
-                                                    item.title === "Schools and Corporate Events") &&
-                                                isGamingPartyInCart
-                                            );
-
+                                                ].includes(box.title) && isGamingPartyInCart
+                                            ) &&
+                                            item.title !== "Schools and Corporate Events";
                                         return (
                                             <div
                                                 style={{

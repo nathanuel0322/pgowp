@@ -16,6 +16,7 @@ import "../../assets/css/routing.css";
 import CartDrawer from "../booking/CartDrawer";
 import Header from "./Header";
 import Checkout from "../../screens/Checkout";
+import CheckoutDetails from "../../screens/CheckoutDetails";
 
 export default function Routing() {
     const hamburgerdetector = useMediaQuery({ query: "(max-width: 991px)" });
@@ -43,6 +44,7 @@ export default function Routing() {
                 <Route path="/bday-card" element={<BDayCard />} />
                 <Route path="/book" element={<Book cartDrawerOpen={cartDrawerOpen} />} />
                 <Route path="/checkout" element={<Checkout />} />
+                <Route path="/checkout-details" element={<CheckoutDetails />} />
             </Routes>
         </div>
     );

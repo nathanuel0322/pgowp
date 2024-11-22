@@ -2,6 +2,7 @@
 // import { createClient, SupabaseClient, User as SupabaseUser } from "@supabase/supabase-js";
 import { createClient } from "@supabase/supabase-js";
 import { Resend } from "resend";
+import Stripe from "stripe";
 
 // interface User extends SupabaseUser {
 //     sub?: string;
@@ -623,6 +624,44 @@ async function handleSendEmail(request, env) {
     return jsonResponse({ body: null, status: 204 });
 }
 
+async function handleCreateCheckoutSession(request, env, stripe) {
+    const { stripe_customer_id, redirect_to, items } = await request.json();
+    const origin = request.headers.get("Origin");
+    console.log("origin:", origin);
+    const finishedUrl = origin + redirect_to;
+
+    try {
+        let products = [];
+        const item_names = items.map((item) => item.name);
+        for await (const product of stripe.product.list()) {
+            console.log("product:", product);
+            if (item_names.includes(product.name)) {
+                products.push({ name: product.name, default_price: product.default_price });
+                if (products.length === item_names.length) break;
+            }
+        }
+
+        const session = await stripe.checkout.sessions.create({
+            customer: stripe_customer_id,
+            line_items: items.map((item) => {
+                const product = products.find((prod) => prod.name === item.name);
+                return {
+                    price: product.default_price,
+                    quantity: 1,
+                };
+            }),
+            mode: "payment",
+            success_url: `${finishedUrl}?success=true`,
+            cancel_url: `${finishedUrl}?canceled=true`,
+        });
+
+        return jsonResponse({ url: session.url });
+    } catch (error) {
+        console.error("Error creating checkout session:", error);
+        return jsonResponse("Internal Server Error", 500);
+    }
+}
+
 export default {
     async fetch(request, env) {
         // console.log("env:", env);
@@ -634,6 +673,9 @@ export default {
                 return jsonResponse({ body: null, request });
             }
 
+            const stripe = new Stripe(
+                env.NODE_ENV === "development" ? env.STRIPE_SECRET_TEST_KEY : env.STRIPE_SECRET_KEY
+            );
             const supabase = createClient("https://jpbsmlujqqoemllljdsz.supabase.co", env.SUPABASE_SERVICE_ROLE, {
                 auth: {
                     persistSession: false,
@@ -647,6 +689,8 @@ export default {
 
             if (request.method === "POST") {
                 if (url.pathname === "/api/send-email") return handleSendEmail(request, env);
+                else if (url.pathname === "/api/create-checkout-session")
+                    return handleCreateCheckoutSession(request, env, stripe);
             }
 
             return jsonResponse({ body: "Not Found", status: 404 });

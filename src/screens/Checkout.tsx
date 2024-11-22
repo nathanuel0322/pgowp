@@ -23,7 +23,7 @@ export interface Party {
     customer_phone: string;
 }
 
-interface PartySlot {
+export interface PartySlot {
     date: Date;
     range: string;
     day_period: string;
@@ -406,7 +406,7 @@ export default function Checkout() {
 
     return (
         <div id="checkout-div">
-            <div className="flex justify-between gap-4 items-center">
+            <div className="flex justify-between gap-4 items-start">
                 <div id="inner-slots-div" className="font-[Figtree]">
                     <div id="inner-slots-header">
                         <div className="text-center relative">
@@ -462,9 +462,6 @@ export default function Checkout() {
                                     onClick={() => setDate(new Date())}
                                 >
                                     Today
-                                </button>
-                                <button type="button" className="select-slot-nav-button secondary">
-                                    First Slot
                                 </button>
                             </div>
                         </div>
@@ -640,7 +637,7 @@ export default function Checkout() {
                                 key={index}
                             >
                                 <span className="summary-section-title">{item.title}</span>
-                                <span className="booking-details-price-summary">${item.price}</span>
+                                {item.price && <span className="booking-details-price-summary">${item.price}</span>}
                             </span>
                         ))}
                     </div>

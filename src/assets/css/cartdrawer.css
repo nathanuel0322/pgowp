@@ -1,6 +1,12 @@
 #cartdrawer > .MuiDrawer-paperAnchorRight {
-    width: 75% !important;
+    width: 25% !important;
     color: white;
+}
+
+@media (max-width: 1056px) {
+    #cartdrawer > .MuiDrawer-paperAnchorRight {
+        width: 80% !important;
+    }
 }
 
 #empty-cart {
