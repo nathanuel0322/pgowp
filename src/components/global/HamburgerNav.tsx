@@ -28,6 +28,7 @@ const HamburgerNav = ({
         else if (location.pathname === "/bday-card") setcurrentpage("BDay Card");
         else if (location.pathname === "/e-invites") setcurrentpage("E-Invites");
         else if (location.pathname === "/book") setcurrentpage("Book");
+        else if (location.pathname === "/checkout-details") setcurrentpage("Checkout Details");
     }, [location.pathname]);
 
     return (

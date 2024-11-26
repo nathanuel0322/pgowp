@@ -21,6 +21,7 @@
         "react": "^18.2.0",
         "react-calendar": "^5.1.0",
         "react-dom": "^18.2.0",
+        "react-google-autocomplete": "^2.7.3",
         "react-hot-toast": "^2.4.1",
         "react-icons": "^4.12.0",
         "react-phone-number-input": "^3.4.9",
@@ -29,11 +30,13 @@
         "react-spinners": "^0.14.1",
         "resend": "^4.0.1-alpha.0",
         "stripe": "^17.4.0",
-        "typed.js": "^2.0.12"
+        "typed.js": "^2.0.12",
+        "validator": "^13.12.0"
     },
     "devDependencies": {
         "@types/react": "^18.3.3",
         "@types/react-dom": "^18.3.0",
+        "@types/validator": "^13.12.2",
         "@vitejs/plugin-react-swc": "^3.7.1",
         "autoprefixer": "^10.4.7",
         "postcss": "^8.4.14",

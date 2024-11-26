@@ -624,41 +624,44 @@ async function handleSendEmail(request, env) {
     return jsonResponse({ body: null, status: 204 });
 }
 
-async function handleCreateCheckoutSession(request, env, stripe) {
-    const { stripe_customer_id, redirect_to, items } = await request.json();
+async function handleCreateCheckoutSession(request, stripe) {
+    const { email, redirect_to, items } = await request.json();
     const origin = request.headers.get("Origin");
     console.log("origin:", origin);
     const finishedUrl = origin + redirect_to;
 
     try {
         let products = [];
-        const item_names = items.map((item) => item.name);
-        for await (const product of stripe.product.list()) {
-            console.log("product:", product);
-            if (item_names.includes(product.name)) {
+        // console.log("items:", items);
+        const item_titles = items.map((item) => item.title);
+        console.log("item_titles:", item_titles);
+        for await (const product of stripe.products.list()) {
+            // console.log("product:", product);
+            if (item_titles.includes(product.name)) {
                 products.push({ name: product.name, default_price: product.default_price });
-                if (products.length === item_names.length) break;
+                if (products.length === item_titles.length) break;
             }
         }
+        console.log("final products:", products, "\n\nproducts.length:", products.length);
 
         const session = await stripe.checkout.sessions.create({
-            customer: stripe_customer_id,
             line_items: items.map((item) => {
-                const product = products.find((prod) => prod.name === item.name);
+                const product = products.find((prod) => prod.name === item.title);
                 return {
                     price: product.default_price,
                     quantity: 1,
                 };
             }),
+            customer_email: email,
             mode: "payment",
             success_url: `${finishedUrl}?success=true`,
             cancel_url: `${finishedUrl}?canceled=true`,
         });
 
-        return jsonResponse({ url: session.url });
+        return jsonResponse({ body: { url: session.url } });
     } catch (error) {
         console.error("Error creating checkout session:", error);
-        return jsonResponse("Internal Server Error", 500);
+        return jsonResponse({ body: { error: "Internal Server Error" }, status: 500 });
     }
 }
 
@@ -690,7 +693,7 @@ export default {
             if (request.method === "POST") {
                 if (url.pathname === "/api/send-email") return handleSendEmail(request, env);
                 else if (url.pathname === "/api/create-checkout-session")
-                    return handleCreateCheckoutSession(request, env, stripe);
+                    return handleCreateCheckoutSession(request, stripe);
             }
 
             return jsonResponse({ body: "Not Found", status: 404 });

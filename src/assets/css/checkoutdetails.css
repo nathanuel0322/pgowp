@@ -10,6 +10,16 @@
     font-family: Figtree, sans-serif;
 }
 
+@media (max-width: 991px) {
+    #checkout-details-container {
+        margin-top: 10vh !important;
+    }
+
+    #take-details-box {
+        margin-top: 0px;
+    }
+}
+
 .take-details-label {
     display: block;
     margin-bottom: 0.2rem;
@@ -105,11 +115,22 @@ textarea {
 }
 
 #take-details-btns-wrapper button {
-    background-color: #50e063;
     color: black;
     border-radius: 0.5rem;
     transition: none;
     font: normal normal 600 1rem Figtree, sans-serif;
+    border: 1px solid transparent;
+    padding: 0.4rem 0.8rem;
+    margin: 0 0 0.4rem 0;
+}
+
+#take-details-btns-wrapper .primary:hover {
+    background-color: #1ea630;
+    filter: none;
+}
+
+#take-details-btns-wrapper .secondary:hover {
+    background: #d1d5db;
 }
 
 .summarySectionTitle {

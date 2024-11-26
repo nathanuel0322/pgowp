@@ -273,7 +273,11 @@ export default function Checkout() {
                         // Only add the slot if the duration is at least the total time required
                         if (slotDuration >= totalTimeRequired) {
                             console.log("current slot start:", currentSlotStart, "\ncurrent slot end:", currentSlotEnd);
-                            const currentSlotRange = `${currentSlotStart.toLocaleTimeString()} - ${currentSlotEnd.toLocaleTimeString()}`;
+                            // const currentSlotRange = `${currentSlotStart.toLocaleTimeString()} - ${currentSlotEnd.toLocaleTimeString()}`;
+                            const currentSlotRange = `${currentSlotStart.toLocaleTimeString([], {
+                                hour: "numeric",
+                                minute: "numeric",
+                            })} - ${currentSlotEnd.toLocaleTimeString([], { hour: "numeric", minute: "numeric" })}`;
                             const currentSlotDayPeriod =
                                 currentSlotStart.getHours() < 12
                                     ? "morning"
@@ -664,13 +668,17 @@ const SlotSection = ({ title, slots, isunder834 }: { title: string; slots: Party
         <ol>
             {slots.length ? (
                 slots.map((slot, index) => {
+                    console.log("slot range:", slot.range);
                     const split_slot = slot.range.split(" - ");
-                    const [hours, minutes] = split_slot[0].split(":");
+                    // split_slot = [1:00 PM, 6:45 PM]
+                    const [hours, minutesandtime] = split_slot[0].split(":");
+                    // hours = 1, minutes = 00 PM
+                    const [minutes, timeofday1] = minutesandtime.split(" ");
                     const start_time = `${hours}:${minutes}`;
-                    const timeofday1 = split_slot[0].split(" ")[1];
-                    const [end_hours, end_minutes] = split_slot[1].split(":");
+
+                    const [end_hours, end_minutesandtime] = split_slot[1].split(":");
+                    const [end_minutes, timeofday2] = end_minutesandtime.split(" ");
                     const end_time = `${end_hours}:${end_minutes}`;
-                    const timeofday2 = split_slot[1].split(" ")[1];
 
                     return (
                         <li key={index}>

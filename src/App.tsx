@@ -41,7 +41,10 @@ function App() {
             }}
         >
             <Routing />
-            <Toaster position="top-center" containerClassName="!flex !flex-row !items-center !justify-center" />
+            <Toaster
+                position="top-center"
+                containerClassName="!flex !flex-row !items-center !justify-center !font-[Figtree] font-semibold"
+            />
         </AppContext.Provider>
     );
 }
