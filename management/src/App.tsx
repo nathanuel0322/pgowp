@@ -1,43 +1,66 @@
-import React, { createContext, useEffect, useState } from "react";
+import React, { createContext, useState } from "react";
 import "./assets/css/home.css";
 import { Toaster } from "react-hot-toast";
 import Routing from "./components/global/Routing.tsx";
-import { CartItem } from "./screens/Book.tsx";
+import { Session, User as SupabaseUser } from "@supabase/supabase-js";
+import { toastPromise } from "./GlobalFunctions.tsx";
+import { supabase } from "./supabase.ts";
 
-interface AppContextType {
-    currentpage: string | null;
-    setcurrentpage: React.Dispatch<React.SetStateAction<string | null>>;
-    cart: CartItem[];
-    setCart: React.Dispatch<React.SetStateAction<CartItem[]>>;
+export interface User extends SupabaseUser {
+    name?: string;
+    mfa_secret?: string;
 }
 
-export const AppContext = createContext<AppContextType>({
+interface AuthContextType {
+    user: User | undefined;
+    setUser: React.Dispatch<React.SetStateAction<User | undefined>>;
+    session: Session | undefined;
+    setSession: React.Dispatch<React.SetStateAction<Session | undefined>>;
+    logout: () => Promise<void>;
+    currentpage: string | null;
+    setcurrentpage: React.Dispatch<React.SetStateAction<string | null>>;
+}
+
+export const AuthContext = createContext<AuthContextType>({
+    user: undefined,
+    setUser: () => {},
+    session: undefined,
+    setSession: () => {},
+    logout: async () => {},
     currentpage: null,
     setcurrentpage: () => {},
-    cart: [],
-    setCart: () => {},
 });
 
 function App() {
+    const [user, setUser] = useState<User | undefined>(undefined);
+    const [session, setSession] = useState<Session | undefined>(undefined);
     const [currentpage, setcurrentpage] = useState<string | null>(null);
-    const [cart, setCart] = useState<CartItem[]>([]);
-
-    useEffect(() => {
-        const cart = localStorage.getItem("cart");
-        if (cart) setCart(JSON.parse(cart));
-    }, []);
-
-    useEffect(() => {
-        localStorage.setItem("cart", JSON.stringify(cart));
-    }, [cart]);
+    // console.log("user:", user);
 
     return (
-        <AppContext.Provider
+        <AuthContext.Provider
             value={{
                 currentpage,
                 setcurrentpage,
-                cart,
-                setCart,
+                user,
+                setUser,
+                session,
+                setSession,
+                logout: async () => {
+                    toastPromise(
+                        new Promise<void>((resolve, reject) => {
+                            supabase.auth.signOut().then(({ error }) => {
+                                if (error) reject(error.message);
+                                else {
+                                    localStorage.removeItem("mfa_passed");
+                                    resolve();
+                                }
+                            });
+                        }),
+                        "Logging out...",
+                        "Logged out!"
+                    );
+                },
             }}
         >
             <Routing />
@@ -45,7 +68,7 @@ function App() {
                 position="top-center"
                 containerClassName="!flex !flex-row !items-center !justify-center !font-[Figtree] font-semibold"
             />
-        </AppContext.Provider>
+        </AuthContext.Provider>
     );
 }
 

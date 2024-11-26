@@ -20,17 +20,7 @@ export default function SideDrawer({
                     </IconButton>
                 </div>
                 <div id="sidedrawerdiv">
-                    {[
-                        "Home",
-                        "Services",
-                        "Packages",
-                        "Game List",
-                        "Gallery",
-                        "E-Invites",
-                        "Contact Us",
-                        "About",
-                        "Book Online",
-                    ].map((text, index) =>
+                    {["Home", "Sign In"].map((text, index) =>
                         index === 8 ? (
                             <li id="booknowli" key={index} onClick={() => setDrawerOpen(false)}>
                                 {import.meta.env.PROD ? (

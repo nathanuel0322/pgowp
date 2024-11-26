@@ -1,0 +1,125 @@
+.createacc {
+    font-size: 25px;
+    font-weight: 500;
+}
+.authdiv input:not([type="button"]),
+#resetpassworddiv input,
+#google-link-input,
+#yelp-search-div > input,
+#create-widget-div input {
+    margin-top: 1rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    border-radius: 10px;
+    font-size: 16px;
+    padding-top: 0.5vh;
+    padding-bottom: 0.5vh;
+    border: 1px solid rgb(0, 0, 0);
+}
+#resetpassworddiv input {
+    color: black;
+}
+.authform {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: black;
+}
+.whiteicon > g > path {
+    fill: white;
+}
+.authbox {
+    width: 50%;
+    padding: 12px;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 185px;
+}
+.logindiv {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: calc(100vh - 4rem);
+}
+
+#acewise-logo {
+    margin: 0 auto;
+    border: none;
+    border-radius: 75px;
+}
+.t-dOnDMp {
+    width: 75%;
+}
+.c-bRTXzr-gJYyDP-color-danger,
+.c-bRTXzr {
+    background-color: white;
+    padding: 0.25rem 1.25rem;
+    border-radius: 12px;
+}
+
+.c-bOcPnF-cmFMMs-color-primary {
+    background-color: #5d87ff !important;
+    color: var(--colors-brandButtonText);
+    border-color: rgb(120, 172, 255) !important;
+}
+.t-PJLV {
+    width: 30vw;
+}
+.t-PJLV input::placeholder {
+    text-align: center;
+}
+.t-PJLV input {
+    text-align: center;
+}
+#auth-sign-up > div > div {
+    gap: 0px;
+}
+.authdiv input:not([type="button"]) {
+    width: 150%;
+    text-align: center;
+}
+.todo-header {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin: 0.5rem 1rem; /* Adjust as needed */
+}
+
+.todo-list {
+    width: 100%; /* Take up the full width */
+    margin: 0; /* Remove any default margin */
+}
+
+.todo-item {
+    background: #fff;
+    color: #000;
+    padding: 0.5rem 1rem;
+
+    width: calc(100%);
+    border: 1px solid #ccc; /* Light outline */
+    border-radius: 0px; /* Adjust if you want square corners */
+    transition: all 0.3s;
+    text-decoration: none; /* Remove underline from links */
+}
+
+.todo-item:hover {
+    background: #5d87ff; /* Blue background */
+    color: #fff; /* White text */
+    border-color: #5d87ff; /* Blue border */
+}
+
+.actionbtn {
+    background: linear-gradient(90deg, #2e96ff, #2e96ff 85%, #94c9ff) !important;
+    color: white;
+    border-radius: 16px;
+    margin-top: 1rem;
+    padding: 0.375rem 1rem;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+.actionbtn:hover {
+    transform: scale(1.05);
+}

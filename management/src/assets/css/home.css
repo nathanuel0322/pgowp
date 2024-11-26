@@ -1,10 +1,15 @@
 #homeouterdiv {
-    font-family: "Teko", sans-serif;
-    background-color: #03396c;
-    font-size: 7vw;
     color: white;
     text-align: center;
 }
+
+#homeouterdiv > p {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
 #titlediv {
     color: rgb(255, 140, 0);
 }
@@ -15,10 +20,7 @@
     align-items: center;
     justify-content: center;
 }
-#homeouterdiv p:not(#parentdiv *) {
-    margin: 0 auto;
-    width: 85%;
-}
+
 .Rectangle {
     opacity: 0.2;
     z-index: -1;

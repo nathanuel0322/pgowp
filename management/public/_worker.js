@@ -665,112 +665,126 @@ async function handleCreateCheckoutSession(request, stripe) {
     }
 }
 
-const parseTime = (timeString) => {
-    const [time, modifier] = timeString.split(" ");
-    let [hours, minutes] = time.split(":").map(Number);
+async function encrypt(text, env) {
+    const algorithm = { name: "AES-CBC", length: 256 };
+    const key = await crypto.subtle.importKey("raw", Buffer.from(env.ENCRYPTION_KEY, "base64"), algorithm, false, [
+        "encrypt",
+    ]);
+    const iv = crypto.getRandomValues(new Uint8Array(16));
+    const encodedText = new TextEncoder().encode(text);
+    const encrypted = await crypto.subtle.encrypt({ ...algorithm, iv }, key, encodedText);
+    return `${Buffer.from(iv).toString("hex")}:${Buffer.from(encrypted).toString("hex")}`;
+}
 
-    if (modifier === "PM" && hours !== 12) {
-        hours += 12;
-    } else if (modifier === "AM" && hours === 12) {
-        hours = 0;
+async function decrypt(text, env) {
+    const algorithm = { name: "AES-CBC", length: 256 };
+    const key = await crypto.subtle.importKey("raw", Buffer.from(env.ENCRYPTION_KEY, "base64"), algorithm, false, [
+        "decrypt",
+    ]);
+    const [ivHex, encryptedHex] = text.split(":");
+    const iv = Buffer.from(ivHex, "hex");
+    const encrypted = Buffer.from(encryptedHex, "hex");
+    const decrypted = await crypto.subtle.decrypt({ ...algorithm, iv }, key, encrypted);
+    return new TextDecoder().decode(decrypted);
+}
+
+function base32ToUint8Array(base32) {
+    const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+    let bits = 0;
+    let value = 0;
+    let index = 0;
+    const output = new Uint8Array(((base32.length * 5) / 8) | 0);
+
+    for (let i = 0; i < base32.length; i++) {
+        const char = base32[i].toUpperCase();
+        if (char === "=") break; // Padding character
+        const idx = alphabet.indexOf(char);
+        if (idx === -1) throw new Error("Invalid Base32 character.");
+
+        value = (value << 5) | idx;
+        bits += 5;
+
+        if (bits >= 8) {
+            output[index++] = (value >>> (bits - 8)) & 255;
+            bits -= 8;
+        }
     }
 
-    return { hours, minutes };
-};
+    return output;
+}
 
-const getTimestamptz = (dateString, timeString) => {
-    const date = new Date(dateString);
-    const { hours, minutes } = parseTime(timeString);
+async function generateOTP(secret, timePeriodOffset = 0) {
+    // Get the current time
+    const time = Math.floor(Date.now() / 1000);
 
-    date.setUTCHours(hours, minutes, 0, 0);
-    return date.toISOString();
-};
+    // Calculate the time period with the offset
+    const timePeriod = Math.floor(time / 30) + timePeriodOffset;
 
-async function handleVerifyPurchase(request, stripe, supabase) {
-    const { customer_details, slot, items } = await request.json();
+    const timeBuffer = new ArrayBuffer(8);
+    // new DataView(timeBuffer).setBigUint64(0, BigInt(timePeriod), false);
+    const view = new DataView(timeBuffer);
+    // view.setUint32(4, timePeriod, false); // Set the last 4 bytes (big-endian)
+    // Properly handle the 64-bit integer by splitting the time into two 32-bit parts
+    view.setUint32(0, Math.floor(timePeriod / Math.pow(2, 32)), false); // High 32 bits
+    view.setUint32(4, timePeriod & 0xffffffff, false); // Low 32 bits
 
-    try {
-        // Calculate the timestamp for 5 minutes ago
-        const fiveMinutesAgo = Math.floor(Date.now() / 1000) - 5 * 60;
+    // Decode Base32 secret
+    const keyData = base32ToUint8Array(secret);
 
-        const customers = await stripe.customers.list({
-            email: customer_details.email,
-            created: { gte: fiveMinutesAgo },
-        });
+    // Create a key from the secret
+    // console.log("secret:", secret);
+    const key = await crypto.subtle.importKey("raw", keyData, { name: "HMAC", hash: "SHA-1" }, false, ["sign"]);
 
-        if (customers.data.length === 0) {
-            return jsonResponse({ body: "Customer not found", status: 404 });
-        }
+    // Sign the time buffer with the key
+    const signatureBuffer = await crypto.subtle.sign("HMAC", key, timeBuffer);
+    const signature = new Uint8Array(signatureBuffer);
 
-        // const slot = {
-        //     date: "2024-11-30T15:00:17.015Z",
-        //     range: "10:00 AM - 3:45 PM",
-        //     day_period: "morning"
-        // };
+    // Take the last 4 bits of the signature
+    const offset = signature[signature.length - 1] & 0xf;
 
-        const [startTime, endTime] = slot.range.split(" - ");
+    // Take 4 bytes from the signature starting at the offset
+    const otp =
+        ((signature[offset] & 0x7f) << 24) |
+        ((signature[offset + 1] & 0xff) << 16) |
+        ((signature[offset + 2] & 0xff) << 8) |
+        (signature[offset + 3] & 0xff);
 
-        const startTimestamptz = getTimestamptz(slot.date, startTime);
-        const endTimestamptz = getTimestamptz(slot.date, endTime);
+    // Take the last 6 digits of the otp
+    const otpStr = (otp % 1000000).toString().padStart(6, "0");
 
-        console.log("Start Time:", startTimestamptz);
-        console.log("End Time:", endTimestamptz);
+    return otpStr;
+}
 
-        const item_titles = items.map((item) => item.title);
+async function verifyOTP(otp, secret) {
+    // Check the OTP for the current time period and the previous and next time periods
+    const otps = [await generateOTP(secret, -1), await generateOTP(secret, 0), await generateOTP(secret, 1)];
 
-        // return jsonResponse({ body: null, status: 204 });
-        const { error } = await supabase
-            .from("parties")
-            .insert({
-                customer_name: customer_details.name,
-                start_time: startTimestamptz,
-                end_time: endTimestamptz,
-                location: customer_details.address,
-                customer_email: customer_details.email,
-                customer_phone: customer_details.number,
-                items: item_titles,
-            });
+    return otps.includes(otp);
+}
 
-        if (error) {
-            console.error("Error inserting purchase:", error);
-            return jsonResponse({ body: "Internal Server Error", status: 500 });
-        }
+async function handleVerifyMFA(request, env, supabase) {
+    await authenticateToken(request, env);
+    const { token } = await request.json();
+    if (!request.user?.sub) {
+        return jsonResponse("Unauthorized", 401);
+    }
+    // read user metadata from supabase auth.users
+    console.log("request.user:", request.user);
 
-        // Send response to the user
-        const response = jsonResponse({ body: null, status: 204 });
+    if (error) {
+        console.error("Error fetching user:", error);
+        return jsonResponse("Internal Server Error", 500);
+    }
 
-        // Trigger webhook asynchronously
-        (async () => {
-            try {
-                // 1. send emails to tbnd email and customer email
-                // 2. add event to all linked calendars
-                const webhookUrl = "YOUR_WEBHOOK_URL"; // Replace with your actual webhook URL
-                const webhookPayload = {
-                    customer_details,
-                    slot,
-                    items,
-                };
+    // const verified = twofactor.verifyToken(data.mfa_secret, token)
 
-                const webhookResponse = await fetch(webhookUrl, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(webhookPayload),
-                });
-
-                if (!webhookResponse.ok) {
-                    console.error("Error triggering webhook:", webhookResponse.statusText);
-                }
-            } catch (webhookError) {
-                console.error("Error triggering webhook:", webhookError);
-            }
-        })();
-
-        return response;
-    } catch (error) {
-        console.error("Error fetching purchase:", error);
-        return jsonResponse({ body: "Internal Server Error", status: 500 });
+    const isValid = await verifyOTP(token, data.mfa_secret);
+    // const isValid = authenticator.check(token, data.mfa_secret);
+    if (isValid) {
+        return jsonResponse({ message: "Success" });
+    } else {
+        console.error("Invalid token");
+        return jsonResponse({ message: "Invalid token" }, 400);
     }
 }
 
@@ -801,10 +815,8 @@ export default {
 
             if (request.method === "POST") {
                 if (url.pathname === "/api/send-email") return handleSendEmail(request, env);
-                else if (url.pathname === "/api/create-checkout-session")
-                    return handleCreateCheckoutSession(request, stripe);
+                else if (url.pathname === "/api/verify-mfa") return handleVerifyMfa(request, env, supabase);
             } else if (request.method === "GET") {
-                if (url.pathname === "/api/verify-purchase") return handleVerifyPurchase(request, stripe, supabase);
             }
 
             return jsonResponse({ body: "Not Found", status: 404 });
