@@ -1,0 +1,37 @@
+.MuiDrawer-paperAnchorRight {
+    background-color: #141229 !important;
+    width: 53% !important;
+    padding: 1rem 2rem;
+}
+#sidedrawerdiv {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: "Play", sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+}
+#sidedrawerdiv > * {
+    text-decoration: none;
+    color: white;
+    font-family: "Teko", sans-serif;
+    font-size: 1.3rem;
+    font-weight: 500;
+    margin: 0.667rem 1rem;
+}
+#linka {
+    letter-spacing: 0.05rem;
+}
+#booknowli {
+    color: white;
+    padding: 0.625rem 2rem;
+    width: 100%;
+    border: 2px solid #141229;
+    border-radius: 40px;
+    text-align: center;
+    background-color: rgb(27, 194, 202);
+}
+#galleryli, #booknowli {
+    list-style-type: none;   
+}

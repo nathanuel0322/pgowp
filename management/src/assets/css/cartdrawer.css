@@ -1,0 +1,25 @@
+#cartdrawer > .MuiDrawer-paperAnchorRight {
+    width: 25% !important;
+    color: white;
+}
+
+@media (max-width: 1056px) {
+    #cartdrawer > .MuiDrawer-paperAnchorRight {
+        width: 80% !important;
+    }
+}
+
+#empty-cart {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2rem;
+    width: 100%;
+    text-align: center;
+}
+
+#cartdrawer .css-1bntgh8-MuiSvgIcon-root {
+    width: 4rem;
+    height: 4rem;
+}

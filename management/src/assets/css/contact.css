@@ -1,0 +1,170 @@
+#contactparentdiv {
+    margin-top: 15vh;
+}
+#contactimg {
+    margin-top: 5.5%;
+    opacity: 0.1;
+}
+
+#contactdiv {
+    width: 100%;
+    text-align: center;
+    font-size: 1.75rem;
+    font-family: "Teko", sans-serif;
+    text-decoration: none;
+    color: white;
+    margin-block: 5vh;
+}
+
+#contactme {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    font-family: "Dosis", sans-serif;
+    font-size: 1rem;
+    margin: 0px auto;
+}
+.nameemail {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.nameemail,
+textarea {
+    color: black;
+}
+@media (max-width: 768px) {
+    .nameemail {
+        flex-direction: column;
+        margin-bottom: 0px !important;
+    }
+    .nameemail > * {
+        margin-bottom: 1rem;
+        max-width: 100%;
+        width: auto !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .formfilled {
+        margin: 0px 2rem;
+    }
+}
+
+@media (min-width: 576px) {
+    #contactme,
+    .formfilled {
+        max-width: 540px;
+    }
+}
+@media (min-width: 768px) {
+    #contactme,
+    .formfilled {
+        max-width: 720px;
+    }
+}
+@media (min-width: 992px) {
+    #contactme,
+    .formfilled {
+        max-width: 960px;
+    }
+}
+@media (min-width: 1200px) {
+    #contactme,
+    .formfilled {
+        max-width: 1140px !important;
+    }
+}
+#contactme > :first-child {
+    color: white;
+}
+#contactme > div > *,
+#contactme > textarea {
+    border-radius: 10px;
+}
+
+.title {
+    align-self: flex-start;
+    font-size: 2rem;
+}
+input,
+textarea {
+    font-family: "Dosis", sans-serif;
+    font-size: 1.25rem;
+}
+.neinputs::placeholder,
+textarea::placeholder {
+    text-align: left !important;
+    color: black !important;
+    font-family: "Dosis", sans-serif !important;
+}
+
+.neinputs {
+    width: 46%;
+    padding: 0.5em 0.6em;
+}
+#contactme > *:not(:last-child) {
+    margin-bottom: 1rem;
+}
+textarea,
+.neinputs {
+    border: 1px solid #ddd;
+}
+
+textarea {
+    min-height: 20vh;
+    padding: 0.5em 0.6em;
+    background-color: white;
+}
+
+.formfilled {
+    font-family: "Teko", sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0px auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+}
+
+.formfilled > :first-child {
+    font-size: 2.5rem;
+}
+
+.formfilled > :last-child {
+    font-size: 1.5rem;
+}
+
+#sendform {
+    border: none;
+    background-color: #ffbc00;
+    transition: all 0.3s;
+}
+
+#sendform:hover {
+    background-color: #c38000;
+}
+
+.buttoncomp {
+    font-family: "Open Sans", sans-serif;
+    color: white;
+    padding: 0.6rem 2rem;
+    border-radius: 25px;
+    transition: all 0.3s;
+    cursor: pointer;
+    letter-spacing: 1px;
+    font-weight: 500;
+}
+
+#contacttext > a {
+    text-decoration: underline;
+}
+
+#contacttext > span,
+#contacttext > a {
+    color: darkturquoise;
+}

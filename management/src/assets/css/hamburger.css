@@ -1,0 +1,82 @@
+#mobilenav {
+    width: 100%;
+    padding: 0 !important;
+    min-height: 70px;
+    transition: .4s all !important;
+    border-bottom: 1px solid transparent;
+    border: none !important;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    left: 0;
+    right: 0;
+    top: 0;
+    z-index: 1030;
+}
+#headerdiv {
+    box-shadow: 3.5px 6.1px 30px darkslategrey;
+    min-height: 70px;
+    padding: 5px 20px !important;
+    border-radius: 0;
+    flex-wrap: nowrap;
+    column-gap: 12px;
+    background: darkslategrey;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    word-wrap: break-word;
+    width: 100%;
+    margin-right: auto;
+    margin-left: auto;
+}
+#mobilebook {
+    min-width: 125px;
+    padding-bottom: 10px;
+    padding-top: 14px;
+    min-height: 46px;
+    border-radius: 6px;
+    font-weight: 400 !important;
+    line-height: 1.1 !important;
+    transition: all .3s;
+    background: radial-gradient(50% 895.56% at 47.69% 50%, #db9a1c 0, #d07808 100%) !important;
+    border: 1px solid #faae26 !important;
+    color: #ffffff !important;
+    box-shadow: 0 6px 30px rgba(227, 160, 41, 0.35);
+    font-style: normal;
+    margin: 0.6rem 0.6rem;
+    white-space: normal;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    word-break: break-word;
+    word-wrap: break-word;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    -webkit-user-select: none;
+    user-select: none;
+}
+#mobilebook:hover {
+    background: radial-gradient(50% 895.56% at 47.69% 50%, #db9a1c 0, #d07808 100%) !important;
+    box-shadow: 0 6px 40px #e3a029;
+}
+@media (max-width: 768px) {
+    #captionwrap, #mobilebook {
+        font-size: calc(0.687 * (1.175rem + (1.5 - 1.175) * ((100vw - 20rem) / (48 - 20))) * 1.25);
+    }
+}
+@media (max-width: 575px) {
+    #mobilebook {
+        min-width: 80px;
+        min-height: 46px;
+        padding: 10px;
+    }
+}
+@media (max-width: 383px) {
+    #pagelabel {
+        white-space: nowrap;
+        padding-right: 50% !important;   
+    }
+}

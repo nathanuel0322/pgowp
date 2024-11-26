@@ -1,0 +1,45 @@
+@media (max-width: 768px) {
+    #gamelistdiv {
+        margin-top: 16vh;
+    }
+}
+.blinking,
+.blinking + * {
+    font-size: 130%;
+    color: #ffa500;
+}
+
+#gamelisttext {
+    padding: 0rem 1rem;
+    margin-top: 10%;
+    text-align: center;
+    font-size: 1.25rem;
+    font-family: Nunito, sans-serif;
+    color: white;
+}
+
+#mobilegamelistp {
+    margin-top: 10%;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+#gamelistp {
+    margin-top: 2%;
+    background-color: white;
+}
+#gamelistp > * {
+    flex-direction: row;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem 0px;
+}
+#gamelistp > :not(:last-child) > :first-child {
+    margin-right: 5%;
+}
+#gamelistp > :not(:last-child) > :last-child {
+    margin-left: 5%;
+}

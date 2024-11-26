@@ -1,0 +1,97 @@
+#aboutimg {
+    margin-top: 5.5%;
+    opacity: 0.05;
+}
+#abouttext {
+    margin-block: 5vh;
+    color: white;
+    font-size: 150%;
+    text-align: center;
+    padding: 0rem 2rem;
+    opacity: 1.0;
+    letter-spacing: 0.2vw;
+}
+body {
+    background-color: white;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+.aboutsection p2 p3{
+    margin-left: 12%;
+    margin-right: 12%;
+}
+
+.Contract {
+    position: relative;
+    padding-top: 200%;
+    top: 110%;
+}
+
+@media only screen
+and (min-width : 1px) and (max-width : 828px)
+{  
+    .active{
+        background-color: blue;
+        color: white;
+    }
+
+    .topnav{
+    display: block;
+    overflow: hidden;
+    font-family: 'Teko', sans-serif;
+    font-size: 100%;
+    background-color: blue;
+    width: 100%;
+    left: 0%;
+    top: 0%;
+    position: fixed;
+    z-index: 10;
+    }
+
+    .topnav #myPages{
+    display: none;
+    }
+
+    .topnav a{
+    color: white;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 150%;
+    display: block;
+    }
+
+    .topnav a.icon {
+    background: blue;
+    display: block;
+    position: fixed;
+    right: 0%;
+    top: 0%;
+    }
+    
+    .topnav a:hover {
+    background-color: orange;
+    color: black;
+    }
+    
+    .aboutsection {
+        top: 11%;
+        left: 0%;
+    }
+
+    .aboutsection p1 , .aboutsection p2 {
+        font-size: 95%;
+    }
+
+    .aboutsection p3 {
+        top: 80%;
+        margin-left: 6%;
+        margin-right: 6%;
+        font-size: 100%;
+    }
+
+    .aboutsection p4 {
+        top: 95%;
+        font-size: 100%;
+    }
+}

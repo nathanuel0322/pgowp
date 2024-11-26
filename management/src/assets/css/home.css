@@ -1,0 +1,322 @@
+#homeouterdiv {
+    font-family: "Teko", sans-serif;
+    background-color: #03396c;
+    font-size: 7vw;
+    color: white;
+    text-align: center;
+}
+#titlediv {
+    color: rgb(255, 140, 0);
+}
+.outertyped {
+    margin-top: 1%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+#homeouterdiv p:not(#parentdiv *) {
+    margin: 0 auto;
+    width: 85%;
+}
+.Rectangle {
+    opacity: 0.2;
+    z-index: -1;
+}
+.blinkinggreen {
+    text-align: center;
+    color: greenyellow;
+}
+.blinkingorange,
+.typed-cursor {
+    color: rgb(255, 87, 34);
+    font-family: "Teko", sans-serif;
+    text-align: center;
+}
+.blinkingblue {
+    color: rgb(7, 242, 241);
+}
+.poster {
+    display: none;
+}
+#outerytdiv {
+    width: 75%;
+    margin: 0px auto;
+    padding: 20px 0px;
+}
+#outerytdiv > div {
+    width: 100%;
+    display: inline-block;
+}
+#outerytdiv > div > div {
+    position: relative;
+    width: 100%;
+    height: 0px;
+    padding-bottom: 100%;
+    display: inline-block;
+    box-sizing: border-box;
+}
+#outerytdiv > div > div > iframe {
+    position: absolute;
+    background-color: rgb(3, 57, 108);
+    border-radius: 1rem;
+}
+.wp {
+    margin-top: 5%;
+}
+
+.wp > *:first-child {
+    font-size: 7vw;
+}
+.wp > *:last-child {
+    font-size: 6vw;
+}
+.pgowp {
+    color: #ff8c00 !important;
+    text-align: center;
+}
+#quote {
+    margin-top: -40% !important;
+}
+#yuh {
+    color: rgb(212, 175, 55);
+}
+#cold {
+    color: rgb(7, 242, 241);
+}
+#Hot {
+    color: rgb(236, 0, 2);
+}
+.rain {
+    color: rgb(3, 74, 236);
+}
+.shine {
+    color: rgb(212, 175, 55);
+}
+#brooklyn {
+    color: rgb(193, 106, 12);
+}
+#queens {
+    color: #9575cd;
+}
+#longisland {
+    color: #009688;
+}
+#manhattan {
+    color: #ec983c;
+}
+#parties {
+    color: #00bcd4;
+}
+#church {
+    color: rgb(139, 69, 19);
+}
+#schools {
+    color: #fdb600;
+}
+#fundraiser {
+    color: #4caf50;
+}
+
+@media (min-width: 1024px) {
+    .poster {
+        margin-top: 7%;
+    }
+}
+
+@keyframes blinkingBlue {
+    0% {
+        color: rgb(7, 242, 241);
+    }
+    49% {
+        color: rgb(7, 242, 241);
+    }
+    60% {
+        color: transparent;
+    }
+    99% {
+        color: transparent;
+    }
+    100% {
+        color: rgb(7, 242, 241);
+    }
+}
+
+@keyframes blinkingGreen {
+    0% {
+        color: green;
+    }
+    49% {
+        color: green;
+    }
+    60% {
+        color: transparent;
+    }
+    99% {
+        color: transparent;
+    }
+    100% {
+        color: green;
+    }
+}
+
+@keyframes blinkingOrange {
+    0% {
+        color: rgb(255, 87, 34);
+    }
+    49% {
+        color: rgb(255, 87, 34);
+    }
+    60% {
+        color: transparent;
+    }
+    99% {
+        color: transparent;
+    }
+    100% {
+        color: rgb(255, 87, 34);
+    }
+}
+
+.reviews {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: column;
+    height: 75%;
+
+    position: absolute;
+    top: 238%;
+    text-align: center;
+    width: 100%;
+}
+
+div.eapps-widget {
+    position: absolute !important;
+    top: 230%;
+    width: 100%;
+    font-family: "Ubuntu";
+}
+
+@media only screen and (min-width: 0px) and (max-width: 319px) {
+    .wp p,
+    .wp a1,
+    .wp a2 {
+        font-size: 125%;
+    }
+
+    #quote {
+        top: 70%;
+        font-size: 115%;
+    }
+
+    #announce {
+        top: 70%;
+        font-size: 115%;
+    }
+
+    .quo {
+        font-size: 156.25%;
+    }
+
+    #locations {
+        top: 67%;
+        font-size: 125%;
+    }
+
+    #occasions {
+        font-size: 125%;
+        top: 92%;
+    }
+
+    .reviews {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-direction: column;
+        height: 75%;
+
+        position: absolute;
+        top: 238%;
+        text-align: center;
+        width: 100%;
+    }
+}
+
+/* Styling for Mobile Devices */
+
+@media only screen and (min-width: 320px) and (max-width: 767px) {
+    #locations {
+        top: 132%;
+    }
+
+    #occasions {
+        top: 157%;
+    }
+}
+#announce > * {
+    letter-spacing: 0.1rem;
+}
+#triplea {
+    color: #00bcd4;
+    text-decoration: underline;
+}
+
+/* Media Query for Laptop or small-size screen */
+@media only screen and (min-width: 768px) and (max-width: 1024px) {
+    .wp {
+        top: 40%;
+    }
+}
+#NJ {
+    color: #009688;
+}
+.videoTag {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    opacity: 0.25;
+    object-fit: cover;
+}
+#reviewsubtitle {
+    letter-spacing: 0.05rem;
+    font-size: 7vw;
+    line-height: 1;
+    color: orange;
+    font-family: "Teko", sans-serif;
+}
+@media (min-width: 768px) {
+    .blinkingorange,
+    .blinkingblue,
+    .blinkinggreen,
+    .typed-cursor {
+        font-size: 4vw;
+    }
+    .poster {
+        display: block;
+        margin-top: 9%;
+    }
+    .wp > *:first-child {
+        font-size: 4vw;
+    }
+    .wp > *:last-child {
+        font-size: 3vw;
+    }
+    #quote,
+    #announce,
+    #locations,
+    #occasions,
+    #reviewsubtitle {
+        font-size: 3vw;
+    }
+    .outertyped {
+        margin-top: 0%;
+    }
+}
+@media (max-width: 991px) {
+    #homeouterdiv {
+        margin-top: 15vh;
+    }
+}

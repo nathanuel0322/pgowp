@@ -1,0 +1,93 @@
+#packdiv {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.prices {
+  margin-top: -77%;
+  font-size: 200%;
+  font-family: 'Comfortaa', cursive;
+}
+#liul {
+  flex-direction: column;
+  list-style: none;
+  float: right;
+  margin: 0px;
+}
+#liul > li {
+  float: left;
+  width: 100%;
+  text-align: center;
+  margin: 5px 0px;
+  color: white;
+  font-size: 1.25rem;
+}
+#liul > :first-child {
+  text-decoration: underline;
+}
+#PLUS {
+  font-size: 200%;
+  color: orange;
+}
+ul.HoursList {
+  flex-direction: column;
+  list-style: none;
+  float: right;
+  margin: 0;
+}
+#recpack {
+  margin-top: 5.5%;
+  opacity: 0.04;
+}
+ul.HoursList li {
+    float: left;
+    width: 100%;
+    text-align: center;
+    margin: 0;
+  color: white;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+#listdiv {
+  font-size: 6vw;
+  margin-block: 10%;
+  font-family: "Comfortaa", cursive;
+  padding: 0rem 2rem;
+}
+.PLUS {
+  font-size: 200%;
+  color: orange;
+}
+
+@media (max-width : 828px) {
+  img{
+    top: 8%;
+  }
+
+  .prices  {
+      top: 13%;
+      width: 100%;
+      font-size: 150%;
+      left: -4%;
+  }
+
+  ul.HoursList {
+      list-style: none;
+      float: right;
+      margin: 0;
+  }
+
+  ul.HoursList li {
+      line-height: 46px;
+      margin: 0;
+  }
+  #listdiv {
+    margin-top: 15vh;
+  }
+}
+
+@media (min-width: 768px) {
+  #listdiv {
+    font-size: 3vw;
+  }
+}
