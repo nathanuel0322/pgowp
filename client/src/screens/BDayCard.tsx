@@ -47,9 +47,10 @@ export default function BDayCard() {
                                 ?.value;
 
                             fetch(
-                                import.meta.env.DEV
-                                    ? "http://localhost:3001/bdaycard"
-                                    : "https://widgie-34c32488147a.herokuapp.com/bdaycard",
+                                // import.meta.env.DEV
+                                //     ? "http://localhost:3001/bdaycard"
+                                //     : "https://natesscraper-latest.onrender.com/bdaycard",
+                                "https://natesscraper-latest.onrender.com/bdaycard",
                                 {
                                     method: "POST",
                                     headers: {
