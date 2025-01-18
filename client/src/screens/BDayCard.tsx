@@ -91,7 +91,7 @@ export default function BDayCard() {
                                     reject(error);
                                 });
                         }),
-                        "Please allow a few seconds for the image to download!",
+                        "Please allow up to 2 minutes for the image to download!",
                         "E-Invite Saved! 🎉"
                     );
                 }}
