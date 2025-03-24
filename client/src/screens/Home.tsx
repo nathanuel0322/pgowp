@@ -95,7 +95,7 @@ export default function Home() {
                 <span id="brooklyn"> Brooklyn! </span>
                 <span id="queens"> Queens!</span>
                 &nbsp;and
-                <span id="longisland"> Long Island!</span>
+                <span id="longisland"> Parts of Nassau!</span>
                 <br />
                 <span className="text-[#FDB600] underline">For an additional surcharge</span>
                 <br />
@@ -105,6 +105,7 @@ export default function Home() {
                 <span style={{ color: "#F44336" }}> Staten Island!</span>
                 <span id="brooklyn">&nbsp;Bronx!</span>
                 <span className="text-[rgb(212,175,55)]">&nbsp;Parts of Connecticut!</span>
+                <span className="text-[greenyellow]">&nbsp;Parts of Nassau!</span>
                 <span>&nbsp;and others!</span>
                 <br />
                 <br />

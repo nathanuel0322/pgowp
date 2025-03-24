@@ -307,8 +307,8 @@ export default function Book({ cartDrawerOpen }: { cartDrawerOpen: boolean }) {
                     <ul className="list-[circle] list-inside mb-1">
                         <li>Private Party events cost- Covers up to 24 kids. Thank you</li>
                         <li>
-                            Additional surcharges outside of Brooklyn, Queens &amp; Nassau depending upon location will
-                            be applied.
+                            Additional surcharges outside of Brooklyn, Queens, &amp; parts of Nassau depending upon
+                            location will be applied.
                         </li>
                         <li>
                             Please note there will be an additional charge for Holiday weekends and more If your event
