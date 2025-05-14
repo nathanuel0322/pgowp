@@ -33,7 +33,6 @@ import Img16 from "../assets/images/img16.jpg";
 import { useInView } from "react-intersection-observer";
 import { useSpring, animated } from "@react-spring/web";
 import { supabase_widgie } from "../supabase_widgie";
-import { BiSolidQuoteLeft } from "react-icons/bi";
 import { MdNavigateBefore, MdNavigateNext } from "react-icons/md";
 
 export default function Home() {
