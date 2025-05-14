@@ -3,6 +3,7 @@ import "./assets/css/home.css";
 import { Toaster } from "react-hot-toast";
 import Routing from "./components/global/Routing.tsx";
 import { CartItem } from "./screens/Book.tsx";
+import ScrollToTop from "./components/global/ScrollToTop.tsx";
 
 interface AppContextType {
     currentpage: string | null;
@@ -40,6 +41,7 @@ function App() {
                 setCart,
             }}
         >
+            <ScrollToTop />
             <Routing />
             <Toaster
                 position="top-center"

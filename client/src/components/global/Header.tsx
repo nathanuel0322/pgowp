@@ -1,81 +1,155 @@
-import "../../assets/css/header.css";
-import "../../assets/css/hamburger.css";
+import React, { useEffect, useContext } from "react";
 import { Link, useLocation } from "react-router-dom";
+import "../../assets/css/header.css";
+import { AppContext } from "../../App.tsx";
 import PGOWPLogo from "../../assets/images/favicon-96x96.png";
 import { MdShoppingCart } from "react-icons/md";
-import { useContext } from "react";
-import { AppContext } from "../../App";
+import Container from "react-bootstrap/Container";
 
-export default function Header({
+const Header = ({
+    drawerOpen,
+    setDrawerOpen,
     setCartDrawerOpen,
 }: {
+    drawerOpen: boolean;
+    setDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>;
     setCartDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>;
-}) {
-    // get the current page
+}) => {
     const location = useLocation();
-    const { cart } = useContext(AppContext);
-    // console.log("location.pathname:", location.pathname)
+    const { currentpage, setcurrentpage, cart } = useContext(AppContext);
+    console.log("currentpage:", currentpage);
+
+    useEffect(() => {
+        console.log("location.pathname:", location.pathname);
+        if (location.pathname === "/services") setcurrentpage("Services");
+        else if (location.pathname === "/packages") setcurrentpage("Packages");
+        else if (location.pathname === "/") setcurrentpage("Home");
+        else if (location.pathname === "/contact-us") setcurrentpage("Contact Us");
+        else if (location.pathname === "/about") setcurrentpage("About");
+        else if (location.pathname === "/bday-card") setcurrentpage("BDay Card");
+        else if (location.pathname === "/e-invites") setcurrentpage("E-Invites");
+        else if (location.pathname === "/book") setcurrentpage("Book");
+        else if (location.pathname === "/checkout-details") setcurrentpage("Checkout Details");
+    }, [location.pathname]);
+
+    useEffect(() => {
+        console.log("draweropen in hamnav:", drawerOpen);
+    }, [drawerOpen]);
 
     return (
-        <div
-            id="header"
+        <nav
+            id="mobilenav"
             style={{
-                position: location.pathname === "/bday-card" ? "relative" : "fixed",
+                position: currentpage === "BDay Card" ? "relative" : "fixed",
                 display: location.pathname === "/e-invites" ? "none" : "flex",
             }}
+            className={`navbar navbar-dropdown navbar-expand-lg opacityScroll ${drawerOpen ? "opened" : ""}`}
         >
-            <div className="navbar">
-                <div id="brand">
+            <Container id="headerdiv" className="bg-black">
+                <div className="navbar-brand">
                     <div id="logo">
                         <Link to="/" id="logolink">
                             <img id="logoimg" src={PGOWPLogo} alt="PGOWP Logo" />
                         </Link>
                     </div>
-                    <div id="captionwrap" className="flex">
-                        <Link to="/">PGOWP</Link>
-                    </div>
+                    <span className="navbar-caption-wrap">
+                        <p className="navbar-caption text-info display-7">{currentpage}</p>
+                    </span>
                 </div>
-                <div id="linkdiv">
-                    <ul id="linkul" className="flex-wrap justify-end overflow-hidden border-none flex pl-0 mb-0 mt-0">
-                        <li id="navli" className="flex justify-center flex-wrap">
-                            <Link to="/services">Services</Link>
-                            <Link to="/packages">Packages</Link>
-                            <Link to="/game-list">Game List</Link>
+                {currentpage === "Book" && (
+                    <button id="cartbtn" type="button" onClick={() => setCartDrawerOpen(true)} title="Cart">
+                        <MdShoppingCart color="white" size={30} />
+                    </button>
+                )}
+                {/* <IoReorderThreeOutline
+                    color="white"
+                    size={50}
+                    onClick={() => setDrawerOpen(true)}
+                    className="cursor-pointer"
+                /> */}
+                <button
+                    className="navbar-toggler"
+                    type="button"
+                    data-toggle="collapse"
+                    data-bs-toggle="collapse"
+                    data-target="#navbarSupportedContent"
+                    data-bs-target="#navbarSupportedContent"
+                    aria-expanded="true"
+                    aria-label="Toggle navigation"
+                    onClick={() => setDrawerOpen(!drawerOpen)}
+                >
+                    <div className="hamburger">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </button>
+                {/* 
+                    navbar-collapse opacityScroll collapse
+                    navbar-collapse opacityScroll collapse show
+                */}
+                <div
+                    className={`navbar-collapse opacityScroll collapse ${drawerOpen ? "show" : ""}`}
+                    id="navbarSupportedContent"
+                >
+                    <ul className="navbar-nav nav-dropdown" data-app-modern-menu="true">
+                        {["Home", "Services", "Packages", "Gallery", "E-Invites", "Contact Us", "About"].map(
+                            (text, index) =>
+                                text === "Gallery" ? (
+                                    <li
+                                        key={index}
+                                        id="galleryli"
+                                        onClick={() => setDrawerOpen(false)}
+                                        className="nav-item"
+                                    >
+                                        <a
+                                            className="nav-link link display-4"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            href="https://www.google.com/maps/place/Prestigious+Gaming+On+Wheels+Plus/@40.6717448,-73.7831725,3a,98y,90t/data=!3m8!1e2!3m6!1sAF1QipNxsYt_rIckjjQfRaQBWaA0pEgAJ_zCm3qYyVA!2e10!3e12!6shttps:%2F%2Flh5.googleusercontent.com%2Fp%2FAF1QipNxsYt_rIckjjQfRaQBWaA0pEgAJ_zCm3qYyVA%3Dw203-h114-k-no!7i800!8i450!4m7!3m6!1s0x89c267ef4ab3d5c7:0x77d90889fb9bc7fc!8m2!3d40.671612!4d-73.7834759!14m1!1BCgIgAQ#"
+                                        >
+                                            Gallery
+                                        </a>
+                                    </li>
+                                ) : (
+                                    <li key={index} className="nav-item">
+                                        <Link
+                                            key={index}
+                                            to={
+                                                text === "E-Invites"
+                                                    ? "/bday-card"
+                                                    : index === 0
+                                                    ? "/"
+                                                    : `/${text.split(" ").join("-").toLowerCase()}`
+                                            }
+                                            onClick={() => setDrawerOpen(false)}
+                                            className="nav-link link display-4"
+                                        >
+                                            {text}
+                                        </Link>
+                                    </li>
+                                )
+                        )}
+                    </ul>
+                    <div className="navbar-buttons section-btn">
+                        {import.meta.env.PROD ? (
                             <a
+                                className="btn btn-secondary display-4"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                href="https://www.google.com/maps/place/Prestigious+Gaming+On+Wheels+Plus/@40.6717448,-73.7831725,3a,98y,90t/data=!3m8!1e2!3m6!1sAF1QipNxsYt_rIckjjQfRaQBWaA0pEgAJ_zCm3qYyVA!2e10!3e12!6shttps:%2F%2Flh5.googleusercontent.com%2Fp%2FAF1QipNxsYt_rIckjjQfRaQBWaA0pEgAJ_zCm3qYyVA%3Dw203-h114-k-no!7i800!8i450!4m7!3m6!1s0x89c267ef4ab3d5c7:0x77d90889fb9bc7fc!8m2!3d40.671612!4d-73.7834759!14m1!1BCgIgAQ#"
+                                href="https://app.10to8.com/book/ymonerhexbfwnegoml/"
                             >
-                                Gallery
+                                Book Now
                             </a>
-                            <Link to="/bday-card">E-Invites</Link>
-                            <Link to="/contact-us" className="lists">
-                                Contact
+                        ) : (
+                            <Link className="btn btn-secondary display-4" to="/book">
+                                Book Now
                             </Link>
-                            <Link to="/about" className="right">
-                                About
-                            </Link>
-                        </li>
-                    </ul>
+                        )}
+                    </div>
                 </div>
-                <div id="bbdiv" className="mx-0 text-[0rem] text-right">
-                    {import.meta.env.PROD ? (
-                        <a
-                            target="_blank"
-                            id="mobilebook"
-                            className="px-5"
-                            rel="noopener noreferrer"
-                            href="https://ymonerhexbfwnegoml.10to8.com"
-                        >
-                            Book Online
-                        </a>
-                    ) : (
-                        <Link to="/book" id="mobilebook" className="px-5">
-                            Book Online
-                        </Link>
-                    )}
-                </div>
-            </div>
+            </Container>
             {location.pathname === "/book" && (
                 <button
                     id="cartbutton"
@@ -90,6 +164,8 @@ export default function Header({
                     )}
                 </button>
             )}
-        </div>
+        </nav>
     );
-}
+};
+
+export default Header;

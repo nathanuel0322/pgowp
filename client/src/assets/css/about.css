@@ -1,3 +1,103 @@
+#aboutdiv {
+    background-color: #000000;
+    background-image: linear-gradient(45deg, orange -20%, #000000 40%);
+}
+
+#aboutdiv .content-wrapper {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+#aboutdiv .content-wrapper .section-title {
+    margin-bottom: 22px;
+    color: white;
+}
+#aboutdiv .content-wrapper .card-wrapper {
+    -webkit-flex: inherit;
+    flex: inherit;
+}
+#aboutdiv .content-wrapper .card-wrapper .card-wrap {
+    display: inline-block;
+    padding: 32px 26px;
+    background-color: #1f2329;
+}
+
+#aboutdiv .content-wrapper .card-wrapper .card-wrap .desc {
+    margin-bottom: 10px;
+}
+
+#aboutdiv .desc,
+#aboutdiv .email {
+    color: #ffffff;
+    text-align: center;
+}
+
+#aboutdiv .panel-group .card:first-child {
+    border-top: 1px solid #ffffff;
+}
+
+#aboutdiv .panel-group .card {
+    position: relative;
+    padding: 22px 0 26px 0;
+    background-color: transparent;
+    border-bottom: 1px solid #ffffff;
+    border-radius: 0 !important;
+}
+
+#aboutdiv .panel-group .card .card-header {
+    background-color: transparent;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+}
+
+#aboutdiv .panel-group .card .card-header .panel-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+#aboutdiv .panel-title-edit,
+#aboutdiv .panel-group .card .panel-text {
+    color: #ffffff;
+}
+
+#aboutdiv .panel-group .card .card-header .panel-title .icon-wrapper {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 16px;
+    transition: all 0.3s ease-in-out;
+    border-radius: 5px;
+    background-color: #1f2329;
+}
+
+#aboutdiv .panel-group .card .panel-body {
+    margin-top: 22px;
+}
+
+#aboutdiv .panel-title-edit {
+    text-align: left;
+}
+
+#aboutdiv .panel-group .card .card-header .panel-title:not(.collapsed) .icon-wrapper .iconfont {
+    transform: rotate(-45deg);
+}
+
+#aboutdiv .panel-group .card .card-header .panel-title .icon-wrapper .iconfont {
+    transition: all 0.3s ease-in-out;
+}
+
+.card {
+    background-color: transparent;
+    border: none;
+}
+
 #aboutimg {
     margin-top: 5.5%;
     opacity: 0.05;
@@ -8,16 +108,11 @@
     font-size: 150%;
     text-align: center;
     padding: 0rem 2rem;
-    opacity: 1.0;
+    opacity: 1;
     letter-spacing: 0.2vw;
 }
-body {
-    background-color: white;
-    overflow-x: hidden;
-    overflow-y: scroll;
-}
 
-.aboutsection p2 p3{
+.aboutsection p2 p3 {
     margin-left: 12%;
     margin-right: 12%;
 }
@@ -28,58 +123,57 @@ body {
     top: 110%;
 }
 
-@media only screen
-and (min-width : 1px) and (max-width : 828px)
-{  
-    .active{
+@media only screen and (min-width: 1px) and (max-width: 828px) {
+    .active {
         background-color: blue;
         color: white;
     }
 
-    .topnav{
-    display: block;
-    overflow: hidden;
-    font-family: 'Teko', sans-serif;
-    font-size: 100%;
-    background-color: blue;
-    width: 100%;
-    left: 0%;
-    top: 0%;
-    position: fixed;
-    z-index: 10;
+    .topnav {
+        display: block;
+        overflow: hidden;
+        font-family: "Teko", sans-serif;
+        font-size: 100%;
+        background-color: blue;
+        width: 100%;
+        left: 0%;
+        top: 0%;
+        position: fixed;
+        z-index: 10;
     }
 
-    .topnav #myPages{
-    display: none;
+    .topnav #myPages {
+        display: none;
     }
 
-    .topnav a{
-    color: white;
-    padding: 14px 16px;
-    text-decoration: none;
-    font-size: 150%;
-    display: block;
+    .topnav a {
+        color: white;
+        padding: 14px 16px;
+        text-decoration: none;
+        font-size: 150%;
+        display: block;
     }
 
     .topnav a.icon {
-    background: blue;
-    display: block;
-    position: fixed;
-    right: 0%;
-    top: 0%;
+        background: blue;
+        display: block;
+        position: fixed;
+        right: 0%;
+        top: 0%;
     }
-    
+
     .topnav a:hover {
-    background-color: orange;
-    color: black;
+        background-color: orange;
+        color: black;
     }
-    
+
     .aboutsection {
         top: 11%;
         left: 0%;
     }
 
-    .aboutsection p1 , .aboutsection p2 {
+    .aboutsection p1,
+    .aboutsection p2 {
         font-size: 95%;
     }
 

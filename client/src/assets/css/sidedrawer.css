@@ -20,9 +20,6 @@
     font-weight: 500;
     margin: 0.667rem 1rem;
 }
-#linka {
-    letter-spacing: 0.05rem;
-}
 #booknowli {
     color: white;
     padding: 0.625rem 2rem;
@@ -32,6 +29,7 @@
     text-align: center;
     background-color: rgb(27, 194, 202);
 }
-#galleryli, #booknowli {
-    list-style-type: none;   
+#galleryli,
+#booknowli {
+    list-style-type: none;
 }

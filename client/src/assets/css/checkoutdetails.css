@@ -32,12 +32,10 @@
 }
 
 .take-details-inputs,
-textarea {
+#take-details-box textarea {
     display: block;
     width: 100%;
-    margin: 0 0 8px;
     margin: 0 0 0.5rem;
-    padding: 9pt !important;
     padding: 0.8rem !important;
     box-sizing: border-box;
     border-radius: 0.5rem;

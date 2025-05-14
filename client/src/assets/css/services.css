@@ -1,32 +1,70 @@
 #coaches {
-  margin-top: 10%;
-  text-align: center;
-  font-size: 225%;
-  color: orange;
-  font-family: 'Teko', sans-serif;
-}
-#gctitle {
-  font-family: 'Bangers', cursive;
+    text-align: center;
 }
 #coaches > :nth-child(2) {
-  color: floralwhite;
-  font-size: 6vw;
-  width: 80%;
-  margin: 0 auto;
+    color: floralwhite;
+    font-size: 6vw;
+    width: 80%;
+    margin: 0 auto;
 }
-
+#coaches .title-wrapper .section-title {
+    margin-bottom: 60px;
+}
+#coaches .items-wrapper {
+    margin: 0 -10px;
+}
+#coaches .items-wrapper .item {
+    padding: 0 10px;
+    margin-bottom: 20px;
+}
+#coaches .item {
+    position: relative;
+}
+#coaches .items-wrapper .item .card_1 {
+    background-image: radial-gradient(circle farthest-corner at 80% 0%, #0047ff, #1f2329 50%);
+}
+#coaches .items-wrapper .item .card_2 {
+    background-image: radial-gradient(circle farthest-corner at 80% 0%, #ff398a, #1f2329 50%);
+}
+#coaches .items-wrapper .item .card_3 {
+    background-image: radial-gradient(circle farthest-corner at 80% 0%, orange, #1f2329 50%);
+}
+#coaches .items-wrapper .item .item-wrapper {
+    padding: 26px;
+    height: 100%;
+    overflow: hidden !important;
+}
+#coaches .items-wrapper .item .item-wrapper .item-img {
+    margin-bottom: 32px;
+}
+#coaches .items-wrapper .item .item-wrapper .item-img img {
+    height: 250px;
+    object-fit: cover;
+    transition: all 0.3s ease;
+}
+#coaches .items-wrapper .item .item-wrapper .item-img img:hover {
+    transform: translateX(64px);
+}
+#coaches .card-box {
+    width: 100%;
+}
 @media (min-width: 652px) {
-  #coaches > :nth-child(2) {
-    font-size: 4vw;
-  }
+    #coaches > :nth-child(2) {
+        font-size: 4vw;
+    }
 }
 @media (min-width: 880px) {
-  #coaches > :nth-child(2) {
-    font-size: 3vw;
-  }
+    #coaches > :nth-child(2) {
+        font-size: 3vw;
+    }
 }
 @media (max-width: 768px) {
-  #coaches {
-    margin-top: 15vh !important;
-  }
+    #coaches {
+        margin-top: 15vh !important;
+    }
+}
+@media (max-width: 992px) {
+    #coaches .items-wrapper .item .item-wrapper .item-img {
+        margin-bottom: 22px;
+    }
 }
