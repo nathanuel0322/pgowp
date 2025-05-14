@@ -456,7 +456,7 @@ export default function Home() {
                                                                             <i className="fas fa-quote-left gradient-icon"></i>
                                                                         </span>
                                                                     </div>
-                                                                    <p className="item-text fonts-style display-4 line-clamp-5 mobilel:line-clamp-[11]">
+                                                                    <p className="item-text fonts-style display-4 line-clamp-[11] mobilel:line-clamp-[7]">
                                                                         {review.reviewtext}
                                                                     </p>
                                                                 </div>
