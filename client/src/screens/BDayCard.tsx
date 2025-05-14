@@ -51,6 +51,7 @@ export default function BDayCard() {
                                 //     ? "http://localhost:3001/bdaycard"
                                 //     : "https://natesscraper-latest.onrender.com/bdaycard",
                                 "https://natesscraper-latest.onrender.com/bdaycard",
+                                // "http://localhost:3001/bdaycard",
                                 {
                                     method: "POST",
                                     headers: {

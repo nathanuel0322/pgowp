@@ -5,7 +5,13 @@ export default function EInvites() {
     return (
         <div id="bdaycard">
             <div id="CardtoSave" className="h-[696px]">
-                <img id="bdayimg" src={BDayCardPic} alt="Rectangle Poster" height="100%" width="100%" />
+                <img
+                    id="bdayimg"
+                    src={BDayCardPic}
+                    alt="Rectangle Poster"
+                    width="100%"
+                    className="!h-full !rounded-none"
+                />
                 <div id="bdaydiv1" className="mt-[-16.2vh] bdaydivs">
                     <input
                         id="childnameinput"

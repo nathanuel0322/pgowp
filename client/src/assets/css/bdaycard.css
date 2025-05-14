@@ -12,7 +12,8 @@
     flex-direction: row;
     align-items: center;
     justify-content: flex-start;
-    margin-left: 138px;
+    /* margin-left: 138px; */
+    margin-left: 162px;
 }
 .inputs ::placeholder {
     text-align: center;
@@ -49,10 +50,12 @@
     font-family: Teko, sans-serif;
 }
 .bdaydivs {
-    gap: 180px;
+    /* gap: 180px; */
+    gap: 211px;
 }
 .bdaydivs > * {
-    width: 333px;
+    /* width: 333px; */
+    width: 390px;
 }
 .bdaydivs > :first-child {
     margin-left: 0;
