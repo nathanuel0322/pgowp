@@ -158,6 +158,9 @@ export default function Home() {
                                     >
                                         <div className="embla__container">
                                             <div className="embla__slide">
+                                                <img src={NintendoNoBg} alt="Nintendo Switch" />
+                                            </div>
+                                            <div className="embla__slide">
                                                 <img src={PS5NoBg} alt="PS5" />
                                             </div>
                                             <div className="embla__slide">
@@ -165,9 +168,6 @@ export default function Home() {
                                             </div>
                                             <div className="embla__slide">
                                                 <img src={XboxNoBg} alt="Xbox Series X" />
-                                            </div>
-                                            <div className="embla__slide">
-                                                <img src={NintendoNoBg} alt="Nintendo Switch" />
                                             </div>
                                             <div className="embla__slide">
                                                 <img src={TabletNoBg} alt="Tablet" />
