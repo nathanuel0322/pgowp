@@ -3,3 +3,5 @@
 
 # misc
 **/.env
+build/
+src/.DS_Store
