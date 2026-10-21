@@ -8,6 +8,8 @@ import Contact from "../../screens/Contact";
 import About from "../../screens/About";
 import BDayCard from "../../screens/BDayCard";
 import NotFound from "../../screens/NotFound";
+import AreaPage from "../../screens/AreaPage";
+import { AREAS } from "../../data/areas";
 import Header from "./Header";
 import Footer from "./Footer";
 import Seo from "./Seo";
@@ -49,6 +51,9 @@ export default function Routing() {
                         <Route path="/about" element={<About />} />
                         <Route path="/bday-card" element={<BDayCard />} />
                         <Route path="/e-invites" element={<EInvites />} />
+                        {AREAS.map((a) => (
+                            <Route key={a.slug} path={a.path} element={<AreaPage area={a} />} />
+                        ))}
                         <Route
                             path="/book"
                             element={

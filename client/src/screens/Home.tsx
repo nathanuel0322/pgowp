@@ -11,6 +11,7 @@ import FaqList from "../components/FaqList";
 import { GALLERY, photo } from "../data/photos";
 import { PARTY_PACKAGES, formatPrice } from "../data/packages";
 import { FAQS } from "../data/faq";
+import { AREAS } from "../data/areas";
 import { EVENT_TYPES, SERVICE_AREAS, SITE } from "../site";
 
 const hero = photo("trailer-night-glow");
@@ -347,12 +348,14 @@ export default function Home() {
                             Standard service area, no travel fee:
                         </p>
                         <ul className="relative mt-4 flex flex-wrap gap-2">
-                            {SERVICE_AREAS.standard.map((a) => (
-                                <li
-                                    key={a}
-                                    className="rounded-full bg-gold px-4 py-2 text-sm font-bold text-ink"
-                                >
-                                    {a}
+                            {AREAS.map((a) => (
+                                <li key={a.slug}>
+                                    <Link
+                                        to={a.path}
+                                        className="inline-block rounded-full bg-gold px-4 py-2 text-sm font-bold text-ink transition hover:bg-gold-soft"
+                                    >
+                                        {a.name}
+                                    </Link>
                                 </li>
                             ))}
                         </ul>

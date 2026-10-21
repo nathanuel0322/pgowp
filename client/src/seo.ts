@@ -1,4 +1,5 @@
-import { FAQS } from "./data/faq";
+import { areaForPath } from "./data/areas";
+import { Faq, FAQS } from "./data/faq";
 import { PARTY_PACKAGES } from "./data/packages";
 import { PageMeta, SERVICE_AREAS, SITE, absoluteUrl } from "./site";
 
@@ -63,11 +64,11 @@ function breadcrumbSchema(meta: PageMeta, label: string) {
     };
 }
 
-function faqSchema() {
+function faqSchema(faqs: Faq[]) {
     return {
         "@context": "https://schema.org",
         "@type": "FAQPage",
-        mainEntity: FAQS.map((f) => ({
+        mainEntity: faqs.map((f) => ({
             "@type": "Question",
             name: f.question,
             acceptedAnswer: { "@type": "Answer", text: f.answer },
@@ -80,7 +81,9 @@ export function schemasFor(meta: PageMeta) {
     const crumbLabel = meta.title.split("|")[0].trim();
     const list: object[] = meta.path === "/" ? [businessSchema(), websiteSchema()] : [businessSchema()];
     if (meta.path !== "/") list.push(breadcrumbSchema(meta, crumbLabel));
-    if (meta.path === "/about") list.push(faqSchema());
+    if (meta.path === "/about") list.push(faqSchema(FAQS));
+    const area = areaForPath(meta.path);
+    if (area) list.push(faqSchema(area.faqs));
     return list;
 }
 

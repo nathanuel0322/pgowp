@@ -1,3 +1,5 @@
+import { AREAS } from "./data/areas";
+
 // Single source of truth for business details, page metadata and structured data.
 // Used by the React app (client + prerender) so search engines and visitors see the same facts.
 
@@ -98,6 +100,9 @@ export const PAGES: Record<string, PageMeta> = {
         description:
             "Create a free, printable gaming-themed birthday invitation in seconds. Add the birthday child's name, party date, location and RSVP number, then download.",
     },
+    ...Object.fromEntries(
+        AREAS.map((a) => [a.path, { path: a.path, title: a.title, description: a.description }])
+    ),
 };
 
 export const NOT_FOUND_META: PageMeta = {

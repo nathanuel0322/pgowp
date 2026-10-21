@@ -2,6 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import { FaInstagram, FaGoogle } from "react-icons/fa6";
 import { MdEmail, MdPhone } from "react-icons/md";
 import { NAV_LINKS, SERVICE_AREAS, SITE } from "../../site";
+import { AREAS } from "../../data/areas";
 import Logo from "./Logo";
 import { BookButton } from "./Header";
 
@@ -61,8 +62,12 @@ export default function Footer() {
                             Service area
                         </h2>
                         <ul className="mt-5 space-y-3 text-sm text-fog">
-                            {SERVICE_AREAS.standard.map((a) => (
-                                <li key={a}>{a}</li>
+                            {AREAS.map((a) => (
+                                <li key={a.slug}>
+                                    <Link to={a.path} className="transition hover:text-white">
+                                        {a.name}
+                                    </Link>
+                                </li>
                             ))}
                             <li className="pt-1 text-xs text-fog/70">
                                 + {SERVICE_AREAS.surcharge.join(", ")} (travel surcharge)
