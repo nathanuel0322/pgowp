@@ -11,6 +11,10 @@ export default defineConfig({
     optimizeDeps: {
         exclude: ["bcrypt"],
     },
+    ssr: {
+        // react-icons v4 ships ESM that Node can't load directly, so bundle it into the prerender build.
+        noExternal: ["react-icons"],
+    },
     resolve: {
         extensions: [".js", ".jsx", ".ts", ".tsx"], // Ensure these extensions are resolved
     },

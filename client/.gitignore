@@ -33,3 +33,4 @@ dist/**
 tsconfig.tsbuildinfo
 notes.txt
 emailtemplate.html
+dist-server/

@@ -807,7 +807,14 @@ export default {
 
             return jsonResponse({ body: "Not Found", status: 404 });
         } else {
-            return env.ASSETS?.fetch(request);
+            const response = await env.ASSETS?.fetch(request);
+            // Vite fingerprints everything in /assets/, so browsers can cache those files forever.
+            if (response && response.ok && url.pathname.startsWith("/assets/")) {
+                const cached = new Response(response.body, response);
+                cached.headers.set("Cache-Control", "public, max-age=31536000, immutable");
+                return cached;
+            }
+            return response;
         }
     },
 };

@@ -1,502 +1,395 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-import "../assets/css/home.css";
-import PS5NoBg from "../assets/images/ps5-nobg.png";
-import PSVRNoBg from "../assets/images/psvr-nobg.png";
-import XboxNoBg from "../assets/images/xbox-nobg.png";
-import NintendoNoBg from "../assets/images/nintendo-nobg.png";
-import TabletNoBg from "../assets/images/tablet-nobg.png";
-import OculusNoBg from "../assets/images/oculus-nobg.png";
-import SquarePrestigiousPoster from "../assets/images/square.jpg";
-import useEmblaCarousel from "embla-carousel-react";
-import Autoplay from "embla-carousel-autoplay";
-import InfinityTab from "../assets/images/infinitygame.jpeg";
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import NicePic from "../assets/images/2024-06-10.jpg";
-import Img1 from "../assets/images/img1.jpg";
-import Img2 from "../assets/images/img2.jpg";
-import Img3 from "../assets/images/img3.jpg";
-import Img4 from "../assets/images/img4.jpg";
-import Img5 from "../assets/images/img5.jpg";
-import Img6 from "../assets/images/img6.jpg";
-import Img7 from "../assets/images/img7.jpg";
-import Img8 from "../assets/images/img8.jpg";
-import Img9 from "../assets/images/img9.jpg";
-import Img10 from "../assets/images/img10.jpg";
-import Img11 from "../assets/images/img11.jpg";
-import Img12 from "../assets/images/img12.jpg";
-import Img13 from "../assets/images/img13.jpg";
-import Img14 from "../assets/images/img14.jpg";
-import Img15 from "../assets/images/img15.jpg";
-import Img16 from "../assets/images/img16.jpg";
-import { useInView } from "react-intersection-observer";
-import { useSpring, animated } from "@react-spring/web";
-import { supabase_widgie } from "../supabase_widgie";
-import { MdNavigateBefore, MdNavigateNext } from "react-icons/md";
+import { Link } from "react-router-dom";
+import { MdPhone, MdCheck, MdArrowForward } from "react-icons/md";
+import { SiPlaystation5, SiXbox, SiNintendoswitch, SiOculus, SiEpicgames } from "react-icons/si";
+import { GiPartyPopper, GiLaserBlast, GiPopcorn, GiMicrophone, GiJoystick, GiPhotoCamera } from "react-icons/gi";
+import { BsCloudRainHeavy, BsPeople, BsTruck, BsController, BsTv, BsJoystick } from "react-icons/bs";
+import { BookButton } from "../components/global/Header";
+import { CtaBand, Img, SectionHeading } from "../components/ui";
+import LiteYouTube from "../components/home/LiteYouTube";
+import Reviews from "../components/home/Reviews";
+import FaqList from "../components/FaqList";
+import { GALLERY, photo } from "../data/photos";
+import { PARTY_PACKAGES, formatPrice } from "../data/packages";
+import { FAQS } from "../data/faq";
+import { EVENT_TYPES, SERVICE_AREAS, SITE } from "../site";
+
+const hero = photo("trailer-night-glow");
+
+const LINEUP = [
+    { icon: SiPlaystation5, label: "PlayStation 5" },
+    { icon: SiXbox, label: "Xbox Series X" },
+    { icon: SiNintendoswitch, label: "Nintendo Switch" },
+    { icon: SiOculus, label: "Virtual Reality" },
+    { icon: SiEpicgames, label: "Fortnite included" },
+    { icon: GiLaserBlast, label: "Live-scored laser tag" },
+    { icon: GiJoystick, label: "1,000+ retro arcade games" },
+    { icon: GiMicrophone, label: "Karaoke" },
+    { icon: GiPhotoCamera, label: "Photobooth" },
+    { icon: GiPopcorn, label: "Popcorn & cotton candy" },
+];
+
+const STATS = [
+    { value: "28", label: "players at once" },
+    { value: "9", label: "4K HD screens" },
+    { value: "1,000+", label: "retro classics" },
+    { value: "100%", label: "climate controlled" },
+];
+
+const FEATURES = [
+    {
+        icon: BsTv,
+        title: "A theater on wheels",
+        text: "Seven indoor 4K TVs with soundbars, two outdoor screens under a 14-foot awning and LED lighting that makes every photo pop.",
+    },
+    {
+        icon: BsPeople,
+        title: "Up to 28 players",
+        text: "Big enough for the whole class. Everyone plays at the same time, so nobody waits around for a turn.",
+    },
+    {
+        icon: BsCloudRainHeavy,
+        title: "Rain or shine",
+        text: "Heat in the winter, A/C in the summer. The party goes on in any weather.",
+    },
+    {
+        icon: BsController,
+        title: "Game coaches included",
+        text: "Our staff helps pick games, switch titles, teach new players and keep the fun going all party long.",
+    },
+    {
+        icon: GiJoystick,
+        title: "Retro for the grown-ups",
+        text: "While the kids battle on today's consoles, parents can relive Pac-Man, Donkey Kong and 1,000+ arcade classics.",
+    },
+    {
+        icon: BsTruck,
+        title: "We come to you",
+        text: "Your driveway, your block, your school parking lot. Just save us about 5 car lengths and we set up everything.",
+    },
+];
+
+const STEPS = [
+    {
+        title: "Pick your package",
+        text: "Choose a gaming, laser tag or movie party and stack on add-ons like VR, karaoke or cotton candy.",
+    },
+    {
+        title: "Lock in your date",
+        text: "A 50% deposit reserves your time slot. The balance is due when we arrive.",
+    },
+    {
+        title: "We pull up. You party.",
+        text: "Save us 5 car lengths of parking. We set up, run the games and leave you with the memories.",
+    },
+];
 
 export default function Home() {
-    const row1Ref = useRef<HTMLDivElement | null>(null);
-    const row2Ref = useRef<HTMLDivElement | null>(null);
-    const [emblaRef] = useEmblaCarousel({ loop: true, dragFree: true, skipSnaps: true }, [Autoplay({ delay: 2000 })]);
-    const [emblaReviewRef, emblaApi] = useEmblaCarousel({ loop: true });
-    const [apiLoaded, setApiLoaded] = useState(false);
-    const [reviews, setReviews] = useState<any[]>([]);
-
-    const scrollPrev = useCallback(() => {
-        if (emblaApi) emblaApi.scrollPrev();
-    }, [emblaApi]);
-
-    const scrollNext = useCallback(() => {
-        if (emblaApi) emblaApi.scrollNext();
-    }, [emblaApi]);
-
-    // Use react-intersection-observer to track visibility
-    const { ref: parentInViewRef, inView: isParentInView } = useInView({ threshold: 0.1 });
-    const [scrollTop, setScrollTop] = useState(0);
-
-    // Springs for X t
-    const row1Spring = useSpring({
-        x: isParentInView ? (window.innerWidth <= 450 ? 0.4 : 0.430556) * scrollTop - 1675 : -900,
-        config: { tension: 120, friction: 14 },
-    });
-
-    const row2Spring = useSpring({
-        x: isParentInView ? (window.innerWidth <= 450 ? -0.4 : -0.430556) * scrollTop + 775 : 0,
-        config: { tension: 120, friction: 14 },
-    });
-
-    useEffect(() => {
-        (async () => {
-            const { data, error } = await supabase_widgie
-                .from("widgets")
-                .select("*")
-                .eq("id", "88bfbcb1-5060-4dca-914c-33788e9850c2")
-                .single();
-            if (error) {
-                console.error("Error fetching widget data:", error);
-            } else {
-                console.log("Widget data:", data);
-                setReviews([...data.yelpreviews, ...data.googlereviews]);
-                setApiLoaded(true);
-            }
-        })();
-    }, []);
-
-    useEffect(() => {
-        const script = document.createElement("script");
-        script.src = "https://widgie.pages.dev/review-widget.umd.js";
-        // script.src = "../review-widget.js";
-        script.async = true;
-        script.defer = true;
-        // console.log("home outer div", document.getElementById("homeouterdiv"));
-        document.getElementById("homeouterdiv")?.appendChild(script);
-
-        const handleScroll = () => {
-            setScrollTop(window.scrollY);
-            // const scrollTop = window.scrollY;
-            // console.log("scrollTop:", scrollTop);
-            // beforeinview: scrollTop = 1800, row1Ref: -900px, row2Ref: 0px
-            // afterinview: scrollTop = 3600, row1Ref: -125px, row2Ref: -775px
-        };
-
-        // Set initial positions for row1Ref and row2Ref
-        // if (row1Ref.current) {
-        //     row1Ref.current.style.transform = `translate3d(-900px, 0, 0)`; // Default position for row1
-        // }
-        // if (row2Ref.current) {
-        //     row2Ref.current.style.transform = `translate3d(0px, 0, 0)`; // Default position for row2
-        // }
-
-        window.addEventListener("scroll", handleScroll);
-        return () => window.removeEventListener("scroll", handleScroll);
-    }, [isParentInView]);
+    const featured = PARTY_PACKAGES.slice(0, 3);
 
     return (
-        <div id="homeouterdiv">
-            <div
-                className="relative fullscreen parallax-background mt-[7.5vh] under769:mt-0"
-                id="first-section"
-                style={{
-                    backgroundImage: `url(${SquarePrestigiousPoster})`,
-                    backgroundAttachment: "fixed",
-                    backgroundSize: "cover",
-                }}
-            >
-                <Container>
-                    <Row className="justify-center">
-                        <div className="col-12 col-lg-10">
-                            <div className="relative z-[2]">
-                                <h2 id="main-title-h2" className="section-title fonts-style display-1">
-                                    <strong id="main-title" className="font-bold">
-                                        Prestigious Gaming on Wheels Plus
-                                    </strong>
-                                </h2>
-                                <button
-                                    className="custom-btn custom-btn-success display-4"
-                                    onClick={() =>
-                                        document.getElementById("intro-section")?.scrollIntoView({ behavior: "smooth" })
-                                    }
-                                >
-                                    View More
-                                </button>
-                            </div>
-                        </div>
-                    </Row>
-                </Container>
-            </div>
-            <div className="py-20">
-                <Container>
-                    <Row>
-                        <div className="col-12">
-                            <div>
-                                <p className="display-4">Our trailer offers</p>
-                                <div className="offer-embla mt-2">
-                                    <div
-                                        className="embla__viewport cursor-grab overflow-hidden w-full mr-4 h-full"
-                                        ref={emblaRef}
-                                    >
-                                        <div className="embla__container">
-                                            <div className="embla__slide">
-                                                <img src={NintendoNoBg} alt="Nintendo Switch" />
-                                            </div>
-                                            <div className="embla__slide">
-                                                <img src={PS5NoBg} alt="PS5" />
-                                            </div>
-                                            <div className="embla__slide">
-                                                <img src={PSVRNoBg} alt="PSVR" />
-                                            </div>
-                                            <div className="embla__slide">
-                                                <img src={XboxNoBg} alt="Xbox Series X" />
-                                            </div>
-                                            <div className="embla__slide">
-                                                <img src={TabletNoBg} alt="Tablet" />
-                                            </div>
-                                            <div className="embla__slide">
-                                                <img src={InfinityTab} alt="Infinity" />
-                                            </div>
-                                            <div className="embla__slide">
-                                                <img src={OculusNoBg} alt="Oculus" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </Row>
-                </Container>
-            </div>
-            <div id="intro-section" className="relative">
-                <Container>
-                    <Row className="justify-between">
-                        <div className="col-12 col-lg-4 text-start">
-                            <div className="title-wrapper">
-                                <h2 className="section-title fonts-style display-2">Hey! Hi There! You found us!</h2>
-                            </div>
-                        </div>
-                        <div className="col-12 col-lg-7 text-start">
-                            <div className="items-wrapper">
-                                <div className="item features-without-image">
-                                    <div className="item-wrapper">
-                                        <div className="card-box">
-                                            <h4 className="item-title fonts-style display-5">Ultimate Entertainment</h4>
-                                            <p className="item-text fonts-style display-4">
-                                                We are the best gaming/movie trailer experience you will ever encounter
-                                                from luxurious quality to the best sounding game/movie trailer on
-                                                wheels.
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="item features-without-image">
-                                    <div className="item-wrapper">
-                                        <div className="card-box">
-                                            <h4 className="item-title fonts-style display-5">Unforgettable Fun</h4>
-                                            <p className="item-text fonts-style display-4">
-                                                This is one game trailer you won’t forget. Up to 28 players at once.
-                                                Don’t worry, we bring the party to you! Party in any weather, rain or
-                                                shine, hot or cold. Come and enjoy your party in our luxury class
-                                                trailer.
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="item features-without-image">
-                                    <div className="item-wrapper">
-                                        <div className="card-box">
-                                            <h4 className="item-title fonts-style display-5">Wide Coverage</h4>
-                                            <p className="item-text fonts-style display-4">
-                                                We're available to come to you in Brooklyn! Queens! and Parts of Nassau!
-                                                For an additional surcharge: Manhattan! Westchester! Suffolk County!
-                                                Staten Island! Bronx! Parts of Connecticut! Parts of Nassau! and others!
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="item features-without-image">
-                                    <div className="item-wrapper">
-                                        <div className="card-box">
-                                            <h4 className="item-title fonts-style display-5">Event Experts</h4>
-                                            <p className="item-text fonts-style display-4">
-                                                We do Birthday Parties! Church Functions! School Events! Fundraisers!
-                                                Bar Mitzvahs! Bat Mitzvahs! Prom! Block Parties! Charities! and More!
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="item features-without-image">
-                                    <div className="item-wrapper">
-                                        <div className="card-box">
-                                            <h4 className="item-title fonts-style display-5">Retro Delight</h4>
-                                            <p className="item-text fonts-style display-4">
-                                                While kids are having fun on today's systems, parents can enjoy our
-                                                retro games: Pac-Man, Donkey Kong, + 1,000 more!
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </Row>
-                </Container>
-            </div>
-            <div className="py-20">
-                <Container>
-                    <Row>
-                        <div className="col-12 col-lg-6 text-start">
-                            <div id="laser-text" className="title-wrapper">
-                                <h2 className="section-title fonts-style display-5">
-                                    We have the best Hi-Tech Arena Style Equipment, Live On-Screen Scoring, Music, and
-                                    Commentating Laser Tag rounds you will ever experience!
-                                </h2>
-                            </div>
-                        </div>
-                        <div className="col-12 col-lg-6">
-                            <div className="self-center">
-                                <iframe
-                                    className="embedded-video w-full"
-                                    src="https://www.youtube.com/embed/UNcke329oIc?rel=0&amp;amp;mute=1&amp;showinfo=0&amp;autoplay=1&amp;loop=1&playlist=UNcke329oIc"
-                                    width="1280"
-                                    height="720"
-                                    allowFullScreen={true}
-                                    style={{ height: "303px" }}
-                                ></iframe>
-                            </div>
-                        </div>
-                    </Row>
-                </Container>
-            </div>
-            <div className="py-20" id="mini-gallery" ref={parentInViewRef}>
-                <Container fluid className="gallery-wrapper overflow-hidden">
-                    <Row className="justify-content-center">
-                        <div className="col-12 content-head">
-                            <div className="section-head"></div>
-                        </div>
-                    </Row>
-                    <div className="grid-container">
-                        <animated.div
-                            className="grid-container-1 items-end"
-                            ref={row1Ref}
-                            style={{ transform: row1Spring.x.to((x) => `translate3d(${x}px, 0, 0)`) }}
-                        >
-                            <div className="grid-item">
-                                <img src={Img1} alt="Image 1" />
-                            </div>
-                            <div className="grid-item">
-                                <img src={Img2} alt="Image 2" />
-                            </div>
-                            <div className="grid-item">
-                                <img src={Img3} alt="Image 3" />
-                            </div>
-                            <div className="grid-item">
-                                <img src={Img4} alt="Image 4" />
-                            </div>
-                            <div className="grid-item">
-                                <img src={Img5} alt="Image 5" />
-                            </div>
-                            <div className="grid-item">
-                                <img src={Img6} alt="Image 6" />
-                            </div>
-                            <div className="grid-item">
-                                <img src={Img7} alt="Image 7" />
-                            </div>
-                            <div className="grid-item">
-                                <img src={Img8} alt="Image 8" />
-                            </div>
-                        </animated.div>
-                        <animated.div
-                            className="grid-container-2"
-                            ref={row2Ref}
-                            style={{ transform: row2Spring.x.to((x) => `translate3d(${x}px, 0, 0)`) }}
-                        >
-                            <div className="grid-item">
-                                <img src={Img9} alt="Image 9" />
-                            </div>
-                            <div className="grid-item">
-                                <img src={Img10} alt="Image 10" />
-                            </div>
-                            <div className="grid-item">
-                                <img src={Img11} alt="Image 11" />
-                            </div>
-                            <div className="grid-item">
-                                <img src={Img12} alt="Image 12" />
-                            </div>
-                            <div className="grid-item">
-                                <img src={Img13} alt="Image 13" />
-                            </div>
-                            <div className="grid-item">
-                                <img src={Img14} alt="Image 14" />
-                            </div>
-                            <div className="grid-item">
-                                <img src={Img15} alt="Image 15" />
-                            </div>
-                            <div className="grid-item">
-                                <img src={Img16} alt="Image 16" />
-                            </div>
-                        </animated.div>
-                    </div>
-                </Container>
-            </div>
-            <div className="py-20 relative">
-                <Container>
-                    <Row>
-                        <Col xs={12}>
-                            <div className="card-wrapper">
-                                <div className="content-wrapper text-start">
-                                    <h2 className="section-title fonts-style display-5 mb-[22px]">
-                                        Parking and Connectivity
-                                    </h2>
-                                    <p className="text fonts-style display-4">
-                                        Make sure at least 5 car spaces are saved for trailer parking!
-                                        <br />
-                                        <br />
-                                        if parking is not available within 30 minutes, you will lose your deposit and
-                                        your party will be canceled.
-                                        <br />
-                                        <br />
-                                        Due to weak or lack of cell sites in certain areas, it may cause us to have to
-                                        connect a line to your router.
-                                    </p>
-                                    <div className="section-btn">
-                                        <a className="custom-btn custom-btn-success display-4" href="tel:7186738529">
-                                            Call Now
-                                        </a>
-                                    </div>
-                                </div>
-                                <div className="image-wrapper">
-                                    <img src={NicePic} alt="Nice Pic" />
-                                </div>
-                            </div>
-                        </Col>
-                    </Row>
-                </Container>
-            </div>
-            {/* <div
-                id="widgie"
-                widget-id="88bfbcb1-5060-4dca-914c-33788e9850c2"
-                bg-color="linear-gradient(135deg, rgb(255,165,0) 0%, rgb(134,197,218) 100%)"
-            ></div> */}
-            {apiLoaded && (
-                <div id="client-reviews">
-                    <Container>
-                        <Row>
-                            <Col xs={12}>
-                                <div className="title-wrapper">
-                                    <h2 className="section-title fonts-style display-2">Client Reviews</h2>
-                                </div>
-                            </Col>
-                            <Col xs={12}>
-                                <div className="content-wrapper">
-                                    <div className="absolute right-4 flex flex-row gap-3">
-                                        <button className="embla__button embla__button--prev" onClick={scrollPrev}>
-                                            <span
-                                                className="mobi-mbri mobi-mbri-arrow-prev iconfont"
-                                                aria-hidden="true"
-                                            >
-                                                <MdNavigateBefore size={30} />
-                                            </span>
-                                            <span className="sr-only visually-hidden visually-hidden visually-hidden">
-                                                Previous
-                                            </span>
-                                        </button>
-                                        <button className="embla__button embla__button--next" onClick={scrollNext}>
-                                            <span
-                                                className="mobi-mbri mobi-mbri-arrow-next iconfont"
-                                                aria-hidden="true"
-                                            >
-                                                <MdNavigateNext size={30} />
-                                            </span>
-                                            <span className="sr-only visually-hidden visually-hidden visually-hidden">
-                                                Next
-                                            </span>
-                                        </button>
-                                    </div>
-                                    <div
-                                        className="review-embla"
-                                        data-skip-snaps="true"
-                                        data-align="center"
-                                        data-contain-scroll="trimSnaps"
-                                        data-loop="true"
-                                        data-auto-play-interval="2"
-                                        data-draggable="true"
-                                    >
-                                        <div className="embla__viewport is-draggable" ref={emblaReviewRef}>
-                                            {/* <div className="embla__container" style="transform: translate3d(-64.4935%, 0px, 0px);"> */}
-                                            <div className="embla__container">
-                                                {reviews.map((review, index) => (
-                                                    <div
-                                                        className="embla__slide slider-image item mx-[10px] left-0"
-                                                        key={index}
-                                                    >
-                                                        <div className="slide-content">
-                                                            <div className="item-wrapper">
-                                                                <div className="item-content">
-                                                                    <div className="iconfont-wrapper">
-                                                                        <span className="mobi-mbri mobi-mbri-quote-left iconfont">
-                                                                            <i className="fas fa-quote-left gradient-icon"></i>
-                                                                        </span>
-                                                                    </div>
-                                                                    <p className="item-text fonts-style display-4 line-clamp-[11] atleast600:line-clamp-5">
-                                                                        {review.reviewtext}
-                                                                    </p>
-                                                                </div>
-                                                                <div className="item-img flex items-center gap-3">
-                                                                    <div className="image-wrap">
-                                                                        <img
-                                                                            src={review.photo}
-                                                                            id="topdivimg"
-                                                                            style={{
-                                                                                borderRadius: review.yelp
-                                                                                    ? "2rem"
-                                                                                    : "0px",
-                                                                                width: review.yelp ? "2.25rem" : "44px",
-                                                                                height: review.yelp
-                                                                                    ? "2.25rem"
-                                                                                    : "44px",
-                                                                            }}
-                                                                            referrerPolicy="no-referrer"
-                                                                            alt=""
-                                                                        />
-                                                                    </div>
-                                                                    <div className="name-wrapper">
-                                                                        <p className="item-name fonts-style display-4">
-                                                                            <strong>{review.name}</strong>
-                                                                        </p>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </Col>
-                        </Row>
-                    </Container>
+        <>
+            {/* Hero */}
+            <section className="relative isolate flex min-h-[100svh] items-end overflow-hidden pb-14 pt-28 sm:items-center sm:pb-20">
+                <div className="absolute inset-0 -z-10">
+                    <Img photo={hero} priority sizes="100vw" className="object-[70%_50%] opacity-70 sm:opacity-80" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/60 to-ink/10 sm:bg-gradient-to-r sm:from-ink sm:via-ink/75 sm:to-ink/10" />
+                    <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-ink to-transparent" />
                 </div>
-            )}
-        </div>
+                <div aria-hidden className="glow-volt absolute -left-40 top-1/4 -z-10 h-[520px] w-[520px] opacity-70" />
+
+                <div className="wrap">
+                    <div className="max-w-2xl animate-rise">
+                        <p className="eyebrow">Queens · Brooklyn · Long Island</p>
+                        <h1 className="h-display mt-5 text-[2.5rem] sm:text-6xl lg:text-7xl">
+                            Video game truck parties, <span className="text-gradient">delivered to your door.</span>
+                        </h1>
+                        <p className="lede mt-6 max-w-xl">
+                            A luxury, climate-controlled gaming theater on wheels with PS5, Xbox Series X, Nintendo
+                            Switch, VR and live-scored laser tag. The ultimate birthday, school or block party in NYC and
+                            Long Island.
+                        </p>
+                        <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+                            <BookButton className="btn-gold !px-8 !py-4 text-base" label="Check availability" />
+                            <Link to="/packages" className="btn-ghost !px-8 !py-4 text-base">
+                                See packages & prices
+                            </Link>
+                        </div>
+                        <a
+                            href={SITE.phoneHref}
+                            className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-fog hover:text-white"
+                        >
+                            <MdPhone className="text-gold" aria-hidden /> Prefer to talk? Call {SITE.phone}
+                        </a>
+                    </div>
+
+                    <dl className="mt-14 grid max-w-3xl grid-cols-2 gap-px overflow-hidden rounded-2xl border border-line bg-line sm:grid-cols-4">
+                        {STATS.map((s) => (
+                            <div key={s.label} className="bg-ink/70 px-5 py-4 backdrop-blur">
+                                <dt className="sr-only">{s.label}</dt>
+                                <dd className="font-display text-2xl font-bold text-white">{s.value}</dd>
+                                <dd className="mt-1 text-xs font-semibold uppercase tracking-wider text-fog">
+                                    {s.label}
+                                </dd>
+                            </div>
+                        ))}
+                    </dl>
+                </div>
+            </section>
+
+            {/* Lineup marquee */}
+            <section aria-label="What's on board" className="border-y border-line bg-surface/60 py-6">
+                <div className="relative overflow-hidden [mask-image:linear-gradient(90deg,transparent,black_10%,black_90%,transparent)]">
+                    <ul className="flex w-max animate-marquee gap-10 pr-10 hover:[animation-play-state:paused]">
+                        {[...LINEUP, ...LINEUP].map((item, i) => (
+                            <li
+                                key={i}
+                                aria-hidden={i >= LINEUP.length}
+                                className="flex items-center gap-3 whitespace-nowrap text-sm font-bold uppercase tracking-wider text-white/80"
+                            >
+                                <item.icon size={22} className="text-gold" aria-hidden />
+                                {item.label}
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            </section>
+
+            {/* Intro + features */}
+            <section className="wrap mt-24 sm:mt-32">
+                <div className="grid items-end gap-10 lg:grid-cols-2">
+                    <SectionHeading
+                        eyebrow="Hey! You found us"
+                        title={
+                            <>
+                                Not your average <span className="text-gradient">game truck.</span>
+                            </>
+                        }
+                    />
+                    <p className="lede lg:pb-2">
+                        Prestigious Gaming on Wheels Plus is a family-owned mobile gaming company from Queens. We
+                        built the trailer we wished existed for our own kids: luxurious, comfortable, loud in all
+                        the right ways and packed with every console worth playing.
+                    </p>
+                </div>
+
+                <div className="mt-14 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                    {FEATURES.map((f) => (
+                        <div key={f.title} className="card group p-7 transition hover:border-gold/30">
+                            <span className="grid h-12 w-12 place-items-center rounded-2xl bg-gold/10 text-gold ring-1 ring-gold/20">
+                                <f.icon size={22} aria-hidden />
+                            </span>
+                            <h3 className="mt-6 font-display text-lg font-semibold text-white">{f.title}</h3>
+                            <p className="mt-3 text-[15px] leading-relaxed text-fog">{f.text}</p>
+                        </div>
+                    ))}
+                </div>
+            </section>
+
+            {/* Packages preview */}
+            <section className="relative mt-28 sm:mt-36">
+                <div aria-hidden className="glow-gold absolute left-1/2 top-0 h-[500px] w-[900px] -translate-x-1/2 opacity-60" />
+                <div className="wrap relative">
+                    <SectionHeading
+                        align="center"
+                        eyebrow="Packages"
+                        title="Simple pricing. Epic parties."
+                        lede="Every gaming party includes game coaches, wristbands for all guests and a free T-shirt + gift for the guest of honor."
+                    />
+                    <div className="mt-14 grid gap-5 lg:grid-cols-3">
+                        {featured.map((p) => (
+                            <article
+                                key={p.id}
+                                className={`relative flex flex-col rounded-3xl border p-8 ${
+                                    p.featured
+                                        ? "border-gold/50 bg-gradient-to-b from-gold/[0.12] to-surface shadow-[0_30px_80px_-30px_rgba(255,176,46,0.45)]"
+                                        : "border-line bg-surface"
+                                }`}
+                            >
+                                {p.featured && (
+                                    <span className="absolute -top-3 left-8 rounded-full bg-gold px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-ink">
+                                        Most booked
+                                    </span>
+                                )}
+                                <h3 className="font-display text-lg font-semibold text-white">{p.name}</h3>
+                                <p className="mt-5 flex flex-wrap items-baseline gap-x-2">
+                                    <span className="font-display text-[2.6rem] font-bold leading-none text-white xl:text-5xl">
+                                        {formatPrice(p.price)}
+                                    </span>
+                                    <span className="text-sm text-fog">/ {p.duration}</span>
+                                </p>
+                                <p className="mt-4 text-[15px] leading-relaxed text-fog">{p.blurb}</p>
+                                <ul className="mt-6 space-y-3 border-t border-line pt-6 text-sm">
+                                    {p.features.slice(0, 4).map((f) => (
+                                        <li key={f} className="flex gap-3 text-white/85">
+                                            <MdCheck className="mt-0.5 shrink-0 text-gold" size={18} aria-hidden />
+                                            {f}
+                                        </li>
+                                    ))}
+                                </ul>
+                                <BookButton
+                                    className={`${p.featured ? "btn-gold" : "btn-ghost"} mt-8 w-full`}
+                                    label="Book this party"
+                                />
+                            </article>
+                        ))}
+                    </div>
+                    <div className="mt-8 text-center">
+                        <Link
+                            to="/packages"
+                            className="inline-flex items-center gap-2 font-semibold text-gold hover:text-gold-soft"
+                        >
+                            Laser tag, movie parties & all add-ons <MdArrowForward aria-hidden />
+                        </Link>
+                    </div>
+                </div>
+            </section>
+
+            {/* Laser tag */}
+            <section className="wrap mt-28 sm:mt-36">
+                <div className="grid items-center gap-12 lg:grid-cols-[1fr_1.15fr]">
+                    <div>
+                        <SectionHeading
+                            eyebrow="Arena laser tag"
+                            title={
+                                <>
+                                    Laser tag that feels like <span className="text-gradient">the pros.</span>
+                                </>
+                            }
+                            lede="Hi-tech arena-style equipment, inflatable bunkers, live on-screen scoring, music and play-by-play commentating. Book it as a stand-alone party or add it to any gaming package."
+                        />
+                        <ul className="mt-8 grid gap-3 text-[15px] sm:grid-cols-2">
+                            {[
+                                "Up to 20 players",
+                                "Live scoreboard",
+                                "Set up in your yard or lot",
+                                "From $22 per child as an add-on",
+                            ].map((t) => (
+                                <li key={t} className="flex items-center gap-3 text-white/85">
+                                    <GiLaserBlast className="shrink-0 text-gold" size={20} aria-hidden />
+                                    {t}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                    <LiteYouTube id="UNcke329oIc" title="Watch our live-scored laser tag in action" />
+                </div>
+            </section>
+
+            {/* How it works */}
+            <section className="wrap mt-28 sm:mt-36">
+                <SectionHeading align="center" eyebrow="How it works" title="Booked in minutes. Remembered for years." />
+                <ol className="mt-14 grid gap-5 md:grid-cols-3">
+                    {STEPS.map((s, i) => (
+                        <li key={s.title} className="card relative overflow-hidden p-8">
+                            <span
+                                aria-hidden
+                                className="absolute -right-3 -top-6 font-display text-[7rem] font-extrabold leading-none text-white/[0.04]"
+                            >
+                                {i + 1}
+                            </span>
+                            <span className="font-display text-sm font-bold text-gold">Step {i + 1}</span>
+                            <h3 className="mt-3 font-display text-xl font-semibold text-white">{s.title}</h3>
+                            <p className="mt-3 text-[15px] leading-relaxed text-fog">{s.text}</p>
+                        </li>
+                    ))}
+                </ol>
+            </section>
+
+            {/* Gallery teaser */}
+            <section className="wrap mt-28 sm:mt-36">
+                <div className="flex flex-wrap items-end justify-between gap-6">
+                    <SectionHeading eyebrow="Gallery" title="Real parties. Real smiles." />
+                    <Link to="/gallery" className="btn-ghost">
+                        View all photos <MdArrowForward aria-hidden />
+                    </Link>
+                </div>
+                <div className="mt-12 grid auto-rows-[160px] grid-cols-2 gap-3 sm:auto-rows-[220px] md:grid-cols-4">
+                    {GALLERY.slice(0, 5).map((p, i) => (
+                        <div
+                            key={p.src}
+                            className={`overflow-hidden rounded-2xl ${
+                                i === 0 ? "col-span-2 row-span-2" : ""
+                            }`}
+                        >
+                            <Img
+                                photo={p}
+                                sizes="(min-width: 768px) 25vw, 50vw"
+                                className="transition duration-700 hover:scale-105"
+                            />
+                        </div>
+                    ))}
+                </div>
+            </section>
+
+            {/* Events + service area */}
+            <section className="wrap mt-28 sm:mt-36">
+                <div className="grid gap-5 lg:grid-cols-2">
+                    <div className="card p-8 sm:p-10">
+                        <GiPartyPopper className="text-gold" size={32} aria-hidden />
+                        <h2 className="h-display mt-6 text-2xl sm:text-3xl">Every kind of celebration</h2>
+                        <p className="mt-3 text-[15px] text-fog">From backyard birthdays to full-campus fun days.</p>
+                        <ul className="mt-7 flex flex-wrap gap-2">
+                            {EVENT_TYPES.map((e) => (
+                                <li
+                                    key={e}
+                                    className="rounded-full border border-line bg-white/[0.03] px-4 py-2 text-sm font-semibold text-white/85"
+                                >
+                                    {e}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                    <div className="card relative overflow-hidden p-8 sm:p-10">
+                        <div aria-hidden className="glow-volt absolute -right-20 -top-20 h-72 w-72" />
+                        <BsJoystick className="relative text-gold" size={30} aria-hidden />
+                        <h2 className="h-display relative mt-6 text-2xl sm:text-3xl">Where we bring the party</h2>
+                        <p className="relative mt-3 text-[15px] text-fog">
+                            Standard service area, no travel fee:
+                        </p>
+                        <ul className="relative mt-4 flex flex-wrap gap-2">
+                            {SERVICE_AREAS.standard.map((a) => (
+                                <li
+                                    key={a}
+                                    className="rounded-full bg-gold px-4 py-2 text-sm font-bold text-ink"
+                                >
+                                    {a}
+                                </li>
+                            ))}
+                        </ul>
+                        <p className="relative mt-6 text-[15px] text-fog">Also available with a travel surcharge:</p>
+                        <ul className="relative mt-4 flex flex-wrap gap-2">
+                            {SERVICE_AREAS.surcharge.map((a) => (
+                                <li
+                                    key={a}
+                                    className="rounded-full border border-line px-4 py-2 text-sm font-semibold text-white/85"
+                                >
+                                    {a}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <Reviews />
+
+            {/* FAQ preview */}
+            <section className="wrap mt-28 sm:mt-36">
+                <div className="grid gap-12 lg:grid-cols-[1fr_1.5fr]">
+                    <div>
+                        <SectionHeading eyebrow="Good to know" title="Before the big day" />
+                        <Link
+                            to="/about"
+                            className="mt-8 inline-flex items-center gap-2 font-semibold text-gold hover:text-gold-soft"
+                        >
+                            Read all FAQs <MdArrowForward aria-hidden />
+                        </Link>
+                    </div>
+                    <FaqList faqs={FAQS.filter((f) => /rain|parking|Wi-Fi|travel/.test(f.question))} />
+                </div>
+            </section>
+
+            <CtaBand />
+        </>
     );
 }

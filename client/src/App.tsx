@@ -1,52 +1,44 @@
 import React, { createContext, useEffect, useState } from "react";
-import "./assets/css/home.css";
 import { Toaster } from "react-hot-toast";
 import Routing from "./components/global/Routing.tsx";
-import { CartItem } from "./screens/Book.tsx";
+import type { CartItem } from "./screens/Book.tsx";
 import ScrollToTop from "./components/global/ScrollToTop.tsx";
 
 interface AppContextType {
-    currentpage: string | null;
-    setcurrentpage: React.Dispatch<React.SetStateAction<string | null>>;
     cart: CartItem[];
     setCart: React.Dispatch<React.SetStateAction<CartItem[]>>;
 }
 
 export const AppContext = createContext<AppContextType>({
-    currentpage: null,
-    setcurrentpage: () => {},
     cart: [],
     setCart: () => {},
 });
 
 function App() {
-    const [currentpage, setcurrentpage] = useState<string | null>(null);
     const [cart, setCart] = useState<CartItem[]>([]);
 
     useEffect(() => {
-        const cart = localStorage.getItem("cart");
-        if (cart) setCart(JSON.parse(cart));
+        try {
+            const saved = localStorage.getItem("cart");
+            if (saved) setCart(JSON.parse(saved));
+        } catch {
+            /* storage unavailable */
+        }
     }, []);
 
     useEffect(() => {
-        localStorage.setItem("cart", JSON.stringify(cart));
+        try {
+            localStorage.setItem("cart", JSON.stringify(cart));
+        } catch {
+            /* storage unavailable */
+        }
     }, [cart]);
 
     return (
-        <AppContext.Provider
-            value={{
-                currentpage,
-                setcurrentpage,
-                cart,
-                setCart,
-            }}
-        >
+        <AppContext.Provider value={{ cart, setCart }}>
             <ScrollToTop />
             <Routing />
-            <Toaster
-                position="top-center"
-                containerClassName="!flex !flex-row !items-center !justify-center !font-[Figtree] font-semibold"
-            />
+            <Toaster position="top-center" toastOptions={{ style: { fontFamily: "Manrope, sans-serif", fontWeight: 600 } }} />
         </AppContext.Provider>
     );
 }

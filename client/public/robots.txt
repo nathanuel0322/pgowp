@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /book
+Disallow: /checkout
+Disallow: /checkout-details
+Disallow: /e-invites
+
+Sitemap: https://prestigiousgamingonwheelsplus.com/sitemap.xml

@@ -1,10 +1,9 @@
-import React, { useEffect, useContext } from "react";
-import { Link, useLocation } from "react-router-dom";
-import "../../assets/css/header.css";
+import React, { useContext, useEffect, useState } from "react";
+import { Link, NavLink, useLocation } from "react-router-dom";
+import { MdShoppingCart, MdPhone } from "react-icons/md";
 import { AppContext } from "../../App.tsx";
-import PGOWPLogo from "../../assets/images/favicon-96x96.png";
-import { MdShoppingCart } from "react-icons/md";
-import Container from "react-bootstrap/Container";
+import { NAV_LINKS, SITE } from "../../site.ts";
+import Logo from "./Logo.tsx";
 
 const Header = ({
     drawerOpen,
@@ -16,156 +15,160 @@ const Header = ({
     setCartDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
     const location = useLocation();
-    const { currentpage, setcurrentpage, cart } = useContext(AppContext);
-    console.log("currentpage:", currentpage);
+    const { cart } = useContext(AppContext);
+    const [scrolled, setScrolled] = useState(false);
 
     useEffect(() => {
-        console.log("location.pathname:", location.pathname);
-        if (location.pathname === "/services") setcurrentpage("Services");
-        else if (location.pathname === "/packages") setcurrentpage("Packages");
-        else if (location.pathname === "/") setcurrentpage("Home");
-        else if (location.pathname === "/contact-us") setcurrentpage("Contact Us");
-        else if (location.pathname === "/about") setcurrentpage("About");
-        else if (location.pathname === "/bday-card") setcurrentpage("BDay Card");
-        else if (location.pathname === "/e-invites") setcurrentpage("E-Invites");
-        else if (location.pathname === "/book") setcurrentpage("Book");
-        else if (location.pathname === "/checkout-details") setcurrentpage("Checkout Details");
-    }, [location.pathname]);
+        const onScroll = () => setScrolled(window.scrollY > 24);
+        onScroll();
+        window.addEventListener("scroll", onScroll, { passive: true });
+        return () => window.removeEventListener("scroll", onScroll);
+    }, []);
 
     useEffect(() => {
-        console.log("draweropen in hamnav:", drawerOpen);
+        document.body.style.overflow = drawerOpen ? "hidden" : "";
     }, [drawerOpen]);
 
+    if (location.pathname === "/e-invites") return null;
+
+    const solid = scrolled || drawerOpen;
+
     return (
-        <nav
-            id="mobilenav"
-            style={{
-                position: currentpage === "BDay Card" ? "relative" : "fixed",
-                display: location.pathname === "/e-invites" ? "none" : "flex",
-            }}
-            className={`navbar navbar-dropdown navbar-expand-lg opacityScroll ${drawerOpen ? "opened" : ""}`}
+        <header
+            className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${
+                solid ? "border-b border-line bg-ink/80 backdrop-blur-xl" : "border-b border-transparent"
+            }`}
         >
-            <Container id="headerdiv" className="bg-black">
-                <div className="navbar-brand">
-                    <div id="logo">
-                        <Link to="/" id="logolink">
-                            <img id="logoimg" src={PGOWPLogo} alt="PGOWP Logo" />
-                        </Link>
-                    </div>
-                    <span className="navbar-caption-wrap">
-                        <p className="navbar-caption text-info display-7">{currentpage}</p>
-                    </span>
-                </div>
-                {currentpage === "Book" && (
-                    <button id="cartbtn" type="button" onClick={() => setCartDrawerOpen(true)} title="Cart">
-                        <MdShoppingCart color="white" size={30} />
-                    </button>
-                )}
-                {/* <IoReorderThreeOutline
-                    color="white"
-                    size={50}
-                    onClick={() => setDrawerOpen(true)}
-                    className="cursor-pointer"
-                /> */}
-                <button
-                    className="navbar-toggler"
-                    type="button"
-                    data-toggle="collapse"
-                    data-bs-toggle="collapse"
-                    data-target="#navbarSupportedContent"
-                    data-bs-target="#navbarSupportedContent"
-                    aria-expanded="true"
-                    aria-label="Toggle navigation"
-                    onClick={() => setDrawerOpen(!drawerOpen)}
-                >
-                    <div className="hamburger">
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                    </div>
-                </button>
-                {/* 
-                    navbar-collapse opacityScroll collapse
-                    navbar-collapse opacityScroll collapse show
-                */}
-                <div
-                    className={`navbar-collapse opacityScroll collapse ${drawerOpen ? "show" : ""}`}
-                    id="navbarSupportedContent"
-                >
-                    <ul className="navbar-nav nav-dropdown" data-app-modern-menu="true">
-                        {["Home", "Services", "Packages", "Gallery", "E-Invites", "Contact Us", "About"].map(
-                            (text, index) =>
-                                text === "Gallery" ? (
-                                    <li
-                                        key={index}
-                                        id="galleryli"
-                                        onClick={() => setDrawerOpen(false)}
-                                        className="nav-item"
-                                    >
-                                        <a
-                                            className="nav-link link display-4"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            href="https://www.google.com/maps/place/Prestigious+Gaming+On+Wheels+Plus/@40.6717448,-73.7831725,3a,98y,90t/data=!3m8!1e2!3m6!1sAF1QipNxsYt_rIckjjQfRaQBWaA0pEgAJ_zCm3qYyVA!2e10!3e12!6shttps:%2F%2Flh5.googleusercontent.com%2Fp%2FAF1QipNxsYt_rIckjjQfRaQBWaA0pEgAJ_zCm3qYyVA%3Dw203-h114-k-no!7i800!8i450!4m7!3m6!1s0x89c267ef4ab3d5c7:0x77d90889fb9bc7fc!8m2!3d40.671612!4d-73.7834759!14m1!1BCgIgAQ#"
-                                        >
-                                            Gallery
-                                        </a>
-                                    </li>
-                                ) : (
-                                    <li key={index} className="nav-item">
-                                        <Link
-                                            key={index}
-                                            to={
-                                                text === "E-Invites"
-                                                    ? "/bday-card"
-                                                    : index === 0
-                                                    ? "/"
-                                                    : `/${text.split(" ").join("-").toLowerCase()}`
-                                            }
-                                            onClick={() => setDrawerOpen(false)}
-                                            className="nav-link link display-4"
-                                        >
-                                            {text}
-                                        </Link>
-                                    </li>
-                                )
-                        )}
+            <a
+                href="#main"
+                className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:rounded-full focus:bg-gold focus:px-4 focus:py-2 focus:text-ink"
+            >
+                Skip to content
+            </a>
+            <div className="wrap flex h-16 items-center justify-between gap-4 lg:h-20">
+                <Link to="/" aria-label={`${SITE.name} home`} onClick={() => setDrawerOpen(false)}>
+                    <Logo />
+                </Link>
+
+                <nav aria-label="Main" className="hidden lg:block">
+                    <ul className="flex items-center gap-1">
+                        {NAV_LINKS.slice(1).map((link) => (
+                            <li key={link.to}>
+                                <NavLink
+                                    to={link.to}
+                                    className={({ isActive }) =>
+                                        `rounded-full px-3.5 py-2 text-sm font-semibold transition-colors ${
+                                            isActive ? "bg-white/10 text-white" : "text-fog hover:text-white"
+                                        }`
+                                    }
+                                >
+                                    {link.label}
+                                </NavLink>
+                            </li>
+                        ))}
                     </ul>
-                    <div className="navbar-buttons section-btn">
-                        {import.meta.env.PROD ? (
-                            <a
-                                className="btn btn-secondary display-4"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                href="https://app.10to8.com/book/ymonerhexbfwnegoml/"
-                            >
-                                Book Now
-                            </a>
-                        ) : (
-                            <Link className="btn btn-secondary display-4" to="/book">
-                                Book Now
-                            </Link>
-                        )}
-                    </div>
-                </div>
-            </Container>
-            {location.pathname === "/book" && (
-                <button
-                    id="cartbutton"
-                    type="button"
-                    title="Cart"
-                    className={`bg-white rounded-full ml-4 relative ${cart.length > 0 ? "p-4" : "p-3"}`}
-                    onClick={() => setCartDrawerOpen(true)}
-                >
-                    <MdShoppingCart size={35} />
-                    {cart.length > 0 && (
-                        <p className="absolute text-black text-xl bottom-2 right-3 font-bold w-fit">{cart.length}</p>
+                </nav>
+
+                <div className="flex items-center gap-2">
+                    <a
+                        href={SITE.phoneHref}
+                        className="hidden items-center gap-2 rounded-full px-3 py-2 text-sm font-bold text-white hover:text-gold xl:inline-flex"
+                    >
+                        <MdPhone className="text-gold" size={18} aria-hidden />
+                        {SITE.phone}
+                    </a>
+                    {location.pathname === "/book" && (
+                        <button
+                            type="button"
+                            title="Cart"
+                            className="relative rounded-full bg-white p-2.5 text-ink"
+                            onClick={() => setCartDrawerOpen(true)}
+                        >
+                            <MdShoppingCart size={22} />
+                            {cart.length > 0 && (
+                                <span className="absolute -right-1 -top-1 grid h-5 w-5 place-items-center rounded-full bg-gold text-[11px] font-bold">
+                                    {cart.length}
+                                </span>
+                            )}
+                        </button>
                     )}
-                </button>
-            )}
-        </nav>
+                    <BookButton className="btn-gold hidden !px-5 !py-2.5 sm:inline-flex" />
+                    <button
+                        type="button"
+                        className="relative grid h-11 w-11 place-items-center rounded-full border border-white/15 bg-white/[0.04] lg:hidden"
+                        aria-label={drawerOpen ? "Close menu" : "Open menu"}
+                        aria-expanded={drawerOpen}
+                        aria-controls="mobile-menu"
+                        onClick={() => setDrawerOpen(!drawerOpen)}
+                    >
+                        <span
+                            className={`absolute h-0.5 w-5 rounded bg-white transition-transform duration-300 ${
+                                drawerOpen ? "rotate-45" : "-translate-y-1.5"
+                            }`}
+                        />
+                        <span
+                            className={`absolute h-0.5 w-5 rounded bg-white transition-opacity duration-200 ${
+                                drawerOpen ? "opacity-0" : ""
+                            }`}
+                        />
+                        <span
+                            className={`absolute h-0.5 w-5 rounded bg-white transition-transform duration-300 ${
+                                drawerOpen ? "-rotate-45" : "translate-y-1.5"
+                            }`}
+                        />
+                    </button>
+                </div>
+            </div>
+
+            <div
+                id="mobile-menu"
+                className={`overflow-hidden transition-[max-height,opacity] duration-300 lg:hidden ${
+                    drawerOpen ? "max-h-[100dvh] opacity-100" : "pointer-events-none max-h-0 opacity-0"
+                }`}
+            >
+                <nav aria-label="Mobile" className="wrap flex h-[calc(100dvh-4rem)] flex-col pb-8 pt-4">
+                    <ul className="flex flex-col">
+                        {NAV_LINKS.map((link) => (
+                            <li key={link.to} className="border-b border-line">
+                                <NavLink
+                                    to={link.to}
+                                    end
+                                    onClick={() => setDrawerOpen(false)}
+                                    className={({ isActive }) =>
+                                        `block py-4 font-display text-2xl font-semibold ${
+                                            isActive ? "text-gold" : "text-white"
+                                        }`
+                                    }
+                                >
+                                    {link.label}
+                                </NavLink>
+                            </li>
+                        ))}
+                    </ul>
+                    <div className="mt-auto flex flex-col gap-3">
+                        <BookButton className="btn-gold w-full !py-4 text-base" />
+                        <a href={SITE.phoneHref} className="btn-ghost w-full !py-4 text-base">
+                            <MdPhone size={20} aria-hidden /> Call {SITE.phone}
+                        </a>
+                    </div>
+                </nav>
+            </div>
+        </header>
     );
 };
+
+export function BookButton({ className = "btn-gold", label = "Book Now" }: { className?: string; label?: string }) {
+    if (import.meta.env.PROD)
+        return (
+            <a className={className} target="_blank" rel="noopener noreferrer" href={SITE.bookingUrl}>
+                {label}
+            </a>
+        );
+    return (
+        <Link className={className} to="/book">
+            {label}
+        </Link>
+    );
+}
 
 export default Header;

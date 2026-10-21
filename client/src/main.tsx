@@ -1,16 +1,21 @@
 import ReactDOM from "react-dom/client";
-import "bootstrap/dist/css/bootstrap.min.css";
+import { BrowserRouter } from "react-router-dom";
 import "./index.css";
 import App from "./App.tsx";
-import { BrowserRouter } from "react-router-dom";
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
-    <BrowserRouter
-        future={{
-            v7_startTransition: true,
-            v7_relativeSplatPath: true,
-        }}
-    >
+const container = document.getElementById("root")!;
+const app = (
+    <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <App />
     </BrowserRouter>
 );
+
+// Pages are prerendered at build time. Hydrate when the HTML matches this URL; otherwise
+// (dev server, SPA fallback, booking routes) render from scratch.
+const path = window.location.pathname.replace(/\/+$/, "") || "/";
+if (container.dataset.prerendered === path) {
+    ReactDOM.hydrateRoot(container, app);
+} else {
+    container.innerHTML = "";
+    ReactDOM.createRoot(container).render(app);
+}
