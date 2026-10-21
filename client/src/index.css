@@ -1,6 +1,103 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@config "../tailwind.config.js";
+
+/*
+    Tailwind v4 changed the default border color to `currentcolor`. Keep the v3 default so borders
+    without an explicit color look the same as before.
+*/
+@layer base {
+    *,
+    ::after,
+    ::before,
+    ::backdrop,
+    ::file-selector-button {
+        border-color: var(--color-gray-200, currentcolor);
+    }
+}
+
+/*
+    v4 sizes these as ratios of the font size; v3 used fixed values, so a responsive arbitrary size like
+    sm:text-[15px] kept the named size's line height. Keep the v3 values so layouts don't shift.
+*/
+@theme {
+    --text-xs--line-height: 1rem;
+    --text-sm--line-height: 1.25rem;
+    --text-base--line-height: 1.5rem;
+    --text-lg--line-height: 1.75rem;
+    --text-xl--line-height: 1.75rem;
+    --text-2xl--line-height: 2rem;
+    --text-3xl--line-height: 2.25rem;
+    --text-4xl--line-height: 2.5rem;
+}
+
+/*
+    Lives in the components layer (below utilities) so a heading's own text-* size sets its line height,
+    as it did under Tailwind v3. Headings with an arbitrary size keep this tighter display leading.
+*/
+@layer components {
+    .h-display {
+        line-height: 1.05;
+    }
+}
+
+@utility wrap {
+    @apply mx-auto w-full max-w-site px-4 sm:px-6 lg:px-8;
+}
+
+@utility eyebrow {
+    @apply inline-flex items-center gap-2 font-display text-[11px] font-semibold uppercase tracking-[0.22em] text-gold;
+    &::before {
+        content: "";
+        @apply h-px w-6 bg-gold/70;
+    }
+}
+
+@utility h-display {
+    @apply font-display font-bold tracking-[-0.02em] text-white;
+}
+
+@utility lede {
+    @apply text-base leading-relaxed text-fog sm:text-lg sm:leading-7;
+}
+
+@utility btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-bold tracking-wide transition duration-200 disabled:pointer-events-none disabled:opacity-60 sm:text-[15px];
+}
+
+@utility btn-gold {
+    @apply btn bg-gold text-ink shadow-[0_8px_30px_-8px_rgba(255,176,46,0.6)] hover:-translate-y-0.5 hover:bg-gold-soft hover:shadow-[0_12px_40px_-8px_rgba(255,176,46,0.75)];
+}
+
+@utility btn-ghost {
+    @apply btn border border-white/15 bg-white/4 text-white backdrop-blur-sm hover:border-white/30 hover:bg-white/8;
+}
+
+@utility card {
+    @apply rounded-3xl border border-line bg-linear-to-b from-white/5 to-white/1.5;
+}
+
+@utility glow-gold {
+    background: radial-gradient(60% 60% at 50% 50%, rgba(255, 176, 46, 0.22), transparent 70%);
+}
+
+@utility glow-volt {
+    background: radial-gradient(60% 60% at 50% 50%, rgba(59, 91, 255, 0.28), transparent 70%);
+}
+
+@utility grid-bg {
+    background-image: linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+    background-size: 56px 56px;
+    mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+}
+
+@utility text-gradient {
+    background: linear-gradient(100deg, #ffd27a 0%, #ffb02e 45%, #ff7a2e 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
 
 @layer base {
     html {
@@ -43,54 +140,5 @@
             animation-iteration-count: 1 !important;
             transition-duration: 0.01ms !important;
         }
-    }
-}
-
-@layer components {
-    .wrap {
-        @apply mx-auto w-full max-w-site px-4 sm:px-6 lg:px-8;
-    }
-    .eyebrow {
-        @apply inline-flex items-center gap-2 font-display text-[11px] font-semibold uppercase tracking-[0.22em] text-gold;
-    }
-    .eyebrow::before {
-        content: "";
-        @apply h-px w-6 bg-gold/70;
-    }
-    .h-display {
-        @apply font-display font-bold leading-[1.05] tracking-[-0.02em] text-white;
-    }
-    .lede {
-        @apply text-base leading-relaxed text-fog sm:text-lg;
-    }
-    .btn {
-        @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-bold tracking-wide transition duration-200 disabled:pointer-events-none disabled:opacity-60 sm:text-[15px];
-    }
-    .btn-gold {
-        @apply btn bg-gold text-ink shadow-[0_8px_30px_-8px_rgba(255,176,46,0.6)] hover:-translate-y-0.5 hover:bg-gold-soft hover:shadow-[0_12px_40px_-8px_rgba(255,176,46,0.75)];
-    }
-    .btn-ghost {
-        @apply btn border border-white/15 bg-white/[0.04] text-white backdrop-blur hover:border-white/30 hover:bg-white/[0.08];
-    }
-    .card {
-        @apply rounded-3xl border border-line bg-gradient-to-b from-white/[0.05] to-white/[0.015];
-    }
-    .glow-gold {
-        background: radial-gradient(60% 60% at 50% 50%, rgba(255, 176, 46, 0.22), transparent 70%);
-    }
-    .glow-volt {
-        background: radial-gradient(60% 60% at 50% 50%, rgba(59, 91, 255, 0.28), transparent 70%);
-    }
-    .grid-bg {
-        background-image: linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
-        background-size: 56px 56px;
-        mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
-    }
-    .text-gradient {
-        background: linear-gradient(100deg, #ffd27a 0%, #ffb02e 45%, #ff7a2e 100%);
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
     }
 }

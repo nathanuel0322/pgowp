@@ -15,6 +15,7 @@
     padding-top: 0.5vh;
     padding-bottom: 0.5vh;
     border: 1px solid rgb(0, 0, 0);
+    background-color: white;
 }
 #resetpassworddiv input {
     color: black;

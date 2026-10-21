@@ -12,7 +12,7 @@ import { supabase } from "../../supabase";
 import { toastError } from "../../GlobalFunctions";
 import ResetPassword from "../../screens/ResetPassword";
 import VerifyMFA from "../../screens/VerifyMFA";
-import PuffLoader from "react-spinners/PuffLoader";
+import { PuffLoader } from "react-spinners";
 
 export default function Routing() {
     const navigate = useNavigate();

@@ -16,7 +16,7 @@ export default function VerifyMFA({
         <div className="authdiv justify-center authbox logindiv">
             <input
                 type="text"
-                className="max-w-[200px] !text-black"
+                className="max-w-[200px] text-black!"
                 placeholder="MFA Code"
                 value={mfaCode}
                 onChange={(e) => setMfaCode(e.target.value)}

@@ -85,7 +85,7 @@ export default function Services() {
                 {SECTIONS.map((s, i) => (
                     <section key={s.title} className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
                         <div
-                            className={`aspect-[4/3] overflow-hidden rounded-3xl border border-line ${
+                            className={`aspect-4/3 overflow-hidden rounded-3xl border border-line ${
                                 i % 2 ? "lg:order-2" : ""
                             }`}
                         >

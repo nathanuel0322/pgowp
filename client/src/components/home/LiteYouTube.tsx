@@ -28,7 +28,7 @@ export default function LiteYouTube({ id, title }: { id: string; title: string }
                         loading="lazy"
                         className="h-full w-full object-cover opacity-80 transition duration-500 group-hover:scale-105 group-hover:opacity-100"
                     />
-                    <span className="absolute inset-0 bg-gradient-to-t from-ink/80 via-transparent to-transparent" />
+                    <span className="absolute inset-0 bg-linear-to-t from-ink/80 via-transparent to-transparent" />
                     <span className="absolute left-1/2 top-1/2 grid h-20 w-20 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-gold text-ink shadow-[0_0_60px_-5px_rgba(255,176,46,0.8)] transition group-hover:scale-110">
                         <FaPlay size={26} className="ml-1" />
                     </span>

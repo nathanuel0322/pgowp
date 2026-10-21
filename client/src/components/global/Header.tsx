@@ -92,10 +92,10 @@ const Header = ({
                             )}
                         </button>
                     )}
-                    <BookButton className="btn-gold hidden !px-5 !py-2.5 sm:inline-flex" />
+                    <BookButton className="btn-gold hidden px-5! py-2.5! sm:inline-flex" />
                     <button
                         type="button"
-                        className="relative grid h-11 w-11 place-items-center rounded-full border border-white/15 bg-white/[0.04] lg:hidden"
+                        className="relative grid h-11 w-11 place-items-center rounded-full border border-white/15 bg-white/4 lg:hidden"
                         aria-label={drawerOpen ? "Close menu" : "Open menu"}
                         aria-expanded={drawerOpen}
                         aria-controls="mobile-menu"
@@ -123,7 +123,7 @@ const Header = ({
             <div
                 id="mobile-menu"
                 className={`overflow-hidden transition-[max-height,opacity] duration-300 lg:hidden ${
-                    drawerOpen ? "max-h-[100dvh] opacity-100" : "pointer-events-none max-h-0 opacity-0"
+                    drawerOpen ? "max-h-dvh opacity-100" : "pointer-events-none max-h-0 opacity-0"
                 }`}
             >
                 <nav aria-label="Mobile" className="wrap flex h-[calc(100dvh-4rem)] flex-col pb-8 pt-4">
@@ -146,8 +146,8 @@ const Header = ({
                         ))}
                     </ul>
                     <div className="mt-auto flex flex-col gap-3">
-                        <BookButton className="btn-gold w-full !py-4 text-base" />
-                        <a href={SITE.phoneHref} className="btn-ghost w-full !py-4 text-base">
+                        <BookButton className="btn-gold w-full py-4! text-base" />
+                        <a href={SITE.phoneHref} className="btn-ghost w-full py-4! text-base">
                             <MdPhone size={20} aria-hidden /> Call {SITE.phone}
                         </a>
                     </div>

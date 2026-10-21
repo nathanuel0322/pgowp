@@ -4,12 +4,7 @@ import App from "./App.tsx";
 import { BrowserRouter } from "react-router-dom";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-    <BrowserRouter
-        future={{
-            v7_startTransition: true,
-            v7_relativeSplatPath: true,
-        }}
-    >
+    <BrowserRouter>
         <App />
     </BrowserRouter>
 );

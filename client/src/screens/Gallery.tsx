@@ -55,7 +55,7 @@ export default function Gallery() {
                                 <Img
                                     photo={p}
                                     sizes="(min-width: 768px) 33vw, 50vw"
-                                    className="!h-auto transition duration-700 group-hover:scale-105"
+                                    className="h-auto! transition duration-700 group-hover:scale-105"
                                 />
                             </button>
                         </li>
@@ -73,7 +73,7 @@ export default function Gallery() {
                     role="dialog"
                     aria-modal="true"
                     aria-label={current.alt}
-                    className="fixed inset-0 z-[60] flex items-center justify-center bg-ink/95 p-4 backdrop-blur"
+                    className="fixed inset-0 z-60 flex items-center justify-center bg-ink/95 p-4 backdrop-blur-sm"
                     onClick={() => setOpen(null)}
                 >
                     <img

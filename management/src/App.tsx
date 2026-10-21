@@ -66,7 +66,7 @@ function App() {
             <Routing />
             <Toaster
                 position="top-center"
-                containerClassName="!flex !flex-row !items-center !justify-center !font-[Figtree] font-semibold"
+                containerClassName="flex! flex-row! items-center! justify-center! font-[Figtree]! font-semibold"
             />
         </AuthContext.Provider>
     );

@@ -25,7 +25,7 @@ export default function Packages() {
                             id={p.id}
                             className={`relative flex flex-col rounded-3xl border p-8 ${
                                 p.featured
-                                    ? "border-gold/50 bg-gradient-to-b from-gold/[0.12] to-surface shadow-[0_30px_80px_-30px_rgba(255,176,46,0.45)]"
+                                    ? "border-gold/50 bg-linear-to-b from-gold/12 to-surface shadow-[0_30px_80px_-30px_rgba(255,176,46,0.45)]"
                                     : "border-line bg-surface"
                             }`}
                         >

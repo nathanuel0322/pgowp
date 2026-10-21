@@ -1,5 +1,5 @@
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
-import CloseIcon from "@mui/icons-material/Close";
+import { Close as CloseIcon } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 import { IconButton } from "@mui/material";
 import "../../assets/css/cartdrawer.css";
@@ -54,7 +54,7 @@ export default function CartDrawer({
                             .reduce((acc, item) => acc + (item.price as number), 0)
                             .toFixed(2)}
                     </h4>
-                    <Link to="/checkout" className="checkout-button !text-2xl" onClick={() => setCartDrawerOpen(false)}>
+                    <Link to="/checkout" className="checkout-button text-2xl!" onClick={() => setCartDrawerOpen(false)}>
                         Checkout
                     </Link>
                 </div>

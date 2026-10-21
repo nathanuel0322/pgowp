@@ -8,7 +8,7 @@ import Turnstile, { TurnstileHandle } from "../components/Turnstile";
 import { SERVICE_AREAS, SITE } from "../site";
 
 const field =
-    "w-full rounded-xl border border-line bg-ink/60 px-4 py-3.5 text-[15px] text-white placeholder:text-fog/60 transition focus:border-gold/60 focus:outline-none focus:ring-2 focus:ring-gold/20";
+    "w-full rounded-xl border border-line bg-ink/60 px-4 py-3.5 text-[15px] text-white placeholder:text-fog/60 transition focus:border-gold/60 focus:outline-hidden focus:ring-2 focus:ring-gold/20";
 
 export default function Contact() {
     const [formfilled, setFormfilled] = useState(false);
@@ -87,7 +87,7 @@ export default function Contact() {
                             href={`mailto:${SITE.email}`}
                             className="card group flex items-center gap-5 p-6 transition hover:border-gold/40"
                         >
-                            <span className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-white/[0.06] text-gold ring-1 ring-line">
+                            <span className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-white/6 text-gold ring-1 ring-line">
                                 <MdEmail size={24} aria-hidden />
                             </span>
                             <span className="min-w-0">
@@ -105,7 +105,7 @@ export default function Contact() {
                             rel="noopener noreferrer"
                             className="card group flex items-center gap-5 p-6 transition hover:border-gold/40"
                         >
-                            <span className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-white/[0.06] text-gold ring-1 ring-line">
+                            <span className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-white/6 text-gold ring-1 ring-line">
                                 <FaInstagram size={22} aria-hidden />
                             </span>
                             <span>
@@ -159,7 +159,7 @@ export default function Contact() {
                                     </label>
                                     <label className="grid gap-2 text-sm font-semibold text-white/85">
                                         Event date
-                                        <input name="event_date" type="date" className={`${field} [color-scheme:dark]`} />
+                                        <input name="event_date" type="date" className={`${field} scheme-dark`} />
                                     </label>
                                 </div>
                                 <label className="grid gap-2 text-sm font-semibold text-white/85">
@@ -181,7 +181,7 @@ export default function Contact() {
                                         toastError("The spam check couldn't load. Refresh the page or call us instead.")
                                     }
                                 />
-                                <button type="submit" className="btn-gold w-full !py-4 sm:w-fit" disabled={submitting}>
+                                <button type="submit" className="btn-gold w-full py-4! sm:w-fit" disabled={submitting}>
                                     {submitting ? "Sending..." : "Send message"}
                                 </button>
                             </form>

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { supabase } from "../supabase";
 import { toastError, toastSuccess } from "../GlobalFunctions";
-import PuffLoader from "react-spinners/PuffLoader";
+import { PuffLoader } from "react-spinners";
 import "../assets/css/resetpassword.css";
 
 export default function ResetPassword() {
@@ -36,13 +36,13 @@ export default function ResetPassword() {
                 onChange={(e) => setNewPassword(e.target.value)}
                 placeholder="New Password"
                 type="password"
-                className="!w-auto"
+                className="w-auto!"
             />
             <input
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="Confirm Password"
                 type="password"
-                className="!w-auto"
+                className="w-auto!"
             />
             <button
                 type="button"

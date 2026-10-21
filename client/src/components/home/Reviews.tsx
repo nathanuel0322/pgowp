@@ -72,7 +72,7 @@ export default function Reviews() {
             </div>
             <div
                 ref={track}
-                className="mt-10 flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth px-4 pb-4 [scrollbar-width:none] sm:px-6 lg:px-[max(2rem,calc((100vw-76rem)/2+2rem))] [&::-webkit-scrollbar]:hidden"
+                className="mt-10 flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth px-4 pb-4 scrollbar-none sm:px-6 lg:px-[max(2rem,calc((100vw-76rem)/2+2rem))] [&::-webkit-scrollbar]:hidden"
             >
                 {reviews.map((review, i) => (
                     <figure
@@ -81,7 +81,7 @@ export default function Reviews() {
                     >
                         <div>
                             <FaQuoteLeft className="text-gold" size={22} aria-hidden />
-                            <blockquote className="mt-5 line-clamp-[8] text-[15px] leading-relaxed text-white/90">
+                            <blockquote className="mt-5 line-clamp-8 text-[15px] leading-relaxed text-white/90">
                                 {review.reviewtext}
                             </blockquote>
                         </div>

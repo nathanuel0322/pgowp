@@ -89,11 +89,11 @@ export default function Home() {
     return (
         <>
             {/* Hero */}
-            <section className="relative isolate flex min-h-[100svh] items-end overflow-hidden pb-14 pt-28 sm:items-center sm:pb-20">
+            <section className="relative isolate flex min-h-svh items-end overflow-hidden pb-14 pt-28 sm:items-center sm:pb-20">
                 <div className="absolute inset-0 -z-10">
                     <Img photo={hero} priority sizes="100vw" className="object-[70%_50%] opacity-70 sm:opacity-80" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/60 to-ink/10 sm:bg-gradient-to-r sm:from-ink sm:via-ink/75 sm:to-ink/10" />
-                    <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-ink to-transparent" />
+                    <div className="absolute inset-0 bg-linear-to-t from-ink via-ink/60 to-ink/10 sm:bg-linear-to-r sm:from-ink sm:via-ink/75 sm:to-ink/10" />
+                    <div className="absolute inset-x-0 bottom-0 h-40 bg-linear-to-t from-ink to-transparent" />
                 </div>
                 <div aria-hidden className="glow-volt absolute -left-40 top-1/4 -z-10 h-[520px] w-[520px] opacity-70" />
 
@@ -109,8 +109,8 @@ export default function Home() {
                             Long Island.
                         </p>
                         <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-                            <BookButton className="btn-gold !px-8 !py-4 text-base" label="Check availability" />
-                            <Link to="/packages" className="btn-ghost !px-8 !py-4 text-base">
+                            <BookButton className="btn-gold px-8! py-4! text-base" label="Check availability" />
+                            <Link to="/packages" className="btn-ghost px-8! py-4! text-base">
                                 See packages & prices
                             </Link>
                         </div>
@@ -124,7 +124,7 @@ export default function Home() {
 
                     <dl className="mt-14 grid max-w-3xl grid-cols-2 gap-px overflow-hidden rounded-2xl border border-line bg-line sm:grid-cols-4">
                         {STATS.map((s) => (
-                            <div key={s.label} className="bg-ink/70 px-5 py-4 backdrop-blur">
+                            <div key={s.label} className="bg-ink/70 px-5 py-4 backdrop-blur-sm">
                                 <dt className="sr-only">{s.label}</dt>
                                 <dd className="font-display text-2xl font-bold text-white">{s.value}</dd>
                                 <dd className="mt-1 text-xs font-semibold uppercase tracking-wider text-fog">
@@ -138,7 +138,7 @@ export default function Home() {
 
             {/* Lineup marquee */}
             <section aria-label="What's on board" className="border-y border-line bg-surface/60 py-6">
-                <div className="relative overflow-hidden [mask-image:linear-gradient(90deg,transparent,black_10%,black_90%,transparent)]">
+                <div className="relative overflow-hidden mask-[linear-gradient(90deg,transparent,black_10%,black_90%,transparent)]">
                     <ul className="flex w-max animate-marquee gap-10 pr-10 hover:[animation-play-state:paused]">
                         {[...LINEUP, ...LINEUP].map((item, i) => (
                             <li
@@ -201,7 +201,7 @@ export default function Home() {
                                 key={p.id}
                                 className={`relative flex flex-col rounded-3xl border p-8 ${
                                     p.featured
-                                        ? "border-gold/50 bg-gradient-to-b from-gold/[0.12] to-surface shadow-[0_30px_80px_-30px_rgba(255,176,46,0.45)]"
+                                        ? "border-gold/50 bg-linear-to-b from-gold/12 to-surface shadow-[0_30px_80px_-30px_rgba(255,176,46,0.45)]"
                                         : "border-line bg-surface"
                                 }`}
                             >
@@ -283,7 +283,7 @@ export default function Home() {
                         <li key={s.title} className="card relative overflow-hidden p-8">
                             <span
                                 aria-hidden
-                                className="absolute -right-3 -top-6 font-display text-[7rem] font-extrabold leading-none text-white/[0.04]"
+                                className="absolute -right-3 -top-6 font-display text-[7rem] font-extrabold leading-none text-white/4"
                             >
                                 {i + 1}
                             </span>
@@ -332,7 +332,7 @@ export default function Home() {
                             {EVENT_TYPES.map((e) => (
                                 <li
                                     key={e}
-                                    className="rounded-full border border-line bg-white/[0.03] px-4 py-2 text-sm font-semibold text-white/85"
+                                    className="rounded-full border border-line bg-white/3 px-4 py-2 text-sm font-semibold text-white/85"
                                 >
                                     {e}
                                 </li>

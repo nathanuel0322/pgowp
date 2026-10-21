@@ -3,7 +3,7 @@ export default function Logo({ compact = false }: { compact?: boolean }) {
         <span className="flex items-center gap-3">
             <span
                 aria-hidden
-                className="grid h-10 w-10 place-items-center rounded-xl border border-white/10 bg-gradient-to-br from-white/[0.08] to-white/[0.02] font-display text-[15px] font-extrabold tracking-tight shadow-[0_0_24px_-6px_rgba(255,176,46,0.5)]"
+                className="grid h-10 w-10 place-items-center rounded-xl border border-white/10 bg-linear-to-br from-white/8 to-white/2 font-display text-[15px] font-extrabold tracking-tight shadow-[0_0_24px_-6px_rgba(255,176,46,0.5)]"
             >
                 <span>
                     <span className="text-volt-soft">P</span>

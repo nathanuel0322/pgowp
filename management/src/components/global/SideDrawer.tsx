@@ -1,5 +1,5 @@
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
-import CloseIcon from "@mui/icons-material/Close";
+import { Close as CloseIcon } from "@mui/icons-material";
 import "../../assets/css/sidedrawer.css";
 import { Link } from "react-router-dom";
 import { IconButton } from "@mui/material";

@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { MdCalendarMonth, MdChevronLeft, MdChevronRight } from "react-icons/md";
 import "../assets/css/checkout.css";
-import PuffLoader from "react-spinners/PuffLoader";
+import { PuffLoader } from "react-spinners";
 import { supabase } from "../supabase";
 import { toastError } from "../GlobalFunctions";
 import { UUID } from "crypto";
@@ -476,7 +476,7 @@ export default function Checkout() {
                             {date && !isSameWeek(date as Date) && (
                                 <button
                                     title="Previous Week"
-                                    className="select-slot-nav-button !rounded-[50%]"
+                                    className="select-slot-nav-button rounded-[50%]!"
                                     type="button"
                                     onClick={() =>
                                         setDate((prev) => {
@@ -519,7 +519,7 @@ export default function Checkout() {
                                         <button
                                             type="button"
                                             className={`select-slot-view-day-slots-header w-full ${
-                                                istoday && !isunder834 ? "!pb-[.13rem]" : ""
+                                                istoday && !isunder834 ? "pb-[.13rem]!" : ""
                                             } ${isunder834 ? "" : "mb-2"}`}
                                             // disabled={!isunder834}
                                             onClick={() => setDate(weekDate)}
@@ -583,7 +583,7 @@ export default function Checkout() {
                             })}
                             <button
                                 title="Next Week"
-                                className="select-slot-nav-button !rounded-[50%]"
+                                className="select-slot-nav-button rounded-[50%]!"
                                 type="button"
                                 onClick={() =>
                                     setDate((prev) => {

@@ -22,7 +22,7 @@ export default function About() {
             <section className="wrap">
                 <div className="grid gap-12 lg:grid-cols-[1fr_1.6fr]">
                     <aside className="lg:sticky lg:top-28 lg:self-start">
-                        <div className="aspect-[4/3] overflow-hidden rounded-3xl border border-line">
+                        <div className="aspect-4/3 overflow-hidden rounded-3xl border border-line">
                             <Img photo={photo("birthday-group")} sizes="(min-width: 1024px) 35vw, 100vw" />
                         </div>
                         <div className="card mt-5 p-6">

@@ -4,7 +4,7 @@ import { AppContext } from "../App";
 import { MdOutlineCalendarMonth } from "react-icons/md";
 import { useLocation, useNavigate } from "react-router-dom";
 import Input, { isValidPhoneNumber, type Value } from "react-phone-number-input/input";
-import ReactGoogleAutocomplete from "react-google-autocomplete";
+import { usePlacesWidget } from "react-google-autocomplete";
 import { apilink, toastError, toastPromise } from "../GlobalFunctions";
 import validator from "validator";
 
@@ -24,6 +24,13 @@ export default function CheckoutDetails() {
     const [showfreeResponse, setShowFreeResponse] = useState(false);
     const [disableAllElements, setDisableAllElements] = useState(false);
     const hasRunRef = useRef(false);
+    const { ref: addressInputRef } = usePlacesWidget<HTMLInputElement>({
+        apiKey: import.meta.env.VITE_GOOGLE_MAPS_KEY,
+        options: { types: ["address"] },
+        onPlaceSelected: (place) => {
+            if (place) setAddress(place.formatted_address);
+        },
+    });
     console.log("cart in checkout details:", cart);
 
     useEffect(() => {
@@ -135,16 +142,7 @@ export default function CheckoutDetails() {
                     <div id="survey-question-89917-label" className="take-details-label">
                         <p>Please include the full address for the Party</p>
                     </div>
-                    <ReactGoogleAutocomplete
-                        apiKey={import.meta.env.VITE_GOOGLE_MAPS_KEY}
-                        options={{ types: ["address"] }}
-                        onPlaceSelected={(place) => {
-                            // console.log("place pressed is:", place);
-                            if (place) setAddress(place.formatted_address);
-                        }}
-                        id="searchbar"
-                        disabled={disableAllElements}
-                    />
+                    <input ref={addressInputRef} id="searchbar" disabled={disableAllElements} />
                     <button type="button" className="text-red-500 underline" onClick={() => setShowFreeResponse(true)}>
                         Address not showing up? Click here to enter manually
                     </button>

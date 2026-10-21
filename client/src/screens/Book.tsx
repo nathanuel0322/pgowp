@@ -331,7 +331,7 @@ export default function Book({ cartDrawerOpen }: { cartDrawerOpen: boolean }) {
                                         return (
                                             <div className="expanded-service-box" key={boxindex}>
                                                 <p className="text-xl">{box.title}</p>
-                                                <p className="!self-start whitespace-pre-wrap text-left expanded-service-box-text">
+                                                <p className="self-start! whitespace-pre-wrap text-left expanded-service-box-text">
                                                     {box.text}
                                                 </p>
                                             </div>
@@ -405,7 +405,7 @@ export default function Book({ cartDrawerOpen }: { cartDrawerOpen: boolean }) {
                                                             type="button"
                                                             aria-expanded="false"
                                                             onClick={() => setDetails({ boxindex, itemindex })}
-                                                            className={!box.details ? "!hidden" : ""}
+                                                            className={!box.details ? "hidden!" : ""}
                                                         >
                                                             <MdInfoOutline />
                                                             Details
@@ -424,8 +424,8 @@ export default function Book({ cartDrawerOpen }: { cartDrawerOpen: boolean }) {
                                                         }}
                                                         disabled={item.title === "Add Ons" && !isGamingPartyInCart}
                                                         className={`${
-                                                            isitemincart ? "!bg-red-700 !text-white" : "bg-[#50e063]"
-                                                        } ${shouldShowAddToCartButton ? "" : "!hidden"}`}
+                                                            isitemincart ? "bg-red-700! text-white!" : "bg-[#50e063]"
+                                                        } ${shouldShowAddToCartButton ? "" : "hidden!"}`}
                                                     >
                                                         {!isitemincart && <MdAddShoppingCart className="shrink-0" />}
                                                         {item.title === "Add Ons"

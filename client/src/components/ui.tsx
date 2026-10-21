@@ -81,15 +81,15 @@ export function CtaBand({
 }) {
     return (
         <section className="wrap mt-24">
-            <div className="relative overflow-hidden rounded-[2rem] border border-gold/20 bg-gradient-to-br from-[#1b1408] via-surface to-[#0b0e22] px-6 py-14 text-center sm:px-12 sm:py-16">
+            <div className="relative overflow-hidden rounded-4xl border border-gold/20 bg-linear-to-br from-[#1b1408] via-surface to-[#0b0e22] px-6 py-14 text-center sm:px-12 sm:py-16">
                 <div aria-hidden className="glow-gold absolute -left-24 -top-24 h-80 w-80" />
                 <div aria-hidden className="glow-volt absolute -bottom-32 -right-24 h-96 w-96" />
                 <div className="relative">
                     <h2 className="h-display mx-auto max-w-2xl text-3xl sm:text-4xl">{title}</h2>
                     <p className="lede mx-auto mt-4 max-w-xl">{text}</p>
                     <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-                        <BookButton className="btn-gold !px-8 !py-4" label="Check availability" />
-                        <a href={SITE.phoneHref} className="btn-ghost !px-8 !py-4">
+                        <BookButton className="btn-gold px-8! py-4!" label="Check availability" />
+                        <a href={SITE.phoneHref} className="btn-ghost px-8! py-4!">
                             <MdPhone size={18} aria-hidden /> {SITE.phone}
                         </a>
                     </div>

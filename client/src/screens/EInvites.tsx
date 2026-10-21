@@ -10,7 +10,7 @@ export default function EInvites() {
                     src={BDayCardPic}
                     alt="Rectangle Poster"
                     width="100%"
-                    className="!h-full !rounded-none"
+                    className="h-full! rounded-none!"
                 />
                 <div id="bdaydiv1" className="mt-[-16.2vh] bdaydivs">
                     <input
