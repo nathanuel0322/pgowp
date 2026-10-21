@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { MdEmail, MdPhone, MdCheckCircle } from "react-icons/md";
 import { FaInstagram } from "react-icons/fa6";
 import { apilink, toastError } from "../GlobalFunctions";
 import { PageHero } from "../components/ui";
 import { BookButton } from "../components/global/Header";
+import Turnstile, { TurnstileHandle } from "../components/Turnstile";
 import { SERVICE_AREAS, SITE } from "../site";
 
 const field =
@@ -12,6 +13,8 @@ const field =
 export default function Contact() {
     const [formfilled, setFormfilled] = useState(false);
     const [submitting, setSubmitting] = useState(false);
+    const [token, setToken] = useState<string | null>(null);
+    const turnstile = useRef<TurnstileHandle>(null);
 
     const sendEmail = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -22,6 +25,7 @@ export default function Contact() {
         const eventDate = String(data.get("event_date") ?? "").trim();
         const body = String(data.get("message") ?? "").trim();
         if (!from_name || !user_email || !body) return toastError("Please fill out your name, email and message.");
+        if (!token) return toastError("Please wait a moment for the spam check to finish, then try again.");
 
         const extras = [phone && `Phone: ${phone}`, eventDate && `Event date: ${eventDate}`].filter(Boolean);
         const message = extras.length ? `${body}\n\n— ${extras.join(" | ")}` : body;
@@ -31,15 +35,18 @@ export default function Contact() {
             const res = await fetch(apilink + "/send-email", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ from_name, user_email, message }),
+                body: JSON.stringify({ from_name, user_email, message, turnstile_token: token }),
             });
             if (res.status !== 204) {
                 const json = await res.json().catch(() => null);
                 toastError(json?.message ?? "Couldn't send your message. Please call us instead.");
+                // Each spam-check token works only once, so get a fresh one for the next try.
+                turnstile.current?.reset();
             } else setFormfilled(true);
         } catch (error: unknown) {
             console.error("Error sending email:", error);
             toastError("Error sending email, please try again later.");
+            turnstile.current?.reset();
         } finally {
             setSubmitting(false);
         }
@@ -165,6 +172,15 @@ export default function Contact() {
                                         className={`${field} resize-y`}
                                     />
                                 </label>
+                                <Turnstile
+                                    ref={turnstile}
+                                    siteKey={SITE.turnstileSiteKey}
+                                    action="contact"
+                                    onToken={setToken}
+                                    onError={() =>
+                                        toastError("The spam check couldn't load. Refresh the page or call us instead.")
+                                    }
+                                />
                                 <button type="submit" className="btn-gold w-full !py-4 sm:w-fit" disabled={submitting}>
                                     {submitting ? "Sending..." : "Send message"}
                                 </button>

@@ -15,6 +15,9 @@ export const SITE = {
     sisterCompany: "https://www.tripleamobilegaming.com/",
     ogImage: "/og-image.jpg",
     geo: { latitude: 40.671612, longitude: -73.7834759 },
+    // Cloudflare Turnstile spam check on the contact form. Site keys are public; the secret lives in the
+    // TURNSTILE_SECRET env var on Pages. Dev uses Cloudflare's always-pass test key.
+    turnstileSiteKey: import.meta.env.DEV ? "1x00000000000000000000AA" : "0x4AAAAAAFeqq_JRbsDecyPE",
 };
 
 export const SERVICE_AREAS = {

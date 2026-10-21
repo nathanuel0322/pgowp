@@ -175,9 +175,64 @@ function jsonResponse({ body, status = 200, request, added_headers }) {
     return ret_resp;
 }
 
-async function handleSendEmail(request, env) {
-    const { from_name, user_email, message } = await request.json();
+// Visitor text goes into an HTML email, so it must never be able to add tags or links of its own.
+function escapeHtml(value) {
+    return value
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+}
 
+const EMAIL_PATTERN = /^[^\s@<>()",;:]+@[^\s@<>()",;:]+\.[^\s@<>()",;:]+$/;
+
+// Checks the Cloudflare Turnstile token from the contact form, so bots can't send email through this endpoint.
+async function verifyTurnstile(token, request, env) {
+    if (!env.TURNSTILE_SECRET) {
+        console.error("TURNSTILE_SECRET is not set");
+        return false;
+    }
+    const form = new FormData();
+    form.append("secret", env.TURNSTILE_SECRET);
+    form.append("response", token);
+    const ip = request.headers.get("CF-Connecting-IP");
+    if (ip) form.append("remoteip", ip);
+    try {
+        const res = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+            method: "POST",
+            body: form,
+        });
+        const outcome = await res.json();
+        if (!outcome.success) console.warn("Turnstile rejected:", outcome["error-codes"]);
+        return outcome.success === true;
+    } catch (error) {
+        console.error("Turnstile verification failed:", error);
+        return false;
+    }
+}
+
+async function handleSendEmail(request, env) {
+    const body = await request.json().catch(() => null);
+    const field = (key, max) => (typeof body?.[key] === "string" ? body[key].trim().slice(0, max) : "");
+    // Newlines in the name would end up in the subject line, so flatten them.
+    const from_name = field("from_name", 100).replace(/\s+/g, " ");
+    const user_email = field("user_email", 254);
+    const message = field("message", 5000);
+    const token = field("turnstile_token", 2048);
+
+    if (!from_name || !user_email || !message) {
+        return jsonResponse({ body: "Please fill out your name, email and message.", status: 400 });
+    }
+    if (!EMAIL_PATTERN.test(user_email)) {
+        return jsonResponse({ body: "Please enter a valid email address.", status: 400 });
+    }
+    if (!token || !(await verifyTurnstile(token, request, env))) {
+        return jsonResponse({ body: "The spam check didn't go through. Please try again.", status: 403 });
+    }
+
+    const safeName = escapeHtml(from_name);
+    const safeMessage = escapeHtml(message).replace(/\r?\n/g, "<br />");
     const resend = new Resend(env.RESEND_KEY);
 
     const { error } = await resend.emails.send({
@@ -591,9 +646,9 @@ async function handleSendEmail(request, env) {
                                                                             text-align: left;
                                                                         "
                                                                     >
-                                                                        <h1>New Message from ${from_name}</h1>
+                                                                        <h1>New Message from ${safeName}</h1>
                                                                         <p style="margin: 0">
-                                                                        ${message}
+                                                                        ${safeMessage}
                                                                         </p>
                                                                     </div>
                                                                 </td>
@@ -618,7 +673,7 @@ async function handleSendEmail(request, env) {
 
     if (error) {
         console.error("Error sending email:", error);
-        return jsonResponse({ body: error.message, status: 400 });
+        return jsonResponse({ body: "Couldn't send your message. Please call us instead.", status: 502 });
     }
     console.log("Email sent successfully to:", user_email);
     return jsonResponse({ body: null, status: 204 });
