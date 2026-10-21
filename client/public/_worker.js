@@ -844,16 +844,18 @@ export default {
                 return jsonResponse({ body: null, request });
             }
 
-            const stripe = new Stripe(
-                env.NODE_ENV === "development" ? env.STRIPE_SECRET_TEST_KEY : env.STRIPE_SECRET_KEY
-            );
-            const supabase = createClient("https://awqealatvcaezaddnten.supabase.co", env.SUPABASE_SERVICE_ROLE, {
-                auth: {
-                    persistSession: false,
-                    autoRefreshToken: false,
-                    detectSessionInUrl: false,
-                },
-            });
+            // Created only for the routes that use them: new Stripe() throws when its key isn't set,
+            // which would take down every other endpoint (like the contact form) with it.
+            const getStripe = () =>
+                new Stripe(env.NODE_ENV === "development" ? env.STRIPE_SECRET_TEST_KEY : env.STRIPE_SECRET_KEY);
+            const getSupabase = () =>
+                createClient("https://awqealatvcaezaddnten.supabase.co", env.SUPABASE_SERVICE_ROLE, {
+                    auth: {
+                        persistSession: false,
+                        autoRefreshToken: false,
+                        detectSessionInUrl: false,
+                    },
+                });
 
             // console.log("url:", url, "\n\nrequest:", request);
             // console.log("request.method:", request.method, "\n\nurl.pathname:", url.pathname);
@@ -861,9 +863,10 @@ export default {
             if (request.method === "POST") {
                 if (url.pathname === "/api/send-email") return handleSendEmail(request, env);
                 else if (url.pathname === "/api/create-checkout-session")
-                    return handleCreateCheckoutSession(request, stripe);
+                    return handleCreateCheckoutSession(request, getStripe());
             } else if (request.method === "GET") {
-                if (url.pathname === "/api/verify-purchase") return handleVerifyPurchase(request, stripe, supabase);
+                if (url.pathname === "/api/verify-purchase")
+                    return handleVerifyPurchase(request, getStripe(), getSupabase());
             }
 
             return jsonResponse({ body: "Not Found", status: 404 });
