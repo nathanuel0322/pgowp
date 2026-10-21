@@ -1,8 +1,7 @@
 // import type { KVNamespace } from "@cloudflare/workers-types/experimental";
 // import { createClient, SupabaseClient, User as SupabaseUser } from "@supabase/supabase-js";
-import { createClient } from "@supabase/supabase-js";
 import { Resend } from "resend";
-import Stripe from "stripe";
+import { handleBookingApi, isBookingPath } from "../src/booking/server.ts";
 
 // interface User extends SupabaseUser {
 //     sub?: string;
@@ -679,154 +678,6 @@ async function handleSendEmail(request, env) {
     return jsonResponse({ body: null, status: 204 });
 }
 
-async function handleCreateCheckoutSession(request, stripe) {
-    const { email, redirect_to, items } = await request.json();
-    const origin = request.headers.get("Origin");
-    console.log("origin:", origin);
-    const finishedUrl = origin + redirect_to;
-
-    try {
-        let products = [];
-        // console.log("items:", items);
-        const item_titles = items.map((item) => item.title);
-        console.log("item_titles:", item_titles);
-        for await (const product of stripe.products.list()) {
-            // console.log("product:", product);
-            if (item_titles.includes(product.name)) {
-                products.push({ name: product.name, default_price: product.default_price });
-                if (products.length === item_titles.length) break;
-            }
-        }
-        console.log("final products:", products, "\n\nproducts.length:", products.length);
-
-        const session = await stripe.checkout.sessions.create({
-            line_items: items.map((item) => {
-                const product = products.find((prod) => prod.name === item.title);
-                return {
-                    price: product.default_price,
-                    quantity: 1,
-                };
-            }),
-            customer_email: email,
-            mode: "payment",
-            success_url: `${finishedUrl}?success=true`,
-            cancel_url: `${finishedUrl}?canceled=true`,
-        });
-
-        return jsonResponse({ body: { url: session.url } });
-    } catch (error) {
-        console.error("Error creating checkout session:", error);
-        return jsonResponse({ body: { error: "Internal Server Error" }, status: 500 });
-    }
-}
-
-const parseTime = (timeString) => {
-    const [time, modifier] = timeString.split(" ");
-    let [hours, minutes] = time.split(":").map(Number);
-
-    if (modifier === "PM" && hours !== 12) {
-        hours += 12;
-    } else if (modifier === "AM" && hours === 12) {
-        hours = 0;
-    }
-
-    return { hours, minutes };
-};
-
-const getTimestamptz = (dateString, timeString) => {
-    const date = new Date(dateString);
-    const { hours, minutes } = parseTime(timeString);
-
-    date.setUTCHours(hours, minutes, 0, 0);
-    return date.toISOString();
-};
-
-async function handleVerifyPurchase(request, stripe, supabase) {
-    const { customer_details, slot, items } = await request.json();
-
-    try {
-        // Calculate the timestamp for 5 minutes ago
-        const fiveMinutesAgo = Math.floor(Date.now() / 1000) - 5 * 60;
-
-        const customers = await stripe.customers.list({
-            email: customer_details.email,
-            created: { gte: fiveMinutesAgo },
-        });
-
-        if (customers.data.length === 0) {
-            return jsonResponse({ body: "Customer not found", status: 404 });
-        }
-
-        // const slot = {
-        //     date: "2024-11-30T15:00:17.015Z",
-        //     range: "10:00 AM - 3:45 PM",
-        //     day_period: "morning"
-        // };
-
-        const [startTime, endTime] = slot.range.split(" - ");
-
-        const startTimestamptz = getTimestamptz(slot.date, startTime);
-        const endTimestamptz = getTimestamptz(slot.date, endTime);
-
-        console.log("Start Time:", startTimestamptz);
-        console.log("End Time:", endTimestamptz);
-
-        const item_titles = items.map((item) => item.title);
-
-        // return jsonResponse({ body: null, status: 204 });
-        const { error } = await supabase.from("parties").insert({
-            customer_name: customer_details.name,
-            start_time: startTimestamptz,
-            end_time: endTimestamptz,
-            location: customer_details.address,
-            customer_email: customer_details.email,
-            customer_phone: customer_details.number,
-            items: item_titles,
-        });
-
-        if (error) {
-            console.error("Error inserting purchase:", error);
-            return jsonResponse({ body: "Internal Server Error", status: 500 });
-        }
-
-        // Send response to the user
-        const response = jsonResponse({ body: null, status: 204 });
-
-        // Trigger webhook asynchronously
-        // (async () => {
-        //     try {
-        //         // 1. send emails to tbnd email and customer email
-        //         // 2. add event to all linked calendars
-        //         const webhookUrl = "YOUR_WEBHOOK_URL";
-        //         const webhookPayload = {
-        //             customer_details,
-        //             slot,
-        //             items,
-        //         };
-
-        //         const webhookResponse = await fetch(webhookUrl, {
-        //             method: "POST",
-        //             headers: {
-        //                 "Content-Type": "application/json",
-        //             },
-        //             body: JSON.stringify(webhookPayload),
-        //         });
-
-        //         if (!webhookResponse.ok) {
-        //             console.error("Error triggering webhook:", webhookResponse.statusText);
-        //         }
-        //     } catch (webhookError) {
-        //         console.error("Error triggering webhook:", webhookError);
-        //     }
-        // })();
-
-        return response;
-    } catch (error) {
-        console.error("Error fetching purchase:", error);
-        return jsonResponse({ body: "Internal Server Error", status: 500 });
-    }
-}
-
 export default {
     async fetch(request, env) {
         // console.log("env:", env);
@@ -838,36 +689,18 @@ export default {
             });
         }
         // console.log("url:", url);
+        // Online booking, Stripe deposits, the admin page and the calendar feed (src/booking/server.ts).
+        if (isBookingPath(url.pathname)) return handleBookingApi(request, env);
         if (url.pathname.startsWith("/api/")) {
             // console.log("req headers:", request.headers);
             if (request.method === "OPTIONS") {
                 return jsonResponse({ body: null, request });
             }
 
-            // Created only for the routes that use them: new Stripe() throws when its key isn't set,
-            // which would take down every other endpoint (like the contact form) with it.
-            const getStripe = () =>
-                new Stripe(env.NODE_ENV === "development" ? env.STRIPE_SECRET_TEST_KEY : env.STRIPE_SECRET_KEY);
-            const getSupabase = () =>
-                createClient("https://awqealatvcaezaddnten.supabase.co", env.SUPABASE_SERVICE_ROLE, {
-                    auth: {
-                        persistSession: false,
-                        autoRefreshToken: false,
-                        detectSessionInUrl: false,
-                    },
-                });
-
             // console.log("url:", url, "\n\nrequest:", request);
             // console.log("request.method:", request.method, "\n\nurl.pathname:", url.pathname);
 
-            if (request.method === "POST") {
-                if (url.pathname === "/api/send-email") return handleSendEmail(request, env);
-                else if (url.pathname === "/api/create-checkout-session")
-                    return handleCreateCheckoutSession(request, getStripe());
-            } else if (request.method === "GET") {
-                if (url.pathname === "/api/verify-purchase")
-                    return handleVerifyPurchase(request, getStripe(), getSupabase());
-            }
+            if (request.method === "POST" && url.pathname === "/api/send-email") return handleSendEmail(request, env);
 
             return jsonResponse({ body: "Not Found", status: 404 });
         } else {

@@ -1,5 +1,5 @@
 import { Suspense, lazy, useState } from "react";
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import Home from "../../screens/Home";
 import Services from "../../screens/Services";
 import Packages from "../../screens/Packages";
@@ -12,33 +12,20 @@ import Header from "./Header";
 import Footer from "./Footer";
 import Seo from "./Seo";
 
-// The in-site booking flow is only reachable in development and pulls in heavy dependencies (MUI, calendar,
-// Google Places), so it is split out of the main bundle.
-const BookingLayout = lazy(() => import("../booking/BookingLayout"));
-const CartDrawer = lazy(() => import("../booking/CartDrawer"));
+// Pages that aren't prerendered are split out of the main bundle. The admin page brings in Supabase.
 const Book = lazy(() => import("../../screens/Book"));
-const Checkout = lazy(() => import("../../screens/Checkout"));
-const CheckoutDetails = lazy(() => import("../../screens/CheckoutDetails"));
+const BookConfirmed = lazy(() => import("../../screens/BookConfirmed"));
+const Admin = lazy(() => import("../../screens/Admin"));
 const EInvites = lazy(() => import("../../screens/EInvites"));
-
-const BOOKING_PATHS = ["/book", "/checkout", "/checkout-details"];
 
 export default function Routing() {
     const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
-    const [cartDrawerOpen, setCartDrawerOpen] = useState<boolean>(false);
-    const location = useLocation();
-    const inBooking = BOOKING_PATHS.includes(location.pathname);
 
     return (
         <>
             <Seo />
-            <Header drawerOpen={drawerOpen} setDrawerOpen={setDrawerOpen} setCartDrawerOpen={setCartDrawerOpen} />
-            {inBooking && (
-                <Suspense fallback={null}>
-                    <CartDrawer cartDrawerOpen={cartDrawerOpen} setCartDrawerOpen={setCartDrawerOpen} />
-                </Suspense>
-            )}
-            <main id="main" className={`overflow-x-clip ${location.pathname === "/checkout" ? "px-[2%]" : ""}`}>
+            <Header drawerOpen={drawerOpen} setDrawerOpen={setDrawerOpen} />
+            <main id="main" className="overflow-x-clip">
                 <Suspense fallback={<div className="min-h-screen" />}>
                     <Routes>
                         <Route path="/" element={<Home />} />
@@ -49,30 +36,9 @@ export default function Routing() {
                         <Route path="/about" element={<About />} />
                         <Route path="/bday-card" element={<BDayCard />} />
                         <Route path="/e-invites" element={<EInvites />} />
-                        <Route
-                            path="/book"
-                            element={
-                                <BookingLayout>
-                                    <Book cartDrawerOpen={cartDrawerOpen} />
-                                </BookingLayout>
-                            }
-                        />
-                        <Route
-                            path="/checkout"
-                            element={
-                                <BookingLayout>
-                                    <Checkout />
-                                </BookingLayout>
-                            }
-                        />
-                        <Route
-                            path="/checkout-details"
-                            element={
-                                <BookingLayout>
-                                    <CheckoutDetails />
-                                </BookingLayout>
-                            }
-                        />
+                        <Route path="/book" element={<Book />} />
+                        <Route path="/book/confirmed" element={<BookConfirmed />} />
+                        <Route path="/admin" element={<Admin />} />
                         <Route path="*" element={<NotFound />} />
                     </Routes>
                 </Suspense>

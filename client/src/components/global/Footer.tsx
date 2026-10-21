@@ -7,7 +7,7 @@ import { BookButton } from "./Header";
 
 export default function Footer() {
     const { pathname } = useLocation();
-    if (["/e-invites", "/book", "/checkout", "/checkout-details"].includes(pathname)) return null;
+    if (["/e-invites", "/admin"].includes(pathname)) return null;
 
     return (
         <footer className="relative mt-24 border-t border-line bg-surface">

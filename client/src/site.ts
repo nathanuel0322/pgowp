@@ -9,7 +9,6 @@ export const SITE = {
     phoneHref: "tel:+17186738529",
     phoneE164: "+1-718-673-8529",
     email: "tbnd@prestigiousgamingonwheelsplus.com",
-    bookingUrl: "https://app.10to8.com/book/ymonerhexbfwnegoml/",
     instagram: "https://www.instagram.com/prestigiousgamingonwheelsplus/",
     googleMaps: "https://maps.google.com/?cid=8635943149184468988",
     sisterCompany: "https://www.tripleamobilegaming.com/",
@@ -107,11 +106,12 @@ export const NOT_FOUND_META: PageMeta = {
     noindex: true,
 };
 
-// Real routes that stay out of search results (booking flow, print view).
-const APP_ROUTES = ["/book", "/checkout", "/checkout-details", "/e-invites"];
+// Real routes that stay out of search results (booking flow, print view, admin).
+export const APP_ROUTES = ["/book", "/book/confirmed", "/e-invites", "/admin"];
 
 export function metaForPath(pathname: string): PageMeta {
     const clean = pathname.length > 1 ? pathname.replace(/\/+$/, "") : pathname;
+    if (clean === "/admin") return { path: clean, title: `Bookings | ${SITE.shortName}`, description: "", noindex: true };
     if (APP_ROUTES.includes(clean))
         return { path: clean, title: `Book Your Party | ${SITE.name}`, description: PAGES["/"].description, noindex: true };
     return PAGES[clean] ?? NOT_FOUND_META;

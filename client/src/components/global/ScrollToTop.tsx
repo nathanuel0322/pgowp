@@ -5,7 +5,8 @@ export default function ScrollToTop() {
     const { pathname } = useLocation();
 
     useEffect(() => {
-        window.scrollTo(0, 0);
+        // "instant" overrides the page's smooth scrolling, which a lazy-loaded page can interrupt halfway.
+        window.scrollTo({ top: 0, left: 0, behavior: "instant" });
     }, [pathname]);
 
     return null;

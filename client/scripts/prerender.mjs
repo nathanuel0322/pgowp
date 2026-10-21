@@ -18,7 +18,11 @@ const ROOT = '<div id="root"><!--app-html--></div>';
 if (!SEO_BLOCK.test(template) || !template.includes(ROOT)) throw new Error("index.html placeholders missing");
 
 const page = (head, rootHtml) => template.replace(SEO_BLOCK, head).replace(ROOT, rootHtml);
-const fileFor = (route) => path.join(dist, route === "/" ? "index.html" : `${route.slice(1)}.html`);
+const fileFor = (route) => {
+    const file = path.join(dist, route === "/" ? "index.html" : `${route.slice(1)}.html`);
+    fs.mkdirSync(path.dirname(file), { recursive: true });
+    return file;
+};
 
 for (const route of routes) {
     const { html, head } = render(route);
@@ -29,7 +33,7 @@ for (const route of routes) {
 // Client-rendered shells: Cloudflare Pages serves 404.html (with a 404 status) for unknown paths,
 // so routes that aren't prerendered need their own file to keep a 200 status.
 const shellHead = notFoundHead.replace(/<title>.*?<\/title>/, `<title>Prestigious Gaming on Wheels Plus</title>`);
-for (const route of ["/book", "/checkout", "/checkout-details", "/e-invites"]) {
+for (const route of ["/book", "/book/confirmed", "/e-invites", "/admin"]) {
     fs.writeFileSync(fileFor(route), page(shellHead, '<div id="root"></div>'));
 }
 fs.writeFileSync(path.join(dist, "404.html"), page(notFoundHead, '<div id="root"></div>'));
