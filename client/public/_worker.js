@@ -776,6 +776,12 @@ export default {
     async fetch(request, env) {
         // console.log("env:", env);
         const url = new URL(request.url);
+        // Google Search Console ownership file. Served here because Pages would redirect the .html URL.
+        if (url.pathname === "/google6c1339269cdf913a.html") {
+            return new Response("google-site-verification: google6c1339269cdf913a.html", {
+                headers: { "Content-Type": "text/html; charset=utf-8" },
+            });
+        }
         // console.log("url:", url);
         if (url.pathname.startsWith("/api/")) {
             // console.log("req headers:", request.headers);
