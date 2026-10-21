@@ -29,7 +29,7 @@ const LINEUP = [
 ];
 
 const STATS = [
-    { value: "28", label: "players at once" },
+    { value: "28", label: "gamers at once" },
     { value: "9", label: "4K HD screens" },
     { value: "1,000+", label: "retro classics" },
     { value: "100%", label: "climate controlled" },
@@ -43,7 +43,7 @@ const FEATURES = [
     },
     {
         icon: BsPeople,
-        title: "Up to 28 players",
+        title: "Up to 28 gamers at once",
         text: "Big enough for the whole class. Everyone plays at the same time, so nobody waits around for a turn.",
     },
     {

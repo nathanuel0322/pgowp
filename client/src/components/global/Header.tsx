@@ -157,10 +157,23 @@ const Header = ({
     );
 };
 
-export function BookButton({ className = "btn-gold", label = "Book Now" }: { className?: string; label?: string }) {
+export function BookButton({
+    className = "btn-gold",
+    label = "Book Now",
+    service,
+}: {
+    className?: string;
+    label?: string;
+    service?: number;
+}) {
     if (import.meta.env.PROD)
         return (
-            <a className={className} target="_blank" rel="noopener noreferrer" href={SITE.bookingUrl}>
+            <a
+                className={className}
+                target="_blank"
+                rel="noopener noreferrer"
+                href={service ? `${SITE.bookingUrl}select-staff-and-location-if-needed/?service=${service}` : SITE.bookingUrl}
+            >
                 {label}
             </a>
         );

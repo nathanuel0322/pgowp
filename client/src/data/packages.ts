@@ -6,6 +6,8 @@ export interface PartyPackage {
     blurb: string;
     features: string[];
     featured?: boolean;
+    // 10to8 service-detail id, so "Book this party" opens straight to this package's booking flow.
+    bookingService: number;
 }
 
 export interface AddOn {
@@ -31,6 +33,7 @@ const gamingIncludes = [
 export const PARTY_PACKAGES: PartyPackage[] = [
     {
         id: "gaming-2hr",
+        bookingService: 1516842,
         name: "2-Hour Gaming Party",
         price: 550,
         duration: "2 hours",
@@ -39,6 +42,7 @@ export const PARTY_PACKAGES: PartyPackage[] = [
     },
     {
         id: "gaming-3hr",
+        bookingService: 1144565,
         name: "3-Hour Gaming Party",
         price: 700,
         duration: "3 hours",
@@ -48,6 +52,7 @@ export const PARTY_PACKAGES: PartyPackage[] = [
     },
     {
         id: "gaming-4hr",
+        bookingService: 1508645,
         name: "4-Hour Gaming Party",
         price: 1050,
         duration: "4 hours",
@@ -56,6 +61,7 @@ export const PARTY_PACKAGES: PartyPackage[] = [
     },
     {
         id: "laser-tag",
+        bookingService: 1222138,
         name: "Laser Tag Party",
         price: 700,
         duration: "1.5 hours",
@@ -70,6 +76,7 @@ export const PARTY_PACKAGES: PartyPackage[] = [
     },
     {
         id: "movie",
+        bookingService: 1144566,
         name: "Movie Party",
         price: 500,
         duration: "2 hours",
@@ -83,6 +90,7 @@ export const PARTY_PACKAGES: PartyPackage[] = [
     },
     {
         id: "movie-gaming",
+        bookingService: 1255645,
         name: "Movie + Gaming Combo",
         price: 875,
         duration: "4 hours",

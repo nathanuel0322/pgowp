@@ -60,7 +60,7 @@ export const PAGES: Record<string, PageMeta> = {
         path: "/",
         title: "Video Game Truck & Laser Tag Parties in Queens, Brooklyn & Long Island | Prestigious Gaming on Wheels Plus",
         description:
-            "Luxury video game trailer parties that come to you. 9 HD screens, PS5, Xbox Series X, Nintendo Switch, VR and live-scored laser tag for up to 28 players. Serving Queens, Brooklyn, Nassau & all of NYC.",
+            "Luxury video game trailer parties that come to you. 9 HD screens, PS5, Xbox Series X, Nintendo Switch and VR for up to 28 gamers, plus live-scored laser tag for up to 20 players. Serving Queens, Brooklyn, Nassau & all of NYC.",
     },
     "/packages": {
         path: "/packages",

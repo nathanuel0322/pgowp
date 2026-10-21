@@ -106,7 +106,7 @@ export default function Book({ cartDrawerOpen }: { cartDrawerOpen: boolean }) {
             ],
         },
         {
-            title: "Professional Arena Style Laser Tag for up to 18 players",
+            title: "Professional Arena Style Laser Tag for up to 20 players",
             boxes: [
                 {
                     title: "Add on - Two 15 min laser Tag Session",
