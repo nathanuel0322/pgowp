@@ -12,7 +12,7 @@ import Header from "./Header";
 import Footer from "./Footer";
 import Seo from "./Seo";
 
-// Pages that aren't prerendered are split out of the main bundle. The admin page brings in Supabase.
+// Pages that aren't prerendered are split out of the main bundle.
 const Book = lazy(() => import("../../screens/Book"));
 const BookConfirmed = lazy(() => import("../../screens/BookConfirmed"));
 const Admin = lazy(() => import("../../screens/Admin"));

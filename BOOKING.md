@@ -8,32 +8,55 @@ Approving or declining it at `/admin` emails the customer; declining refunds the
 | --- | --- |
 | `client/src/data/packages.ts` | Prices, deposits, how long each party blocks the calendar, add-ons |
 | `client/src/booking/schedule.ts` | Open-time rules. Default hours match 10to8: Fri 12:00–8:30 PM, Sat 10 AM–10 PM, Sun 5:30–10:30 PM, 2 crews, 1 hour between parties, 24 hours' notice |
-| `client/src/booking/server.ts` | The API the worker runs: availability, Stripe checkout, webhook, admin, calendar feed, emails |
+| `client/src/booking/server.ts` | The API the worker runs: availability, Stripe checkout, webhook, admin sign-in, calendar feed, emails |
+| `client/src/booking/d1.ts` | The database (Cloudflare D1). Its tables are created automatically the first time the site uses it |
 | `client/src/screens/Book.tsx`, `BookConfirmed.tsx`, `Admin.tsx` | Booking page, thank-you page, admin page |
-| `supabase/bookings.sql` | Database tables |
 
 Hours, crews, the gap between parties, notice and booking window can all be changed on the admin page later
 (Hours & settings). Prices and packages are changed in `packages.ts`.
 
 ## One-time setup, before deploying
 
-Deploying this code switches every Book button from 10to8 to the new page, so do these first.
+Deploying this code switches every Book button from 10to8 to the new page, so do these first. Everything is in the
+Cloudflare account that already hosts the site, plus Stripe.
 
-1. **Database.** In Supabase (project `awqealatvcaezaddnten`): SQL Editor → New query → paste `supabase/bookings.sql` → Run.
-2. **Stripe.** Use the Stripe account 10to8 pays into (`acct_1JPFx7IO67Spu8tm`), so deposits keep landing in the same place.
+1. **Database.** Cloudflare dashboard → Storage & databases → D1 → Create database, named `pgowp-bookings`. Leave it
+   empty; the site creates its tables on first use.
+2. **Connect it to the site.** Workers & Pages → the site's Pages project → Settings → Bindings → Add → D1 database.
+   Variable name `DB`, database `pgowp-bookings`. Do this for Production (and Preview, if you use preview deploys).
+3. **Stripe.** Use the Stripe account 10to8 pays into (`acct_1JPFx7IO67Spu8tm`), so deposits keep landing in the same place.
    - Make sure `STRIPE_SECRET_KEY` in Cloudflare is that account's live secret key.
    - Developers → Webhooks → Add endpoint: `https://prestigiousgamingonwheelsplus.com/api/stripe-webhook`, events
      `checkout.session.completed` and `checkout.session.async_payment_succeeded`. Copy its signing secret.
-3. **Cloudflare Pages → Settings → Variables and secrets** (Production):
-   - `STRIPE_WEBHOOK_SECRET`: the signing secret from step 2 (new)
-   - `CALENDAR_TOKEN`: any long random string, e.g. the output of `openssl rand -hex 24` (new; turns on the calendar feed)
-   - `VITE_SUPABASE_KEY`: the Supabase **anon / publishable** key, so the admin page can sign in (build variable)
-   - Already used by the site and still needed: `SUPABASE_SERVICE_ROLE`, `STRIPE_SECRET_KEY`, `RESEND_KEY`, `TURNSTILE_SECRET`
-   - Optional: `ADMIN_EMAILS` (comma-separated; defaults to tbnd@prestigiousgamingonwheelsplus.com),
-     `NOTIFY_EMAIL` (where new-request alerts go; same default)
-4. **Supabase → Authentication → URL Configuration:** add `https://prestigiousgamingonwheelsplus.com/admin` to the
-   redirect URLs, so "Forgot password?" on the admin page works.
-5. **Deploy**, then sign in at `/admin` with the tbnd@ account (the same login as the old management app).
+4. **Pages project → Settings → Variables and secrets** (Production). Add these as secrets (Encrypt):
+   - `ADMIN_PASSWORD`: the password for `/admin`, at least 10 characters. A few random words works well, e.g.
+     `purple trailer jumps fridays`. Sign-in stays off until it's set.
+   - `STRIPE_WEBHOOK_SECRET`: the signing secret from step 3
+   - `CALENDAR_TOKEN`: any long random string, e.g. the output of `openssl rand -hex 24` (turns on the calendar feed)
+   - Already used by the site and still needed: `STRIPE_SECRET_KEY`, `RESEND_KEY`, `TURNSTILE_SECRET`
+   - Optional: `NOTIFY_EMAIL` (where new-request alerts go; defaults to tbnd@prestigiousgamingonwheelsplus.com)
+   - No longer used, safe to delete: `SUPABASE_SERVICE_ROLE`, `VITE_SUPABASE_KEY`
+5. **Deploy**, then sign in at `/admin` with the password from step 4.
+
+## Admin sign-in
+
+`/admin` has one shared password, `ADMIN_PASSWORD`. Each browser stays signed in for 30 days. Every attempt has to pass
+the Turnstile spam check, and failed attempts are logged in the Pages project's logs.
+
+- **Forgot the password, or a phone with it signed in was lost:** set a new `ADMIN_PASSWORD` in Cloudflare and
+  redeploy. Changing it signs out every device.
+- **Extra protection (optional, free):** Cloudflare Zero Trust → Access → add an application for
+  `prestigiousgamingonwheelsplus.com/admin*` and `/api/admin/*`, allowing only your email addresses. Cloudflare then
+  emails a one-time code before the page even loads.
+
+## Backups
+
+D1 keeps its own history: in the dashboard (D1 → `pgowp-bookings` → Time Travel) the database can be put back to any
+minute in the last 7 days on the free plan, 30 on the paid one. To keep a copy of your own:
+
+```bash
+npx wrangler d1 export pgowp-bookings --remote --output bookings-backup.sql
+```
 
 ## Moving over from 10to8
 
@@ -54,7 +77,8 @@ Deploying this code switches every Book button from 10to8 to the new page, so do
   packages page. Add them to `PARTY_PACKAGES` in `packages.ts` to sell them online.
 - School and corporate events stay "call for a quote", as on the website.
 
-## Old tables
+## The old Supabase project
 
-The old, unfinished checkout read a `parties` table straight from the browser. Nothing uses it or `availability`
-any more. If either holds real customer data, turn on row level security for it or drop it in Supabase.
+The site used to keep its (unfinished) checkout and the `management` app's logins in Supabase project
+`awqealatvcaezaddnten`. It has been paused since December 2024 and can no longer be restored, and nothing in the new
+booking system uses it. The Supabase dashboard still offers a backup download if that old data is ever needed.

@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { BookingSettings, DEFAULT_SETTINGS } from "./schedule";
-import { BlockRow, BookingRow, CheckoutSession, Deps, Email, handleBookingApi, Store } from "./server";
+import { BlockRow, BookingRow, CheckoutSession, Deps, Email, Env, handleBookingApi, Store } from "./server";
 import { zonedToUtc } from "./time";
 
-// In-memory stand-ins for Supabase, Stripe and Resend.
+// In-memory stand-ins for the database, Stripe and Resend.
 function fakes(now = zonedToUtc("2026-10-21", "18:00")) {
     const bookings: BookingRow[] = [];
     const blocks: BlockRow[] = [];
@@ -84,14 +84,11 @@ function fakes(now = zonedToUtc("2026-10-21", "18:00")) {
         async sendEmail(email) {
             emails.push(email);
         },
-        async adminFromToken(token) {
-            return token === "admin-token" ? { email: "tbnd@prestigiousgamingonwheelsplus.com" } : { error: "Nope", status: 403 };
-        },
         async verifyHuman(token) {
             return token === "human";
         },
         now: () => now,
-        env: { CALENDAR_TOKEN: "cal-secret" },
+        env: { CALENDAR_TOKEN: "cal-secret", ADMIN_PASSWORD: "correct horse battery" } as Env,
     };
 
     const pay = (bookingId: string) => {
@@ -133,12 +130,15 @@ const party = {
     turnstileToken: "human",
 };
 
-const admin = { Authorization: "Bearer admin-token" };
+const signIn = async (deps: Deps, password = "correct horse battery", turnstileToken = "human") =>
+    api(deps, "/api/admin/login", { method: "POST", json: { password, turnstileToken } });
 
 describe("booking API", () => {
     let f: ReturnType<typeof fakes>;
-    beforeEach(() => {
+    let admin: Record<string, string>;
+    beforeEach(async () => {
         f = fakes();
+        admin = { Authorization: `Bearer ${(await (await signIn(f.deps)).json()).token}` };
     });
 
     it("lists open start times for a month", async () => {
@@ -216,10 +216,31 @@ describe("booking API", () => {
         expect(f.bookings).toHaveLength(0);
     });
 
-    it("keeps admin routes behind sign-in", async () => {
+    it("keeps admin routes behind the password", async () => {
         expect((await api(f.deps, "/api/admin/bookings")).status).toBe(401);
-        expect((await api(f.deps, "/api/admin/bookings", { headers: { Authorization: "Bearer someone" } })).status).toBe(403);
+        expect((await api(f.deps, "/api/admin/bookings", { headers: { Authorization: "Bearer someone" } })).status).toBe(401);
         expect((await api(f.deps, "/api/admin/bookings", { headers: admin })).status).toBe(200);
+
+        expect((await signIn(f.deps, "wrong password")).status).toBe(401);
+        expect((await signIn(f.deps, "correct horse battery", "bot")).status).toBe(403);
+
+        // A forged expiry doesn't match the signature.
+        const [, signature] = admin.Authorization.split(".");
+        const forged = { Authorization: `Bearer ${Date.now() + 999 * 86_400_000}.${signature}` };
+        expect((await api(f.deps, "/api/admin/bookings", { headers: forged })).status).toBe(401);
+
+        // Changing the password signs everyone out.
+        f.deps.env.ADMIN_PASSWORD = "a brand new password";
+        expect((await api(f.deps, "/api/admin/bookings", { headers: admin })).status).toBe(401);
+
+        // Sign-in stays off until a long enough password is set.
+        f.deps.env.ADMIN_PASSWORD = "short";
+        expect((await signIn(f.deps, "short")).status).toBe(503);
+    });
+
+    it("expires sign-ins after 30 days", async () => {
+        const later = { ...f.deps, now: () => f.deps.now() + 31 * 86_400_000 };
+        expect((await api(later, "/api/admin/bookings", { headers: admin })).status).toBe(401);
     });
 
     it("lets the owner confirm, decline with a refund, and cancel", async () => {

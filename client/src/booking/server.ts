@@ -3,25 +3,26 @@
 //   /api/stripe-webhook Stripe telling us a deposit went through
 //   /api/admin/*        the /admin page: approve, decline, cancel, add and edit bookings, time off, hours
 //   /api/calendar.ics   a private calendar feed of every party, for Google or Apple Calendar
-// Talks to Supabase, Stripe and Resend through small interfaces so the tests can swap in fakes.
-import { createClient, SupabaseClient } from "@supabase/supabase-js";
+// Talks to the D1 database, Stripe and Resend through small interfaces so the tests can swap in fakes.
 import { Resend } from "resend";
 import Stripe from "stripe";
 import { PARTY_PACKAGES } from "../data/packages";
+import { d1Store, type D1Database } from "./d1";
 import { BOOKABLE_ADD_ONS, findPackage, quote, QuoteError, type Quote } from "./quote";
 import { BookingSettings, Busy, busyFor, fits, normalizeSettings, startTimes } from "./schedule";
 import { addDays, formatDate, formatRange, formatTime, isDate, isTime, todayInZone, utcToZoned, zonedToUtc } from "./time";
 
 export interface Env {
-    SUPABASE_SERVICE_ROLE?: string;
+    // The D1 database binding (Pages > Settings > Bindings).
+    DB?: D1Database;
     STRIPE_SECRET_KEY?: string;
     STRIPE_SECRET_TEST_KEY?: string;
     STRIPE_WEBHOOK_SECRET?: string;
     RESEND_KEY?: string;
     TURNSTILE_SECRET?: string;
     NODE_ENV?: string;
-    // Comma-separated emails allowed into /admin. Defaults to the business email.
-    ADMIN_EMAILS?: string;
+    // Password for the /admin page. Sign-in is off until it's set.
+    ADMIN_PASSWORD?: string;
     // Where new-booking alerts go. Defaults to the business email.
     NOTIFY_EMAIL?: string;
     // Secret in the calendar feed link. The feed is off until this is set.
@@ -117,8 +118,6 @@ export interface Deps {
     store: Store;
     payments: Payments;
     sendEmail(email: Email): Promise<void>;
-    // Returns the signed-in user's email when the request carries a valid admin session, or an error message.
-    adminFromToken(token: string): Promise<{ email: string } | { error: string; status: number }>;
     verifyHuman(token: string, ip: string | null): Promise<boolean>;
     now(): number;
     env: Env;
@@ -139,6 +138,8 @@ const HOLD_MINUTES = 40;
 const DAY = 86_400_000;
 const EMAIL_PATTERN = /^[^\s@<>()",;:]+@[^\s@<>()",;:]+\.[^\s@<>()",;:]+$/;
 const ACTIVE: Status[] = ["hold", "requested", "confirmed"];
+const SESSION_DAYS = 30;
+const MIN_PASSWORD_LENGTH = 10;
 
 class HttpError extends Error {
     constructor(
@@ -187,6 +188,7 @@ async function route(request: Request, url: URL, deps: Deps): Promise<Response> 
     if (pathname === "/api/booking/confirm" && method === "GET") return confirmPayment(url, deps);
     if (pathname === "/api/stripe-webhook" && method === "POST") return stripeWebhook(request, deps);
     if (pathname === "/api/calendar.ics" && method === "GET") return calendarFeed(url, deps);
+    if (pathname === "/api/admin/login" && method === "POST") return adminLogin(request, deps);
 
     if (pathname.startsWith("/api/admin/")) {
         await requireAdmin(request, deps);
@@ -449,11 +451,69 @@ async function stripeWebhook(request: Request, deps: Deps) {
 // ---------------------------------------------------------------------------------------------------------------
 // Admin
 
+// Sign-in is one shared password (ADMIN_PASSWORD). Signing in returns a token that's good for 30 days. Tokens are
+// signed with the password, so changing ADMIN_PASSWORD in Cloudflare signs out every device.
+const encoder = new TextEncoder();
+
+const toBase64Url = (bytes: ArrayBuffer) =>
+    btoa(String.fromCharCode(...new Uint8Array(bytes))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+const fromBase64Url = (value: string) => Uint8Array.from(atob(value.replace(/-/g, "+").replace(/_/g, "/")), (c) => c.charCodeAt(0));
+
+function sessionKey(password: string) {
+    return crypto.subtle.importKey("raw", encoder.encode(`pgow-admin-session:${password}`), { name: "HMAC", hash: "SHA-256" }, false, [
+        "sign",
+        "verify",
+    ]);
+}
+
+async function createSession(password: string, now: number) {
+    const expires = now + SESSION_DAYS * DAY;
+    const signature = await crypto.subtle.sign("HMAC", await sessionKey(password), encoder.encode(`admin.${expires}`));
+    return { token: `${expires}.${toBase64Url(signature)}`, expires };
+}
+
+async function validSession(token: string, password: string, now: number) {
+    const [expires, signature] = token.split(".");
+    if (!/^\d+$/.test(expires ?? "") || Number(expires) <= now || !signature) return false;
+    try {
+        return await crypto.subtle.verify("HMAC", await sessionKey(password), fromBase64Url(signature), encoder.encode(`admin.${expires}`));
+    } catch {
+        return false;
+    }
+}
+
+// Compares hashes of the two passwords, so the time taken doesn't hint at how much of a guess was right.
+async function samePassword(guess: string, password: string) {
+    const [a, b] = await Promise.all([guess, password].map(async (p) => new Uint8Array(await crypto.subtle.digest("SHA-256", encoder.encode(p)))));
+    let diff = 0;
+    for (let i = 0; i < a.length; i++) diff |= a[i] ^ b[i];
+    return diff === 0;
+}
+
+function adminPassword(deps: Deps) {
+    const password = deps.env.ADMIN_PASSWORD ?? "";
+    return password.length >= MIN_PASSWORD_LENGTH ? password : null;
+}
+
+async function adminLogin(request: Request, deps: Deps) {
+    const password = adminPassword(deps);
+    if (!password)
+        throw new HttpError(503, `Sign-in isn't set up yet. Add an ADMIN_PASSWORD of at least ${MIN_PASSWORD_LENGTH} characters in Cloudflare.`);
+    const body = await readJson(request);
+    const ip = request.headers.get("CF-Connecting-IP");
+    if (!(await deps.verifyHuman(text(body, "turnstileToken", 2048), ip)))
+        throw new HttpError(403, "The spam check didn't go through. Please try again.");
+    if (!(await samePassword(typeof body.password === "string" ? body.password : "", password))) {
+        console.warn("Admin sign-in failed from", ip);
+        throw new HttpError(401, "Wrong password.");
+    }
+    return json(await createSession(password, deps.now()));
+}
+
 async function requireAdmin(request: Request, deps: Deps) {
     const token = request.headers.get("Authorization")?.replace(/^Bearer\s+/i, "") ?? "";
-    if (!token) throw new HttpError(401, "Please sign in.");
-    const result = await deps.adminFromToken(token);
-    if ("error" in result) throw new HttpError(result.status, result.error);
+    const password = adminPassword(deps);
+    if (!token || !password || !(await validSession(token, password, deps.now()))) throw new HttpError(401, "Please sign in.");
 }
 
 async function adminList(url: URL, deps: Deps) {
@@ -825,68 +885,9 @@ export function ownerEmail(b: BookingRow, env: Env): Email {
 // Live services
 
 export function liveDeps(env: Env): Deps {
-    let supabase: SupabaseClient | undefined;
-    const db = () =>
-        (supabase ??= createClient("https://awqealatvcaezaddnten.supabase.co", env.SUPABASE_SERVICE_ROLE ?? "", {
-            auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
-        }));
     let stripe: Stripe | undefined;
     const pay = () =>
         (stripe ??= new Stripe((env.NODE_ENV === "development" ? env.STRIPE_SECRET_TEST_KEY : env.STRIPE_SECRET_KEY) ?? ""));
-
-    const must = <T>({ data, error }: { data: T | null; error: unknown }) => {
-        if (error) throw error;
-        return data as T;
-    };
-
-    const store: Store = {
-        async bookingsBetween(from, to) {
-            return must(
-                await db()
-                    .from("bookings")
-                    .select("*")
-                    .lt("start_at", new Date(to).toISOString())
-                    .gt("end_at", new Date(from).toISOString())
-                    .order("start_at")
-            );
-        },
-        async blocksBetween(from, to) {
-            return must(
-                await db()
-                    .from("blocked_times")
-                    .select("*")
-                    .lt("start_at", new Date(to).toISOString())
-                    .gt("end_at", new Date(from).toISOString())
-                    .order("start_at")
-            );
-        },
-        async getBooking(id) {
-            return must(await db().from("bookings").select("*").eq("id", id).maybeSingle());
-        },
-        async insertBooking(row) {
-            return must(await db().from("bookings").insert(row).select().single());
-        },
-        async updateBooking(id, patch, fromStatuses) {
-            let q = db().from("bookings").update(patch).eq("id", id);
-            if (fromStatuses) q = q.in("status", fromStatuses);
-            return must(await q.select().maybeSingle());
-        },
-        async insertBlock(row) {
-            return must(await db().from("blocked_times").insert(row).select().single());
-        },
-        async deleteBlock(id) {
-            must(await db().from("blocked_times").delete().eq("id", id));
-        },
-        async getSettings() {
-            const row = must(await db().from("booking_settings").select("settings").eq("id", 1).maybeSingle()) as {
-                settings: Partial<BookingSettings>;
-            } | null;
-            return row?.settings ?? null;
-        },
-        async saveSettings(settings) {
-            must(await db().from("booking_settings").upsert({ id: 1, settings, updated_at: new Date().toISOString() }));
-        },
-    };
 
     const toSession = (s: Stripe.Checkout.Session): CheckoutSession => ({
         id: s.id,
@@ -939,7 +940,7 @@ export function liveDeps(env: Env): Deps {
     };
 
     return {
-        store,
+        store: d1Store(env.DB),
         payments,
         async sendEmail(email) {
             if (!email.to) return;
@@ -953,32 +954,10 @@ export function liveDeps(env: Env): Deps {
             });
             if (error) console.error("Email failed:", email.subject, error);
         },
-        async adminFromToken(token) {
-            const { data, error } = await db().auth.getUser(token);
-            if (error || !data.user?.email) return { error: "Your session expired. Please sign in again.", status: 401 };
-            const allowed = (env.ADMIN_EMAILS || BUSINESS_EMAIL).split(",").map((e) => e.trim().toLowerCase());
-            if (!allowed.includes(data.user.email.toLowerCase()))
-                return { error: "This account can't manage bookings.", status: 403 };
-            // Accounts with two-step sign-in set up must have finished it for this session.
-            const hasMfa = data.user.factors?.some((f) => f.status === "verified");
-            if (hasMfa && jwtClaim(token, "aal") !== "aal2")
-                return { error: "Please finish two-step sign-in.", status: 403 };
-            return { email: data.user.email };
-        },
         verifyHuman: (token, ip) => verifyTurnstile(token, ip, env),
         now: () => Date.now(),
         env,
     };
-}
-
-// The token was already verified by Supabase; this only reads a claim from it.
-function jwtClaim(token: string, claim: string) {
-    try {
-        const payload = token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/");
-        return JSON.parse(atob(payload))[claim];
-    } catch {
-        return undefined;
-    }
 }
 
 // Cloudflare Turnstile spam check, shared with the contact form.

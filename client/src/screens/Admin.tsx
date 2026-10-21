@@ -1,15 +1,15 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import type { Session } from "@supabase/supabase-js";
 import { MdAdd, MdContentCopy, MdLocationOn, MdLogout, MdPhone, MdRefresh } from "react-icons/md";
 import BookingForm, { adminField, BookingFormValues } from "../components/admin/BookingForm";
+import Turnstile, { TurnstileHandle } from "../components/Turnstile";
 import { BOOKABLE_ADD_ONS, findPackage } from "../booking/quote";
 import type { BookingSettings } from "../booking/schedule";
 import type { BlockRow, BookingRow } from "../booking/server";
 import { formatDate, formatRange, formatTime, todayInZone, utcToZoned } from "../booking/time";
 import { formatPrice } from "../data/packages";
 import { apilink, toastError, toastSuccess } from "../GlobalFunctions";
-import { supabase, supabaseConfigured } from "../supabase";
+import { SITE } from "../site";
 
 class ApiError extends Error {
     constructor(
@@ -21,17 +21,42 @@ class ApiError extends Error {
     }
 }
 
+// Signing in returns a token that's good for 30 days; it's kept in this browser so the page stays signed in.
+const TOKEN_KEY = "pgow-admin-session";
+
+function savedToken() {
+    try {
+        const token = localStorage.getItem(TOKEN_KEY);
+        // The token starts with its expiry time.
+        return token && Number(token.split(".")[0]) > Date.now() ? token : null;
+    } catch {
+        return null;
+    }
+}
+
+function saveToken(token: string | null) {
+    try {
+        if (token) localStorage.setItem(TOKEN_KEY, token);
+        else localStorage.removeItem(TOKEN_KEY);
+    } catch {
+        // Private browsing: stays signed in until the tab closes.
+    }
+}
+
+// Set by the Admin page, so any request that comes back "please sign in" shows the sign-in form again.
+let onSignedOut = () => {};
+
 async function api<T>(path: string, init: { method?: string; body?: unknown } = {}): Promise<T> {
-    const { data } = await supabase.auth.getSession();
     const res = await fetch(`${apilink}/admin${path}`, {
         method: init.method ?? "GET",
         headers: {
-            Authorization: `Bearer ${data.session?.access_token ?? ""}`,
+            Authorization: `Bearer ${savedToken() ?? ""}`,
             ...(init.body ? { "Content-Type": "application/json" } : {}),
         },
         body: init.body ? JSON.stringify(init.body) : undefined,
     });
     const body = res.status === 204 ? null : await res.json().catch(() => null);
+    if (res.status === 401) onSignedOut();
     if (!res.ok) throw new ApiError(res.status, body?.message ?? "Something went wrong.", body?.code);
     return body as T;
 }
@@ -58,26 +83,21 @@ const STATUS_LABELS: Record<string, string> = {
 };
 
 export default function Admin() {
-    const [session, setSession] = useState<Session | null | undefined>(undefined);
-    const [needsCode, setNeedsCode] = useState(false);
-
-    const checkMfa = useCallback(async () => {
-        const { data } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
-        setNeedsCode(data?.currentLevel === "aal1" && data?.nextLevel === "aal2");
-    }, []);
+    // undefined until the saved sign-in has been checked, so the sign-in form doesn't flash.
+    const [signedIn, setSignedIn] = useState<boolean | undefined>(undefined);
 
     useEffect(() => {
-        if (!supabaseConfigured) return;
-        supabase.auth.getSession().then(({ data }) => {
-            setSession(data.session);
-            if (data.session) checkMfa();
-        });
-        const { data } = supabase.auth.onAuthStateChange((_event, s) => {
-            setSession(s);
-            if (s) checkMfa();
-        });
-        return () => data.subscription.unsubscribe();
-    }, [checkMfa]);
+        setSignedIn(!!savedToken());
+        onSignedOut = () => {
+            saveToken(null);
+            setSignedIn(false);
+        };
+    }, []);
+
+    const signIn = (token: string) => {
+        saveToken(token);
+        setSignedIn(true);
+    };
 
     return (
         <div className="min-h-screen bg-ink">
@@ -86,10 +106,10 @@ export default function Admin() {
                     <Link to="/" className="font-display text-sm font-semibold text-white">
                         PGOW Plus <span className="text-fog">· Bookings</span>
                     </Link>
-                    {session && (
+                    {signedIn && (
                         <button
                             type="button"
-                            onClick={() => supabase.auth.signOut()}
+                            onClick={() => onSignedOut()}
                             className="inline-flex items-center gap-1.5 text-sm font-semibold text-fog hover:text-white"
                         >
                             <MdLogout size={16} /> Sign out
@@ -97,106 +117,71 @@ export default function Admin() {
                     )}
                 </div>
             </header>
-            {!supabaseConfigured ? (
-                <p className="wrap mt-16 text-fog">
-                    Sign-in isn't set up yet: add VITE_SUPABASE_KEY (the Supabase public key) to the site's build settings in
-                    Cloudflare and redeploy.
-                </p>
-            ) : session === undefined ? null : !session ? (
-                <SignIn />
-            ) : needsCode ? (
-                <MfaCode onDone={checkMfa} />
-            ) : (
-                <Dashboard />
-            )}
+            {signedIn === undefined ? null : signedIn ? <Dashboard /> : <SignIn onSignedIn={signIn} />}
         </div>
     );
 }
 
-function SignIn() {
-    const [email, setEmail] = useState("");
+function SignIn({ onSignedIn }: { onSignedIn(token: string): void }) {
     const [password, setPassword] = useState("");
     const [busy, setBusy] = useState(false);
-    const [resetSent, setResetSent] = useState(false);
+    const [human, setHuman] = useState<string | null>(null);
+    const turnstile = useRef<TurnstileHandle>(null);
 
     const submit = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (!human) return toastError("Please wait a moment for the spam check to finish, then try again.");
         setBusy(true);
-        const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
-        setBusy(false);
-        if (error) toastError(error.message === "Invalid login credentials" ? "Wrong email or password." : error.message);
-    };
-
-    const reset = async () => {
-        if (!email.trim()) return toastError("Type your email first, then tap Forgot password.");
-        const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
-            redirectTo: `${window.location.origin}/admin`,
-        });
-        if (error) toastError(error.message);
-        else setResetSent(true);
+        try {
+            const res = await fetch(`${apilink}/admin/login`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ password, turnstileToken: human }),
+            });
+            const body = await res.json().catch(() => ({}));
+            if (res.ok && body.token) return onSignedIn(body.token);
+            toastError(body.message ?? "Couldn't sign in. Please try again.");
+        } catch {
+            toastError("Couldn't reach the website. Please check your connection and try again.");
+        } finally {
+            setBusy(false);
+        }
+        // Each spam-check token works only once.
+        turnstile.current?.reset();
     };
 
     return (
         <form onSubmit={submit} className="wrap mt-16 max-w-sm!">
             <h1 className="font-display text-2xl font-semibold text-white">Sign in</h1>
             <p className="mt-2 text-sm text-fog">Manage party bookings, time off and hours.</p>
+            {/* Lets password managers save the password under a name. */}
+            <input type="text" name="username" autoComplete="username" value="PGOW Plus bookings" readOnly hidden />
             <label className="mt-6 block">
-                <span className="text-sm font-semibold text-white">Email</span>
-                <input type="email" autoComplete="email" required value={email} onChange={(e) => setEmail(e.target.value)} className={`${adminField} mt-1.5`} />
-            </label>
-            <label className="mt-4 block">
                 <span className="text-sm font-semibold text-white">Password</span>
                 <input
                     type="password"
+                    name="password"
                     autoComplete="current-password"
                     required
+                    autoFocus
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     className={`${adminField} mt-1.5`}
                 />
             </label>
-            <button type="submit" className="btn-gold mt-6 w-full" disabled={busy}>
+            <div className="mt-4">
+                <Turnstile
+                    ref={turnstile}
+                    siteKey={SITE.turnstileSiteKey}
+                    action="admin"
+                    onToken={setHuman}
+                    onError={() => toastError("The spam check couldn't load. Please refresh the page.")}
+                />
+            </div>
+            <button type="submit" className="btn-gold mt-4 w-full" disabled={busy}>
                 {busy ? "Signing in…" : "Sign in"}
             </button>
-            <button type="button" onClick={reset} className="mt-4 w-full text-sm font-semibold text-fog hover:text-white">
-                {resetSent ? "Check your email for a reset link" : "Forgot password?"}
-            </button>
-        </form>
-    );
-}
-
-function MfaCode({ onDone }: { onDone(): void }) {
-    const [code, setCode] = useState("");
-    const [busy, setBusy] = useState(false);
-    const submit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setBusy(true);
-        const { data: factors } = await supabase.auth.mfa.listFactors();
-        const factor = factors?.totp[0];
-        if (!factor) {
-            setBusy(false);
-            return toastError("No authenticator app is set up on this account.");
-        }
-        const { error } = await supabase.auth.mfa.challengeAndVerify({ factorId: factor.id, code: code.trim() });
-        setBusy(false);
-        if (error) return toastError("That code didn't work. Try the newest one from your authenticator app.");
-        onDone();
-    };
-    return (
-        <form onSubmit={submit} className="wrap mt-16 max-w-sm!">
-            <h1 className="font-display text-2xl font-semibold text-white">Enter your code</h1>
-            <p className="mt-2 text-sm text-fog">Open your authenticator app and type the 6-digit code.</p>
-            <input
-                inputMode="numeric"
-                autoComplete="one-time-code"
-                maxLength={6}
-                value={code}
-                onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
-                className={`${adminField} mt-6 text-center text-2xl tracking-[0.5em]`}
-            />
-            <button type="submit" className="btn-gold mt-6 w-full" disabled={busy || code.length !== 6}>
-                {busy ? "Checking…" : "Continue"}
-            </button>
+            <p className="mt-4 text-center text-sm text-fog">Forgot the password? Whoever runs the website can set a new one.</p>
         </form>
     );
 }
