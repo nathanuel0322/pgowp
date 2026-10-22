@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { FaApple, FaGoogle } from "react-icons/fa6";
 import { MdAdd, MdContentCopy, MdLocationOn, MdLogout, MdPhone, MdRefresh } from "react-icons/md";
 import BookingForm, { adminField, BookingFormValues } from "../components/admin/BookingForm";
 import Turnstile, { TurnstileHandle } from "../components/Turnstile";
@@ -551,6 +552,9 @@ function TimeOff({ blocks, onChange }: { blocks: BlockRow[]; onChange(): void })
     );
 }
 
+// webcal:// opens the Calendar app's subscribe dialog on iPhone and Mac; Google's "add by URL" link takes it too.
+const webcalUrl = (url: string) => url.replace(/^https?:/, "webcal:");
+
 function Settings({
     settings,
     calendarUrl,
@@ -643,11 +647,27 @@ function Settings({
                 {calendarUrl ? (
                     <>
                         <p className="mt-2 text-sm leading-relaxed text-fog">
-                            Copy this private link. In Google Calendar choose <strong className="text-white">Other calendars → From URL</strong>; on
-                            an iPhone go to <strong className="text-white">Settings → Calendar → Accounts → Add Subscribed Calendar</strong>. New
-                            bookings show up on their own (Google can take a few hours to refresh). Don't share the link.
+                            Subscribe once and new bookings show up on their own (Google can take a few hours to refresh). It's read-only:
+                            deleting an event in your calendar doesn't change the booking. Don't share the link.
                         </p>
-                        <div className="mt-4 flex gap-2">
+                        <div className="mt-4 flex flex-wrap gap-2">
+                            <a
+                                href={`https://calendar.google.com/calendar/render?cid=${encodeURIComponent(webcalUrl(calendarUrl))}`}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="btn-ghost px-4!"
+                            >
+                                <FaGoogle size={14} /> Add to Google Calendar
+                            </a>
+                            <a href={webcalUrl(calendarUrl)} className="btn-ghost px-4!">
+                                <FaApple size={16} /> Add to Apple Calendar
+                            </a>
+                        </div>
+                        <p className="mt-4 text-xs leading-relaxed text-fog">
+                            Or copy the link: in Google Calendar choose <strong className="text-white">Other calendars → From URL</strong>; on an
+                            iPhone go to <strong className="text-white">Settings → Calendar → Accounts → Add Subscribed Calendar</strong>.
+                        </p>
+                        <div className="mt-2 flex gap-2">
                             <input readOnly value={calendarUrl} className={`${adminField} font-mono text-xs`} onFocus={(e) => e.target.select()} />
                             <button
                                 type="button"
