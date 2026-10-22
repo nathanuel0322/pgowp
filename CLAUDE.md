@@ -38,6 +38,11 @@ After that, "Moving over from 10to8" in BOOKING.md: copy upcoming 10to8 bookings
 days off, subscribe to the calendar link, make one real test booking (book, pay, approve, cancel with refund), then
 cancel the 10to8 subscription.
 
+## Next: spelling and grammar checks
+
+Planned, not started: cspell for spelling plus a local LanguageTool server for grammar and commas. The plan is in
+[SPELLCHECK.md](SPELLCHECK.md).
+
 ## Notes
 
 - Bookings are stored in Cloudflare D1 (`client/src/booking/d1.ts`). The old Supabase project
