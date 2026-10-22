@@ -13,20 +13,21 @@ new booking page.
 Walk the user through these one step at a time, waiting for them to finish each step before giving the next. Tick
 each box here as it's done.
 
-- [ ] **1. Create the database.** dash.cloudflare.com → Storage & databases → D1 SQL database → Create.
+- [x] **1. Create the database.** dash.cloudflare.com → Storage & databases → D1 SQL database → Create.
       Name `pgowp-bookings`; location Eastern North America if it asks, otherwise Automatic. Leave it empty: the
       site creates its tables the first time it uses the database.
-- [ ] **2. Connect it to the site.** Workers & Pages → the site's Pages project → Settings → Bindings → Add →
+- [x] **2. Connect it to the site.** Workers & Pages → the site's Pages project → Settings → Bindings → Add →
       D1 database. Variable name `DB`, database `pgowp-bookings`. Add it for Production (and Preview, if preview
       deploys are used).
-- [ ] **3. Stripe webhook.** Use the Stripe account 10to8 pays into (`acct_1JPFx7IO67Spu8tm`).
+- [ ] **3. Stripe webhook.** Waiting on access to the Stripe account; steps 4 and 5 are blocked until it's done.
+      Use the Stripe account 10to8 pays into (`acct_1JPFx7IO67Spu8tm`).
       - Check `STRIPE_SECRET_KEY` in Cloudflare is that account's live secret key.
       - Developers → Webhooks → Add endpoint `https://prestigiousgamingonwheelsplus.com/api/stripe-webhook`, events
         `checkout.session.completed` and `checkout.session.async_payment_succeeded`. Copy its signing secret.
 - [ ] **4. Secrets.** Pages project → Settings → Variables and secrets (Production), added as encrypted secrets:
-      - `ADMIN_PASSWORD`: password for `/admin`, at least 10 characters (a few random words works well)
-      - `STRIPE_WEBHOOK_SECRET`: the signing secret from step 3
-      - `CALENDAR_TOKEN`: a long random string, e.g. from `openssl rand -hex 24`
+      - [x] `ADMIN_PASSWORD`: password for `/admin`, at least 10 characters (a few random words works well)
+      - [ ] `STRIPE_WEBHOOK_SECRET`: the signing secret from step 3 (the only one left)
+      - [x] `CALENDAR_TOKEN`: a long random string, e.g. from `openssl rand -hex 24`
       - Already set and still needed: `STRIPE_SECRET_KEY`, `RESEND_KEY`, `TURNSTILE_SECRET`
       - Optional: `NOTIFY_EMAIL` (new-request alerts; defaults to tbnd@prestigiousgamingonwheelsplus.com)
       - No longer used, safe to delete: `SUPABASE_SERVICE_ROLE`, `VITE_SUPABASE_KEY`
