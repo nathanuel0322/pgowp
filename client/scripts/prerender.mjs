@@ -9,7 +9,7 @@ const dist = path.join(root, "dist");
 const serverDir = path.join(root, "dist-server");
 
 const template = fs.readFileSync(path.join(dist, "index.html"), "utf8");
-const { render, routes, siteUrl, notFoundHead } = await import(
+const { render, routes, appRoutes, siteUrl, notFoundHead } = await import(
     pathToFileURL(path.join(serverDir, "entry-server.js")).href
 );
 
@@ -29,7 +29,8 @@ for (const route of routes) {
 // Client-rendered shells: Cloudflare Pages serves 404.html (with a 404 status) for unknown paths,
 // so routes that aren't prerendered need their own file to keep a 200 status.
 const shellHead = notFoundHead.replace(/<title>.*?<\/title>/, `<title>Prestigious Gaming on Wheels Plus</title>`);
-for (const route of ["/book", "/checkout", "/checkout-details", "/e-invites"]) {
+for (const route of appRoutes) {
+    fs.mkdirSync(path.dirname(fileFor(route)), { recursive: true });
     fs.writeFileSync(fileFor(route), page(shellHead, '<div id="root"></div>'));
 }
 fs.writeFileSync(path.join(dist, "404.html"), page(notFoundHead, '<div id="root"></div>'));

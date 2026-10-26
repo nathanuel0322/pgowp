@@ -2,18 +2,26 @@ export interface PartyPackage {
     id: string;
     name: string;
     price: number;
+    // Charged online to hold the date. The rest is due when the truck arrives.
+    deposit: number;
     duration: string;
+    // Party length used for scheduling. Travel and setup time between parties is a booking setting.
+    minutes: number;
     blurb: string;
     features: string[];
     featured?: boolean;
-    // 10to8 service-detail id, so "Book this party" opens straight to this package's booking flow.
-    bookingService: number;
 }
 
 export interface AddOn {
+    // Stable id saved on bookings. Don't rename one once it has been booked.
+    id: string;
     name: string;
     price: number | null;
     note?: string;
+    // Priced per child, so the booking form asks how many.
+    perChild?: boolean;
+    // Lengthens the party by this many minutes per unit (additional party time).
+    minutes?: number;
 }
 
 export interface AddOnGroup {
@@ -33,38 +41,42 @@ const gamingIncludes = [
 export const PARTY_PACKAGES: PartyPackage[] = [
     {
         id: "gaming-2hr",
-        bookingService: 1516842,
         name: "2-Hour Gaming Party",
         price: 550,
+        deposit: 275,
         duration: "2 hours",
+        minutes: 120,
         blurb: "Two hours of nonstop gaming in our climate-controlled luxury trailer.",
         features: gamingIncludes,
     },
     {
         id: "gaming-3hr",
-        bookingService: 1144565,
         name: "3-Hour Gaming Party",
         price: 700,
+        deposit: 350,
         duration: "3 hours",
+        minutes: 180,
         blurb: "Our most-booked party. More time for tournaments, VR and the outdoor screens.",
         features: gamingIncludes,
         featured: true,
     },
     {
         id: "gaming-4hr",
-        bookingService: 1508645,
         name: "4-Hour Gaming Party",
         price: 1050,
+        deposit: 525,
         duration: "4 hours",
+        minutes: 240,
         blurb: "The all-day blowout for big crews, block parties and school fun days.",
         features: gamingIncludes.slice(0, 5),
     },
     {
         id: "laser-tag",
-        bookingService: 1222138,
         name: "Laser Tag Party",
         price: 700,
+        deposit: 200,
         duration: "1.5 hours",
+        minutes: 90,
         blurb: "Professional arena-style laser tag with live on-screen scoring, music and commentary.",
         features: [
             "Up to 20 players",
@@ -76,10 +88,11 @@ export const PARTY_PACKAGES: PartyPackage[] = [
     },
     {
         id: "movie",
-        bookingService: 1144566,
         name: "Movie Party",
         price: 500,
+        deposit: 250,
         duration: "2 hours",
+        minutes: 120,
         blurb: "A private cinema on wheels. 7 HD TVs plus a large projector screen.",
         features: [
             "Bring any movie: DVD, Blu-ray or stream from your device",
@@ -90,10 +103,11 @@ export const PARTY_PACKAGES: PartyPackage[] = [
     },
     {
         id: "movie-gaming",
-        bookingService: 1255645,
         name: "Movie + Gaming Combo",
         price: 875,
+        deposit: 437.5,
         duration: "4 hours",
+        minutes: 240,
         blurb: "The full movie party, followed by two hours of gaming.",
         features: ["Everything in the Movie Party", "2 hours of gaming after the credits roll", "Game coaches on board"],
     },
@@ -103,37 +117,37 @@ export const ADD_ON_GROUPS: AddOnGroup[] = [
     {
         title: "Party Upgrades",
         items: [
-            { name: "Virtual reality (ages 10+)", price: 80, note: "$100 if added on-site" },
-            { name: "Laser tag add-on", price: 22, note: "per child, two 15-min sessions" },
-            { name: "Photobooth (digital)", price: 100, note: "unlimited digital shares" },
-            { name: "Photobooth with sticker prints", price: 125, note: "up to 15 prints" },
-            { name: "Karaoke", price: 75, note: "4 mics for the whole party" },
-            { name: "Additional party time", price: 150, note: "per hour" },
+            { id: "vr", name: "Virtual reality (ages 10+)", price: 80, note: "$100 if added on-site" },
+            { id: "laser-tag-addon", name: "Laser tag add-on", price: 22, note: "per child, two 15-min sessions", perChild: true },
+            { id: "photobooth", name: "Photobooth (digital)", price: 100, note: "unlimited digital shares" },
+            { id: "photobooth-prints", name: "Photobooth with sticker prints", price: 125, note: "up to 15 prints" },
+            { id: "karaoke", name: "Karaoke", price: 75, note: "4 mics for the whole party" },
+            { id: "extra-hour", name: "Additional party time", price: 150, note: "per hour", minutes: 60 },
         ],
     },
     {
         title: "Concessions",
         items: [
-            { name: "Cotton candy machine", price: 225, note: "a serving per guest" },
-            { name: "Popcorn machine", price: 175, note: "a serving per guest" },
-            { name: "Large hot dog grill", price: 150, note: "you supply the hot dogs" },
-            { name: "Sno-cone machine", price: 125 },
+            { id: "cotton-candy", name: "Cotton candy machine", price: 225, note: "a serving per guest" },
+            { id: "popcorn", name: "Popcorn machine", price: 175, note: "a serving per guest" },
+            { id: "hot-dog-grill", name: "Large hot dog grill", price: 150, note: "you supply the hot dogs" },
+            { id: "sno-cone", name: "Sno-cone machine", price: 125 },
         ],
     },
     {
         title: "Jumbo Yard Games",
         items: [
-            { name: "Two giant Connect 4 sets", price: 145 },
-            { name: "Giant Connect 4", price: 80 },
-            { name: "Jumbo yard Jenga", price: 60 },
+            { id: "connect4-pair", name: "Two giant Connect 4 sets", price: 145 },
+            { id: "connect4", name: "Giant Connect 4", price: 80 },
+            { id: "jenga", name: "Jumbo yard Jenga", price: 60 },
         ],
     },
     {
         title: "Equipment Rentals",
         items: [
-            { name: "Projector + screen", price: 400, note: "refundable $150 deposit" },
-            { name: "Projector", price: 250, note: "refundable $100 deposit" },
-            { name: "4 x 4' stage", price: 150, note: "+$50 delivery, refundable deposit" },
+            { id: "projector-screen", name: "Projector + screen", price: 400, note: "refundable $150 deposit" },
+            { id: "projector", name: "Projector", price: 250, note: "refundable $100 deposit" },
+            { id: "stage", name: "4 x 4' stage", price: 150, note: "+$50 delivery, refundable deposit" },
         ],
     },
 ];

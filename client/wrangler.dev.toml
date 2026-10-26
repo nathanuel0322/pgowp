@@ -1,0 +1,15 @@
+# Local development only: `npm run start:worker` runs the Pages worker on 127.0.0.1:8787 with a local D1 database.
+# Production settings (the DB binding, secrets) live on the Cloudflare Pages project, not in this file.
+# Secrets for local runs go in .dev.vars (see .dev.vars.example).
+name = "pgowp-dev"
+main = "public/_worker.js"
+compatibility_date = "2024-11-01"
+
+[vars]
+NODE_ENV = "development"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "pgowp-bookings"
+database_id = "473d109d-8e4b-48c6-bf02-22e96d5eeaa9"
+migrations_dir = "migrations"

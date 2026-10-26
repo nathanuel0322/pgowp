@@ -51,7 +51,7 @@ export default function Packages() {
                             <BookButton
                                 className={`${p.featured ? "btn-gold" : "btn-ghost"} mt-8 w-full`}
                                 label="Book this party"
-                                service={p.bookingService}
+                                packageId={p.id}
                             />
                         </article>
                     ))}

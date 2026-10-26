@@ -1,0 +1,14 @@
+# Copy to .dev.vars (gitignored) for `npm run start:worker`.
+
+# Stripe test-mode secret key (Stripe dashboard > Developers > API keys, with test mode on).
+STRIPE_SECRET_TEST_KEY=sk_test_...
+# Signing secret for local webhook tests (`stripe listen` prints one, or use any string with a self-signed event).
+STRIPE_WEBHOOK_SECRET=whsec_...
+# Cloudflare's documented always-pass Turnstile secret, matching the test site key the dev build uses.
+TURNSTILE_SECRET=1x0000000000000000000000000000000AA
+# Any long random string. Signs /admin sessions and the calendar feed link.
+BOOKING_SECRET=
+# Password for /admin while developing.
+ADMIN_PASSWORD=
+# Optional: a Resend API key to actually send booking emails locally.
+RESEND_KEY=

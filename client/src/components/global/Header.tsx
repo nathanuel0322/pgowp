@@ -1,21 +1,17 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
-import { MdShoppingCart, MdPhone } from "react-icons/md";
-import { AppContext } from "../../App.tsx";
+import { MdPhone } from "react-icons/md";
 import { NAV_LINKS, SITE } from "../../site.ts";
 import Logo from "./Logo.tsx";
 
 const Header = ({
     drawerOpen,
     setDrawerOpen,
-    setCartDrawerOpen,
 }: {
     drawerOpen: boolean;
     setDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    setCartDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
     const location = useLocation();
-    const { cart } = useContext(AppContext);
     const [scrolled, setScrolled] = useState(false);
 
     useEffect(() => {
@@ -77,21 +73,6 @@ const Header = ({
                         <MdPhone className="text-gold" size={18} aria-hidden />
                         {SITE.phone}
                     </a>
-                    {location.pathname === "/book" && (
-                        <button
-                            type="button"
-                            title="Cart"
-                            className="relative rounded-full bg-white p-2.5 text-ink"
-                            onClick={() => setCartDrawerOpen(true)}
-                        >
-                            <MdShoppingCart size={22} />
-                            {cart.length > 0 && (
-                                <span className="absolute -right-1 -top-1 grid h-5 w-5 place-items-center rounded-full bg-gold text-[11px] font-bold">
-                                    {cart.length}
-                                </span>
-                            )}
-                        </button>
-                    )}
                     <BookButton className="btn-gold hidden !px-5 !py-2.5 sm:inline-flex" />
                     <button
                         type="button"
@@ -157,28 +138,18 @@ const Header = ({
     );
 };
 
+// Opens the online booking page, optionally with a package already picked.
 export function BookButton({
     className = "btn-gold",
     label = "Book Now",
-    service,
+    packageId,
 }: {
     className?: string;
     label?: string;
-    service?: number;
+    packageId?: string;
 }) {
-    if (import.meta.env.PROD)
-        return (
-            <a
-                className={className}
-                target="_blank"
-                rel="noopener noreferrer"
-                href={service ? `${SITE.bookingUrl}select-staff-and-location-if-needed/?service=${service}` : SITE.bookingUrl}
-            >
-                {label}
-            </a>
-        );
     return (
-        <Link className={className} to="/book">
+        <Link className={className} to={packageId ? `/book?package=${packageId}` : "/book"}>
             {label}
         </Link>
     );
