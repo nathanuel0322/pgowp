@@ -1,4 +1,4 @@
-// Online booking: open time slots, Stripe Checkout for the deposit, confirmation, the owner's calendar feed and the
+// Online booking: open time slots, Stripe Checkout for the deposit, confirmation, the team's calendar feeds and the
 // /admin API. Prices, deposits and slot rules come from src/lib/booking.ts, the same code the booking page runs.
 //
 // Storage is Cloudflare D1, bound to the Pages project as DB (schema in ../migrations). Times are stored as epoch
@@ -18,7 +18,7 @@ import {
     zonedParts,
     zonedToUtc,
 } from "../src/lib/booking.ts";
-import { sendBookingConfirmation, sendOwnerAlert } from "./emails.js";
+import { sendBookingConfirmation, sendLoginLink, sendOwnerAlert } from "./emails.js";
 import { ALLOWED_ORIGINS, EMAIL_PATTERN, describeWhen, dollars, jsonResponse, verifyTurnstile } from "./shared.js";
 
 // Not imported from src/site.ts, which reads Vite-only import.meta.env.
@@ -28,6 +28,7 @@ const SITE_URL = "https://prestigiousgamingonwheelsplus.com";
 const CHECKOUT_MINUTES = 30;
 const HOLD_MINUTES = 35;
 const ADMIN_SESSION_DAYS = 30;
+const LOGIN_LINK_MINUTES = 20;
 
 // Created only by the routes that need it: Stripe throws when its key isn't set, and that must never take down
 // unrelated routes like the contact form.
@@ -425,7 +426,7 @@ async function handleStripeWebhook(request, env) {
 
 // ---- Secrets: admin sessions and the calendar feed -----------------------------------------------------------
 // Both are signed with BOOKING_SECRET, a long random value set on Pages (falling back to the JWT_SECRET the Pages
-// project already had). Changing it signs the owner out and changes the calendar feed link.
+// project already had). Changing it signs everyone out and changes the owner's calendar feed link.
 
 const signingSecret = (env) => env.BOOKING_SECRET || env.JWT_SECRET;
 
@@ -445,17 +446,32 @@ function timingSafeEqual(a, b) {
     return diff === 0;
 }
 
-const calendarToken = async (env) => (await hmacHex(signingSecret(env), "calendar-feed")).slice(0, 40);
+const toHex = (bytes) => [...new Uint8Array(bytes)].map((b) => b.toString(16).padStart(2, "0")).join("");
+const randomHex = (bytes) => toHex(crypto.getRandomValues(new Uint8Array(bytes)));
+const sha256Hex = async (value) => toHex(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(value)));
 
-async function adminToken(env, expires) {
-    return `${expires}.${await hmacHex(signingSecret(env), `admin-session:${expires}`)}`;
+// The owner's feed link. Team members each get their own random link instead (staff.calendar_token).
+const calendarToken = async (env) => (await hmacHex(signingSecret(env), "calendar-feed")).slice(0, 40);
+const calendarUrl = (token) => `${SITE_URL}/api/booking/calendar.ics?token=${token}`;
+
+// Session tokens are "expires.who.signature", where who is "owner" or a manager's staff id.
+async function adminToken(env, expires, who) {
+    return `${expires}.${who}.${await hmacHex(signingSecret(env), `admin-session:${expires}:${who}`)}`;
 }
 
-async function isAdmin(request, env) {
+async function startSession(env, who, name) {
+    const expires = Date.now() + ADMIN_SESSION_DAYS * 86400000;
+    return { token: await adminToken(env, expires, who), expires, name };
+}
+
+// Who is signed in, or null. Removing a manager from the team (or making them a worker) signs them out.
+async function adminUser(request, env) {
     const token = (request.headers.get("Authorization") ?? "").replace(/^Bearer\s+/i, "");
-    const [expires] = token.split(".");
-    if (!/^\d+$/.test(expires ?? "") || Number(expires) < Date.now()) return false;
-    return timingSafeEqual(token, await adminToken(env, expires));
+    const [expires, who] = token.split(".");
+    if (!/^\d+$/.test(expires ?? "") || Number(expires) < Date.now() || !who) return null;
+    if (!timingSafeEqual(token, await adminToken(env, expires, who))) return null;
+    if (who === "owner") return { id: "owner", name: "Owner" };
+    return await env.DB.prepare("SELECT id, name FROM staff WHERE id = ?1 AND role = 'manager'").bind(who).first();
 }
 
 // POST /api/admin/login { password, turnstile_token }
@@ -471,11 +487,53 @@ async function handleAdminLogin(request, env) {
         hmacHex(signingSecret(env), `pw:${env.ADMIN_PASSWORD}`),
     ]);
     if (!timingSafeEqual(given, expected)) return fail("Wrong password.", 401);
-    const expires = Date.now() + ADMIN_SESSION_DAYS * 86400000;
-    return jsonResponse({ body: { token: await adminToken(env, expires), expires } });
+    return jsonResponse({ body: await startSession(env, "owner", "Owner") });
 }
 
-// ---- Owner calendar feed -------------------------------------------------------------------------------------
+// POST /api/admin/login-link { email, turnstile_token }: emails a manager a one-time sign-in link. The reply is the
+// same whether or not the email belongs to a manager, so the form can't be used to find out who's on the team.
+async function handleAdminLoginLink(request, env) {
+    const body = await request.json().catch(() => null);
+    const email = text(body?.email, 200).toLowerCase();
+    const token = text(body?.turnstile_token, 2048);
+    if (!EMAIL_PATTERN.test(email)) return fail("Enter your email address.");
+    if (!signingSecret(env)) return fail("Admin sign-in isn't set up yet.", 500);
+    if (!token || !(await verifyTurnstile(token, request, env))) return fail("The spam check didn't go through. Please try again.", 403);
+    const manager = await env.DB.prepare("SELECT id, name FROM staff WHERE email = ?1 AND role = 'manager'").bind(email).first();
+    if (manager) {
+        const code = randomHex(32);
+        await env.DB.prepare("UPDATE staff SET login_code_hash = ?1, login_code_expires_at = ?2 WHERE id = ?3")
+            .bind(await sha256Hex(code), Date.now() + LOGIN_LINK_MINUTES * 60000, manager.id)
+            .run();
+        await sendLoginLink(env, {
+            to: email,
+            name: manager.name,
+            url: `${siteOrigin(request)}/admin?code=${manager.id}.${code}`,
+            minutes: LOGIN_LINK_MINUTES,
+        });
+    }
+    return jsonResponse({ body: { sent: true } });
+}
+
+// POST /api/admin/login-code { code }: trades the code from an emailed link for a session. Each link works once.
+async function handleAdminLoginCode(request, env) {
+    const body = await request.json().catch(() => null);
+    const [id, code] = text(body?.code, 200).split(".");
+    const expired = () => fail("That sign-in link has expired or was already used. Ask for a new one.", 401);
+    if (!UUID.test(id ?? "") || !/^[0-9a-f]{64}$/.test(code ?? "")) return expired();
+    const now = Date.now();
+    const manager = await env.DB.prepare(
+        `UPDATE staff SET login_code_hash = NULL, login_code_expires_at = NULL, last_login_at = ?1
+         WHERE id = ?2 AND role = 'manager' AND login_code_hash = ?3 AND login_code_expires_at > ?1
+         RETURNING id, name`
+    )
+        .bind(now, id, await sha256Hex(code))
+        .first();
+    if (!manager) return expired();
+    return jsonResponse({ body: await startSession(env, manager.id, manager.name) });
+}
+
+// ---- Calendar feeds ------------------------------------------------------------------------------------------
 
 const icsDate = (ms) => new Date(ms).toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
 const icsText = (value) =>
@@ -506,10 +564,14 @@ function foldLine(line) {
     return out.join("\r\n ");
 }
 
-// GET /api/booking/calendar.ics?token=...: a secret link the owner subscribes to in Google or Apple Calendar.
+// GET /api/booking/calendar.ics?token=...: a secret link the owner or a team member subscribes to in Google or Apple
+// Calendar.
 async function handleCalendarFeed(request, env) {
     const token = new URL(request.url).searchParams.get("token") ?? "";
-    if (!timingSafeEqual(token, await calendarToken(env))) return new Response("Not found", { status: 404 });
+    const allowed =
+        timingSafeEqual(token, await calendarToken(env)) ||
+        (/^[0-9a-f]{40}$/.test(token) && (await env.DB.prepare("SELECT 1 FROM staff WHERE calendar_token = ?1").bind(token).first()));
+    if (!allowed) return new Response("Not found", { status: 404 });
 
     const { results } = await env.DB.prepare("SELECT * FROM bookings WHERE status = 'confirmed' AND starts_at >= ?1 ORDER BY starts_at")
         .bind(Date.now() - 60 * 86400000)
@@ -537,7 +599,7 @@ async function handleCalendarFeed(request, env) {
             addOns && `Add-ons: ${addOns}`,
             `Total ${dollars(b.total_cents)}, paid ${dollars(b.paid_cents)}, due ${dollars(b.total_cents - b.paid_cents)}`,
             b.notes && `Customer notes: ${b.notes}`,
-            b.admin_notes && `Your notes: ${b.admin_notes}`,
+            b.admin_notes && `Team notes: ${b.admin_notes}`,
         ].filter(Boolean);
         lines.push(
             "BEGIN:VEVENT",
@@ -689,7 +751,6 @@ async function handleAdminGetSettings(request, env) {
         body: {
             settings,
             blocked: blocked.results.map((b) => ({ ...b, starts_at: iso(b.starts_at), ends_at: iso(b.ends_at) })),
-            calendarUrl: `${SITE_URL}/api/booking/calendar.ics?token=${await calendarToken(env)}`,
         },
     });
 }
@@ -731,6 +792,84 @@ async function handleAdminDeleteBlocked(request, env, id) {
     return jsonResponse({ body: null, status: 204 });
 }
 
+// ---- Team: managers and workers ------------------------------------------------------------------------------
+
+const toStaffApi = (row) => ({
+    id: row.id,
+    name: row.name,
+    email: row.email,
+    role: row.role,
+    last_login_at: iso(row.last_login_at),
+    calendarUrl: calendarUrl(row.calendar_token),
+});
+
+async function handleAdminListStaff(request, env, me) {
+    const { results } = await env.DB.prepare("SELECT * FROM staff ORDER BY role, name COLLATE NOCASE").all();
+    return jsonResponse({
+        body: { me: me.id, staff: results.map(toStaffApi), ownerCalendarUrl: calendarUrl(await calendarToken(env)) },
+    });
+}
+
+function staffFields(body) {
+    const fields = {
+        name: text(body?.name, 80),
+        email: text(body?.email, 200).toLowerCase(),
+        role: body?.role === "manager" ? "manager" : "worker",
+    };
+    if (!fields.name) return { error: "Enter their name." };
+    if (fields.email && !EMAIL_PATTERN.test(fields.email)) return { error: "That email doesn't look right." };
+    if (fields.role === "manager" && !fields.email) return { error: "Managers need an email address to sign in." };
+    return { fields };
+}
+
+const duplicateEmail = (error) => /UNIQUE/i.test(String(error?.message)) && /email/i.test(String(error?.message));
+
+// POST /api/admin/staff { name, email, role }
+async function handleAdminAddStaff(request, env) {
+    const { fields, error } = staffFields(await request.json().catch(() => null));
+    if (error) return fail(error);
+    try {
+        const row = await env.DB.prepare(
+            "INSERT INTO staff (id, created_at, name, email, role, calendar_token) VALUES (?1, ?2, ?3, ?4, ?5, ?6) RETURNING *"
+        )
+            .bind(crypto.randomUUID(), Date.now(), fields.name, fields.email, fields.role, randomHex(20))
+            .first();
+        return jsonResponse({ body: { member: toStaffApi(row) }, status: 201 });
+    } catch (err) {
+        if (duplicateEmail(err)) return fail("Someone on the team already uses that email.");
+        throw err;
+    }
+}
+
+// PATCH /api/admin/staff/:id { name, email, role } or { new_calendar_link: true }
+async function handleAdminUpdateStaff(request, env, me, id) {
+    const body = await request.json().catch(() => null);
+    let row;
+    if (body?.new_calendar_link) {
+        row = await env.DB.prepare("UPDATE staff SET calendar_token = ?1 WHERE id = ?2 RETURNING *").bind(randomHex(20), id).first();
+    } else {
+        const { fields, error } = staffFields(body);
+        if (error) return fail(error);
+        if (id === me.id && fields.role !== "manager") return fail("You can't take away your own manager access.");
+        try {
+            row = await env.DB.prepare("UPDATE staff SET name = ?1, email = ?2, role = ?3 WHERE id = ?4 RETURNING *")
+                .bind(fields.name, fields.email, fields.role, id)
+                .first();
+        } catch (err) {
+            if (duplicateEmail(err)) return fail("Someone on the team already uses that email.");
+            throw err;
+        }
+    }
+    if (!row) return fail("Not Found", 404);
+    return jsonResponse({ body: { member: toStaffApi(row) } });
+}
+
+async function handleAdminDeleteStaff(request, env, me, id) {
+    if (id === me.id) return fail("You can't remove yourself.");
+    await env.DB.prepare("DELETE FROM staff WHERE id = ?1").bind(id).run();
+    return jsonResponse({ body: null, status: 204 });
+}
+
 // ---- Router --------------------------------------------------------------------------------------------------
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -752,9 +891,12 @@ export async function routeBooking(request, env, url) {
         if (path === "/api/booking/calendar.ics" && method === "GET") return await handleCalendarFeed(request, env);
         if (path === "/api/stripe/webhook" && method === "POST") return await handleStripeWebhook(request, env);
         if (path === "/api/admin/login" && method === "POST") return await handleAdminLogin(request, env);
+        if (path === "/api/admin/login-link" && method === "POST") return await handleAdminLoginLink(request, env);
+        if (path === "/api/admin/login-code" && method === "POST") return await handleAdminLoginCode(request, env);
 
         if (path.startsWith("/api/admin/")) {
-            if (!(await isAdmin(request, env))) return fail("Please sign in again.", 401);
+            const me = await adminUser(request, env);
+            if (!me) return fail("Please sign in again.", 401);
             const [, , , resource, id] = path.split("/");
             if (id !== undefined && !UUID.test(id)) return fail("Not Found", 404);
             if (resource === "bookings") {
@@ -769,6 +911,12 @@ export async function routeBooking(request, env, url) {
             if (resource === "blocked") {
                 if (!id && method === "POST") return await handleAdminAddBlocked(request, env);
                 if (id && method === "DELETE") return await handleAdminDeleteBlocked(request, env, id);
+            }
+            if (resource === "staff") {
+                if (!id && method === "GET") return await handleAdminListStaff(request, env, me);
+                if (!id && method === "POST") return await handleAdminAddStaff(request, env);
+                if (id && method === "PATCH") return await handleAdminUpdateStaff(request, env, me, id);
+                if (id && method === "DELETE") return await handleAdminDeleteStaff(request, env, me, id);
             }
         }
         return fail("Not Found", 404);

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { MdContentCopy, MdLogout, MdOpenInNew, MdPhone, MdPlace } from "react-icons/md";
+import { MdContentCopy, MdLogout, MdOpenInNew, MdPhone, MdPlace, MdSms } from "react-icons/md";
 import { apilink, toastError, toastSuccess } from "../GlobalFunctions";
 import { field } from "../components/booking/field";
 import Turnstile, { TurnstileHandle } from "../components/Turnstile";
@@ -14,10 +14,12 @@ import {
     type BookingSettings,
     type PricedLine,
 } from "../lib/booking";
+import { calendarLinks, subscribePageUrl } from "../lib/calendar";
 import { SITE } from "../site";
 
-// Owner dashboard: bookings, manual bookings, hours and time off. Signs in with the ADMIN_PASSWORD set on Pages; the
-// worker checks the signed session token on every request.
+// Bookings dashboard: bookings, manual bookings, hours, time off and the team's calendar links. The owner signs in
+// with the ADMIN_PASSWORD set on Pages, managers with a one-time link emailed to them. The worker checks the signed
+// session token on every request.
 
 interface Booking {
     id: string;
@@ -46,6 +48,15 @@ interface Blocked {
     reason: string;
 }
 
+interface Member {
+    id: string;
+    name: string;
+    email: string;
+    role: "manager" | "worker";
+    last_login_at: string | null;
+    calendarUrl: string;
+}
+
 const small = field.replace("px-4 py-3.5 text-[15px]", "px-3 py-2.5 text-sm");
 const DAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 const today = () => new Date().toLocaleDateString("en-CA", { timeZone: TIME_ZONE });
@@ -62,17 +73,25 @@ const money = (cents: number) => formatPrice(cents / 100);
 
 const TOKEN_KEY = "admin-session";
 
-// Signed session token from POST /api/admin/login. signOut is called on any 401 so an expired session lands back on
-// the sign-in form.
+// Signed session token from the sign-in routes. signOut is called on any 401 so an expired session lands back on the
+// sign-in form.
 interface AdminSession {
     token: string;
+    name: string;
     signOut(): void;
 }
 
-function readToken() {
+interface SavedSession {
+    token: string;
+    expires: number;
+    name: string;
+}
+
+function readSession(): SavedSession | null {
     try {
         const saved = JSON.parse(localStorage.getItem(TOKEN_KEY) ?? "null");
-        return saved && saved.expires > Date.now() ? (saved.token as string) : null;
+        // Tokens from before manager sign-in have two parts and no longer work.
+        return saved && saved.expires > Date.now() && saved.token.split(".").length === 3 ? saved : null;
     } catch {
         return null;
     }
@@ -100,47 +119,69 @@ function useApi(session: AdminSession) {
 }
 
 export default function Admin() {
-    const [token, setToken] = useState<string | null>(null);
+    const [saved, setSaved] = useState<SavedSession | null>(null);
     const [checking, setChecking] = useState(true);
-    const [tab, setTab] = useState<"bookings" | "add" | "settings">("bookings");
+    const [tab, setTab] = useState<"bookings" | "add" | "settings" | "team">("bookings");
+
+    const signedIn = useCallback((s: SavedSession) => {
+        try {
+            localStorage.setItem(TOKEN_KEY, JSON.stringify(s));
+        } catch {
+            /* storage unavailable: stays signed in for this visit only */
+        }
+        setSaved(s);
+    }, []);
 
     useEffect(() => {
-        setToken(readToken());
-        setChecking(false);
-    }, []);
+        // Arriving from an emailed sign-in link: trade its one-time code for a session, then drop it from the address bar.
+        const code = new URLSearchParams(window.location.search).get("code");
+        if (!code) {
+            setSaved(readSession());
+            setChecking(false);
+            return;
+        }
+        window.history.replaceState(null, "", window.location.pathname);
+        fetch(`${apilink}/admin/login-code`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ code }),
+        })
+            .then(async (res) => {
+                const json = await res.json().catch(() => null);
+                if (!res.ok) throw new Error(json?.message ?? "Couldn't sign in.");
+                signedIn(json);
+            })
+            .catch((error) => {
+                toastError(error.message);
+                setSaved(readSession());
+            })
+            .finally(() => setChecking(false));
+    }, [signedIn]);
 
     const session = useMemo<AdminSession | null>(
         () =>
-            token
+            saved
                 ? {
-                      token,
+                      token: saved.token,
+                      name: saved.name,
                       signOut() {
                           try {
                               localStorage.removeItem(TOKEN_KEY);
                           } catch {
                               /* storage unavailable */
                           }
-                          setToken(null);
+                          setSaved(null);
                       },
                   }
                 : null,
-        [token]
+        [saved]
     );
 
     if (checking) return <Shell>Loading...</Shell>;
     if (!session)
         return (
             <Shell>
-                <SignIn
-                    onSignedIn={(t, expires) => {
-                        try {
-                            localStorage.setItem(TOKEN_KEY, JSON.stringify({ token: t, expires }));
-                        } catch {
-                            /* storage unavailable: stays signed in for this visit only */
-                        }
-                        setToken(t);
-                    }}
-                />
+                <SignIn onSignedIn={signedIn} />
             </Shell>
         );
 
@@ -148,9 +189,12 @@ export default function Admin() {
         <Shell wide>
             <div className="flex flex-wrap items-center justify-between gap-4">
                 <h1 className="h-display text-3xl">Bookings</h1>
-                <button type="button" className="btn-ghost !px-4 !py-2" onClick={session.signOut}>
-                    <MdLogout aria-hidden /> Sign out
-                </button>
+                <div className="flex items-center gap-3">
+                    <span className="text-sm text-fog">Signed in as {session.name}</span>
+                    <button type="button" className="btn-ghost !px-4 !py-2" onClick={session.signOut}>
+                        <MdLogout aria-hidden /> Sign out
+                    </button>
+                </div>
             </div>
             <nav className="mt-6 flex gap-2 overflow-x-auto" aria-label="Admin sections">
                 {(
@@ -158,6 +202,7 @@ export default function Admin() {
                         ["bookings", "Bookings"],
                         ["add", "Add a booking"],
                         ["settings", "Hours & time off"],
+                        ["team", "Team & calendars"],
                     ] as const
                 ).map(([key, label]) => (
                     <button
@@ -176,6 +221,7 @@ export default function Admin() {
                 {tab === "bookings" && <BookingList session={session} />}
                 {tab === "add" && <AddBooking session={session} onAdded={() => setTab("bookings")} />}
                 {tab === "settings" && <Settings session={session} />}
+                {tab === "team" && <Team session={session} />}
             </div>
         </Shell>
     );
@@ -189,29 +235,33 @@ function Shell({ children, wide }: { children: React.ReactNode; wide?: boolean }
     );
 }
 
-function SignIn({ onSignedIn }: { onSignedIn(token: string, expires: number): void }) {
+// Managers get a one-time link by email. The owner can still use the password.
+function SignIn({ onSignedIn }: { onSignedIn(session: SavedSession): void }) {
+    const [mode, setMode] = useState<"link" | "password">("link");
+    const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [sentTo, setSentTo] = useState("");
     const [busy, setBusy] = useState(false);
     const [captcha, setCaptcha] = useState<string | null>(null);
     const turnstile = useRef<TurnstileHandle>(null);
 
-    const signIn = async (e: React.FormEvent) => {
+    const submit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!captcha) return toastError("Please wait a moment for the spam check to finish.");
         setBusy(true);
         try {
-            const res = await fetch(`${apilink}/admin/login`, {
+            const res = await fetch(`${apilink}/admin/${mode === "link" ? "login-link" : "login"}`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ password, turnstile_token: captcha }),
+                body: JSON.stringify(mode === "link" ? { email, turnstile_token: captcha } : { password, turnstile_token: captcha }),
             });
             const json = await res.json().catch(() => null);
-            if (!res.ok) {
-                toastError(json?.message ?? "Couldn't sign in.");
-                turnstile.current?.reset();
-                return;
-            }
-            onSignedIn(json.token, json.expires);
+            // Each spam check token works once.
+            turnstile.current?.reset();
+            setCaptcha(null);
+            if (!res.ok) return toastError(json?.message ?? "Couldn't sign in.");
+            if (mode === "link") setSentTo(email.trim());
+            else onSignedIn(json);
         } catch {
             toastError("Couldn't sign in. Check your connection.");
             turnstile.current?.reset();
@@ -220,21 +270,45 @@ function SignIn({ onSignedIn }: { onSignedIn(token: string, expires: number): vo
         }
     };
 
+    if (sentTo)
+        return (
+            <div className="card grid gap-4 p-8">
+                <h1 className="h-display text-2xl">Check your email</h1>
+                <p className="text-fog">
+                    If <span className="text-white">{sentTo}</span> is a manager on the team, a sign-in link is on its way. It works
+                    once, for the next 20 minutes. Check spam if it doesn't show up in a minute or two.
+                </p>
+                <button type="button" className="btn-ghost w-fit !px-4 !py-2" onClick={() => setSentTo("")}>
+                    Use a different email
+                </button>
+            </div>
+        );
+
     return (
-        <form onSubmit={signIn} className="card grid gap-4 p-8">
-            <h1 className="h-display text-2xl">Owner sign in</h1>
-            {/* Lets password managers file the password under the right account. */}
-            <input type="hidden" name="username" autoComplete="username" value={SITE.email} readOnly />
-            <label className="grid gap-2 text-sm font-semibold text-white/85">
-                Password
-                <input
-                    type="password"
-                    autoComplete="current-password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className={field}
-                />
-            </label>
+        <form onSubmit={submit} className="card grid gap-4 p-8">
+            <h1 className="h-display text-2xl">Sign in</h1>
+            {mode === "link" ? (
+                <label className="grid gap-2 text-sm font-semibold text-white/85">
+                    Your email
+                    <input type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} className={field} />
+                    <span className="text-xs font-normal text-fog">We'll email you a link to sign in. No password needed.</span>
+                </label>
+            ) : (
+                <>
+                    {/* Lets password managers file the password under the right account. */}
+                    <input type="hidden" name="username" autoComplete="username" value={SITE.email} readOnly />
+                    <label className="grid gap-2 text-sm font-semibold text-white/85">
+                        Owner password
+                        <input
+                            type="password"
+                            autoComplete="current-password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            className={field}
+                        />
+                    </label>
+                </>
+            )}
             <Turnstile
                 ref={turnstile}
                 siteKey={SITE.turnstileSiteKey}
@@ -242,8 +316,15 @@ function SignIn({ onSignedIn }: { onSignedIn(token: string, expires: number): vo
                 onToken={setCaptcha}
                 onError={() => toastError("The spam check couldn't load. Refresh the page.")}
             />
-            <button type="submit" className="btn-gold" disabled={busy || !password}>
-                {busy ? "Signing in..." : "Sign in"}
+            <button type="submit" className="btn-gold" disabled={busy || (mode === "link" ? !email : !password)}>
+                {busy ? "One moment..." : mode === "link" ? "Email me a sign-in link" : "Sign in"}
+            </button>
+            <button
+                type="button"
+                className="text-sm font-semibold text-fog hover:text-white"
+                onClick={() => setMode(mode === "link" ? "password" : "link")}
+            >
+                {mode === "link" ? "Owner? Sign in with the password" : "Manager? Sign in with your email"}
             </button>
         </form>
     );
@@ -405,7 +486,7 @@ function BookingCard({ booking: b, session, onChange }: { booking: Booking; sess
                 </p>
             )}
             {b.notes && <p className="mt-2 whitespace-pre-wrap text-sm text-white/85"><span className="text-fog">Customer notes: </span>{b.notes}</p>}
-            {b.admin_notes && <p className="mt-2 whitespace-pre-wrap text-sm text-gold-soft"><span className="text-fog">Your notes: </span>{b.admin_notes}</p>}
+            {b.admin_notes && <p className="mt-2 whitespace-pre-wrap text-sm text-gold-soft"><span className="text-fog">Team notes: </span>{b.admin_notes}</p>}
             <p className="mt-3 text-sm">
                 <span className="text-fog">Total</span> <span className="text-white">{money(b.total_cents)}</span>
                 <span className="mx-2 text-line">|</span>
@@ -433,7 +514,7 @@ function BookingCard({ booking: b, session, onChange }: { booking: Booking; sess
                         <input inputMode="decimal" value={form.paid} onChange={(e) => setForm({ ...form, paid: e.target.value })} className={small} />
                     </label>
                     <label className="grid gap-1 text-xs font-semibold text-fog sm:col-span-4">
-                        Your notes (only you see these)
+                        Team notes (in the team's calendars, never shown to the customer)
                         <textarea rows={2} value={form.admin_notes} onChange={(e) => setForm({ ...form, admin_notes: e.target.value })} className={small} />
                     </label>
                     <div className="flex flex-wrap gap-2 sm:col-span-4">
@@ -637,7 +718,8 @@ function AddBooking({ session, onAdded }: { session: AdminSession; onAdded(): vo
                 <input inputMode="decimal" value={form.paid} onChange={(e) => set({ paid: e.target.value })} className={field} />
             </label>
             <label className="grid gap-2 text-sm font-semibold text-white/85 sm:col-span-2">
-                Your notes
+                Team notes
+                <span className="text-xs font-normal text-fog">Shown in the team's calendars, never to the customer.</span>
                 <textarea rows={2} value={form.admin_notes} onChange={(e) => set({ admin_notes: e.target.value })} className={field} />
             </label>
             <button type="submit" className="btn-gold sm:col-span-2 sm:w-fit" disabled={busy}>
@@ -653,15 +735,13 @@ function Settings({ session }: { session: AdminSession }) {
     const api = useApi(session);
     const [settings, setSettings] = useState<BookingSettings | null>(null);
     const [blocked, setBlocked] = useState<Blocked[]>([]);
-    const [calendarUrl, setCalendarUrl] = useState("");
     const [newBlock, setNewBlock] = useState({ start_date: "", end_date: "", reason: "" });
 
     useEffect(() => {
-        api<{ settings: BookingSettings; blocked: Blocked[]; calendarUrl: string }>("/admin/settings")
+        api<{ settings: BookingSettings; blocked: Blocked[] }>("/admin/settings")
             .then((data) => {
                 setSettings(data.settings);
                 setBlocked(data.blocked);
-                setCalendarUrl(data.calendarUrl);
             })
             .catch((error) => toastError(error.message));
     }, [api]);
@@ -780,7 +860,7 @@ function Settings({ session }: { session: AdminSession }) {
                             <input type="date" value={newBlock.end_date} onChange={(e) => setNewBlock({ ...newBlock, end_date: e.target.value })} className={`${small} [color-scheme:dark]`} />
                         </label>
                         <label className="grid gap-1 text-xs font-semibold text-fog sm:col-span-2">
-                            Reason (only you see this)
+                            Reason (only the dashboard shows this)
                             <input value={newBlock.reason} onChange={(e) => setNewBlock({ ...newBlock, reason: e.target.value })} className={small} />
                         </label>
                         <button type="submit" className="btn-ghost w-fit !px-4 !py-2">
@@ -808,27 +888,226 @@ function Settings({ session }: { session: AdminSession }) {
                         </ul>
                     )}
                 </section>
-
-                <section className="card p-6 sm:p-8">
-                    <h2 className="font-display text-lg font-semibold text-white">Calendar feed</h2>
-                    <p className="mt-1 text-sm text-fog">
-                        Subscribe to this link in Google Calendar (Other calendars → From URL) or on your iPhone (Settings →
-                        Calendar → Accounts → Add Subscribed Calendar). Confirmed bookings show up automatically. Keep the link
-                        private: anyone with it can see your bookings.
-                    </p>
-                    <div className="mt-4 flex gap-2">
-                        <input readOnly value={calendarUrl} className={`${small} font-mono text-xs`} onFocus={(e) => e.target.select()} />
-                        <button
-                            type="button"
-                            className="btn-ghost shrink-0 !px-3"
-                            aria-label="Copy calendar link"
-                            onClick={() => navigator.clipboard.writeText(calendarUrl).then(() => toastSuccess("Copied."))}
-                        >
-                            <MdContentCopy />
-                        </button>
-                    </div>
-                </section>
             </div>
+        </div>
+    );
+}
+
+// ---- Team & calendars ----------------------------------------------------------------------------------------
+
+const tokenOf = (calendarUrl: string) => new URL(calendarUrl).searchParams.get("token") ?? "";
+
+// Ways to get someone's calendar link onto their phone: a text with the /calendar page link, or the buttons directly.
+function CalendarLinks({ calendarUrl, name }: { calendarUrl: string; name: string }) {
+    const token = tokenOf(calendarUrl);
+    const page = subscribePageUrl(token);
+    const links = calendarLinks(token);
+    const message = `Hi ${name.split(" ")[0]}, here's your Prestigious Gaming bookings calendar. Open it to add every party to your Apple or Google Calendar: ${page}`;
+    return (
+        <div className="flex flex-wrap gap-2">
+            <a href={`sms:?&body=${encodeURIComponent(message)}`} className="btn-ghost !px-3 !py-1.5 !text-xs">
+                <MdSms aria-hidden /> Text link
+            </a>
+            <button
+                type="button"
+                className="btn-ghost !px-3 !py-1.5 !text-xs"
+                onClick={() => navigator.clipboard.writeText(page).then(() => toastSuccess("Link copied. Paste it into a text or email."))}
+            >
+                <MdContentCopy aria-hidden /> Copy link
+            </button>
+            <a href={links.apple} className="btn-ghost !px-3 !py-1.5 !text-xs">
+                Apple Calendar
+            </a>
+            <a href={links.google} target="_blank" rel="noopener noreferrer" className="btn-ghost !px-3 !py-1.5 !text-xs">
+                Google Calendar <MdOpenInNew aria-hidden />
+            </a>
+        </div>
+    );
+}
+
+function Team({ session }: { session: AdminSession }) {
+    const api = useApi(session);
+    const [data, setData] = useState<{ me: string; staff: Member[]; ownerCalendarUrl: string } | null>(null);
+    const [form, setForm] = useState({ name: "", email: "", role: "worker" as Member["role"] });
+    const [busy, setBusy] = useState(false);
+
+    useEffect(() => {
+        api<{ me: string; staff: Member[]; ownerCalendarUrl: string }>("/admin/staff")
+            .then(setData)
+            .catch((error) => toastError(error.message));
+    }, [api]);
+
+    if (!data) return <p className="text-fog">Loading...</p>;
+
+    const replace = (member: Member) =>
+        setData((d) => d && { ...d, staff: d.staff.map((m) => (m.id === member.id ? member : m)) });
+
+    const add = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setBusy(true);
+        try {
+            const { member } = await api<{ member: Member }>("/admin/staff", { method: "POST", body: JSON.stringify(form) });
+            setData((d) => d && { ...d, staff: [...d.staff, member] });
+            setForm({ name: "", email: "", role: "worker" });
+            toastSuccess(`${member.name} added. Send them their calendar link below.`);
+        } catch (error) {
+            toastError((error as Error).message);
+        } finally {
+            setBusy(false);
+        }
+    };
+
+    const update = async (m: Member, body: Record<string, unknown>, message: string) => {
+        try {
+            const { member } = await api<{ member: Member }>(`/admin/staff/${m.id}`, { method: "PATCH", body: JSON.stringify(body) });
+            replace(member);
+            toastSuccess(message);
+        } catch (error) {
+            toastError((error as Error).message);
+        }
+    };
+
+    const remove = async (m: Member) => {
+        if (!window.confirm(`Remove ${m.name}? Their calendar link stops working${m.role === "manager" ? " and they're signed out" : ""}.`)) return;
+        try {
+            await api(`/admin/staff/${m.id}`, { method: "DELETE" });
+            setData((d) => d && { ...d, staff: d.staff.filter((s) => s.id !== m.id) });
+        } catch (error) {
+            toastError((error as Error).message);
+        }
+    };
+
+    return (
+        <div className="grid gap-6 lg:grid-cols-[1fr_1.4fr]">
+            <div className="grid content-start gap-6">
+                {/* Managers find their own link in the team list. */}
+                {data.me === "owner" && (
+                    <section className="card p-6 sm:p-8">
+                        <h2 className="font-display text-lg font-semibold text-white">Your calendar</h2>
+                        <p className="mt-1 text-sm text-fog">
+                            Add every confirmed party to your own Apple or Google Calendar. On an iPhone, tap Apple Calendar.
+                            Google only adds calendar links from a computer.
+                        </p>
+                        <div className="mt-4">
+                            <CalendarLinks calendarUrl={data.ownerCalendarUrl} name={session.name} />
+                        </div>
+                    </section>
+                )}
+                <form onSubmit={add} className="card grid gap-4 p-6 sm:p-8">
+                    <h2 className="font-display text-lg font-semibold text-white">Add someone</h2>
+                    <label className="grid gap-1 text-sm font-semibold text-white/85">
+                        Name
+                        <input required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className={small} />
+                    </label>
+                    <label className="grid gap-1 text-sm font-semibold text-white/85">
+                        Email {form.role === "worker" && <span className="text-xs font-normal text-fog">(optional for workers)</span>}
+                        <input
+                            type="email"
+                            required={form.role === "manager"}
+                            value={form.email}
+                            onChange={(e) => setForm({ ...form, email: e.target.value })}
+                            className={small}
+                        />
+                    </label>
+                    <label className="grid gap-1 text-sm font-semibold text-white/85">
+                        Access
+                        <select value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value as Member["role"] })} className={small}>
+                            <option value="worker">Worker: sees bookings in their calendar</option>
+                            <option value="manager">Manager: can also sign in here and change bookings, hours and the team</option>
+                        </select>
+                    </label>
+                    <button type="submit" className="btn-gold w-fit !px-4 !py-2" disabled={busy}>
+                        {busy ? "Adding..." : "Add to team"}
+                    </button>
+                </form>
+            </div>
+
+            <section className="card p-6 sm:p-8">
+                <h2 className="font-display text-lg font-semibold text-white">Team</h2>
+                <p className="mt-1 text-sm text-fog">
+                    Everyone gets their own calendar link with every confirmed party: time, address, customer phone, add-ons,
+                    what's due and team notes. Text it to them and they tap to add it. Managers sign in at{" "}
+                    <span className="text-white">{SITE.url.replace("https://", "")}/admin</span> with their email: no password.
+                </p>
+                {!data.staff.length ? (
+                    <p className="mt-6 text-fog">No one added yet.</p>
+                ) : (
+                    <ul className="mt-6 grid gap-4">
+                        {data.staff.map((m) => (
+                            <li key={m.id} className="rounded-2xl border border-line p-4">
+                                <div className="flex flex-wrap items-start justify-between gap-2">
+                                    <div>
+                                        <p className="font-semibold text-white">
+                                            {m.name}
+                                            {m.id === data.me && <span className="text-fog"> (you)</span>}
+                                        </p>
+                                        {m.email && <p className="text-sm text-fog">{m.email}</p>}
+                                        {m.role === "manager" && (
+                                            <p className="text-xs text-fog">
+                                                {m.last_login_at ? `Last signed in ${new Date(m.last_login_at).toLocaleDateString("en-US", { timeZone: TIME_ZONE })}` : "Hasn't signed in yet"}
+                                            </p>
+                                        )}
+                                    </div>
+                                    <span
+                                        className={`rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase ${
+                                            m.role === "manager" ? "bg-gold/15 text-gold" : "bg-white/10 text-fog"
+                                        }`}
+                                    >
+                                        {m.role}
+                                    </span>
+                                </div>
+                                <div className="mt-3">
+                                    <CalendarLinks calendarUrl={m.calendarUrl} name={m.name} />
+                                </div>
+                                <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs font-semibold text-fog">
+                                    {m.id !== data.me &&
+                                        (m.role === "worker" ? (
+                                            <button
+                                                type="button"
+                                                className="hover:text-white"
+                                                onClick={() => {
+                                                    if (!m.email) return toastError(`Add an email for ${m.name} first: managers sign in with it.`);
+                                                    update(m, { ...m, role: "manager" }, `${m.name} can now sign in.`);
+                                                }}
+                                            >
+                                                Make manager
+                                            </button>
+                                        ) : (
+                                            <button type="button" className="hover:text-white" onClick={() => update(m, { ...m, role: "worker" }, `${m.name} is now a worker.`)}>
+                                                Make worker
+                                            </button>
+                                        ))}
+                                    <button
+                                        type="button"
+                                        className="hover:text-white"
+                                        onClick={() => {
+                                            const email = window.prompt(`Email for ${m.name}`, m.email);
+                                            if (email !== null) update(m, { ...m, email }, "Email saved.");
+                                        }}
+                                    >
+                                        {m.email ? "Change email" : "Add email"}
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className="hover:text-white"
+                                        onClick={() => {
+                                            if (window.confirm(`Make a new calendar link for ${m.name}? Their old link stops working, so they'll need to add the new one.`))
+                                                update(m, { new_calendar_link: true }, "New link ready. Send it to them.");
+                                        }}
+                                    >
+                                        New calendar link
+                                    </button>
+                                    {m.id !== data.me && (
+                                        <button type="button" className="hover:text-red-300" onClick={() => remove(m)}>
+                                            Remove
+                                        </button>
+                                    )}
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
+                )}
+            </section>
         </div>
     );
 }

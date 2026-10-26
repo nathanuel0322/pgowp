@@ -48,10 +48,15 @@ Cloudflare Pages builds and deploys on every push to `master`.
 - Checkout inserts a `pending` booking that holds the slot for 35 minutes, then opens Stripe Checkout. The booking
   becomes `confirmed` from the `checkout.session.completed` webhook (`/api/stripe/webhook`) or from
   `/book/confirmed` asking `/api/booking/status`, whichever comes first. Confirmation emails are sent once.
-- `/admin` (`Admin.tsx`): owner dashboard. Bookings, manual bookings (phone, school and corporate events), weekly
-  hours, gap between parties, capacity and time off, plus a private calendar feed (`/api/booking/calendar.ics`).
-  Signs in with `ADMIN_PASSWORD`. Sessions and the feed link are signed with `BOOKING_SECRET`, falling back to the
-  Pages project's existing `JWT_SECRET`.
+- `/admin` (`Admin.tsx`): bookings dashboard. Bookings, manual bookings (phone, school and corporate events), weekly
+  hours, gap between parties, capacity, time off and the team. The owner signs in with `ADMIN_PASSWORD`. Managers
+  (the `staff` table, e.g. Tricia, who runs day-to-day booking) sign in with a one-time link emailed through Resend,
+  and can do everything the owner can. Sessions and the owner's feed link are signed with `BOOKING_SECRET`, falling
+  back to the Pages project's existing `JWT_SECRET`.
+- Calendars: everyone on the team (managers and workers) has their own random feed link
+  (`/api/booking/calendar.ics?token=`). The dashboard texts them a `/calendar?token=` page with Apple and Google
+  Calendar buttons. Google refreshes subscribed calendars only every several hours; Apple is quicker.
+- The business never takes Thursday parties: Thursday is closed in `DEFAULT_SETTINGS` and in the saved settings.
 - `/bday-card` makes birthday e-invites fully in the browser (`src/lib/invite.ts`).
 
 ## Production environment (Cloudflare Pages)

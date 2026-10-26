@@ -28,14 +28,15 @@ export interface BookingSettings {
 }
 
 // Used when the booking_settings row is missing. Hours are the ones that were set in 10to8 when online booking
-// moved here (Oct 2026). The owner changes the real values on /admin.
+// moved here (Oct 2026), except Thursday: the business never takes Thursday parties. The owner changes the real
+// values on /admin.
 export const DEFAULT_SETTINGS: BookingSettings = {
     weekly_hours: [
         { open: "17:30", close: "23:30" },
         null,
         null,
         null,
-        { open: "13:00", close: "15:00" },
+        null,
         { open: "12:00", close: "22:30" },
         { open: "10:00", close: "23:45" },
     ],

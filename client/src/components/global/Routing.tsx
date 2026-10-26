@@ -18,6 +18,7 @@ import Seo from "./Seo";
 const BookParty = lazy(() => import("../../screens/BookParty"));
 const BookingConfirmed = lazy(() => import("../../screens/BookingConfirmed"));
 const Admin = lazy(() => import("../../screens/Admin"));
+const CalendarSubscribe = lazy(() => import("../../screens/CalendarSubscribe"));
 const EInvites = lazy(() => import("../../screens/EInvites"));
 
 export default function Routing() {
@@ -44,6 +45,7 @@ export default function Routing() {
                         <Route path="/book" element={<BookParty />} />
                         <Route path="/book/confirmed" element={<BookingConfirmed />} />
                         <Route path="/admin" element={<Admin />} />
+                        <Route path="/calendar" element={<CalendarSubscribe />} />
                         <Route path="*" element={<NotFound />} />
                     </Routes>
                 </Suspense>

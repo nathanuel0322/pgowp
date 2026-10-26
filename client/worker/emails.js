@@ -1,4 +1,4 @@
-// Booking emails sent through Resend: the customer's confirmation and the owner's copy. Every customer-entered value
+// Emails sent through Resend: the customer's confirmation, the owner's copy and managers' sign-in links. Every entered value
 // goes through escapeHtml before it reaches the HTML.
 import { Resend } from "resend";
 import { describeWhen, dollars, escapeHtml } from "./shared.js";
@@ -102,6 +102,31 @@ export async function sendBookingConfirmation(env, booking) {
     for (const { error } of results) if (error) console.error("Booking email failed:", error);
     // Nothing went out: throw so the caller retries. If only one failed, retrying would duplicate the other.
     if (results.every((r) => r.error)) throw new Error("Both booking emails failed");
+}
+
+// A manager's one-time sign-in link for /admin. Failures are only logged: the sign-in form says the same thing either
+// way, so it can't reveal who's on the team.
+export async function sendLoginLink(env, { to, name, url, minutes }) {
+    if (env.NODE_ENV === "development") {
+        console.log(`Sign-in link for ${to}: ${url}`);
+        return;
+    }
+    try {
+        const { error } = await new Resend(env.RESEND_KEY).emails.send({
+            from: FROM,
+            to,
+            subject: "Your sign-in link for the bookings dashboard",
+            html: layout(
+                "Sign in to bookings",
+                `<p style="margin:0 0 16px;">Hi ${escapeHtml(name.split(" ")[0])}, tap the button to sign in to the bookings dashboard. The link works once, for the next ${minutes} minutes.</p>
+                <p style="margin:0 0 16px;"><a href="${escapeHtml(url)}" style="display:inline-block;background:#f5c542;color:#0b0b12;font-weight:bold;text-decoration:none;padding:12px 22px;border-radius:999px;">Sign in</a></p>
+                <p style="margin:0;color:#a1a1aa;font-size:13px;">Didn't ask for this? You can ignore this email.</p>`
+            ),
+        });
+        if (error) console.error("Sign-in link email failed:", error);
+    } catch (error) {
+        console.error("Sign-in link email failed:", error);
+    }
 }
 
 export async function sendOwnerAlert(env, subject, message) {

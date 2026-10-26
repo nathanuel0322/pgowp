@@ -112,11 +112,12 @@ export const NOT_FOUND_META: PageMeta = {
 };
 
 // Real routes that stay out of search results (booking flow, owner dashboard, print view).
-export const APP_ROUTES = ["/book", "/book/confirmed", "/admin", "/e-invites"];
+export const APP_ROUTES = ["/book", "/book/confirmed", "/admin", "/calendar", "/e-invites"];
 
 export function metaForPath(pathname: string): PageMeta {
     const clean = pathname.length > 1 ? pathname.replace(/\/+$/, "") : pathname;
-    if (clean === "/admin") return { path: clean, title: `Owner dashboard | ${SITE.name}`, description: "", noindex: true };
+    if (clean === "/admin") return { path: clean, title: `Bookings dashboard | ${SITE.name}`, description: "", noindex: true };
+    if (clean === "/calendar") return { path: clean, title: `Add the bookings calendar | ${SITE.name}`, description: "", noindex: true };
     if (APP_ROUTES.includes(clean))
         return { path: clean, title: `Book Your Party | ${SITE.name}`, description: PAGES["/"].description, noindex: true };
     return PAGES[clean] ?? NOT_FOUND_META;
