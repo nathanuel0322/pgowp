@@ -1,10 +1,14 @@
 import { MdCheck, MdPhone } from "react-icons/md";
 import { BookButton } from "../components/global/Header";
 import { CtaBand, PageHero, SectionHeading } from "../components/ui";
-import { ADD_ON_GROUPS, GROUP_EVENTS, PARTY_PACKAGES, formatPrice } from "../data/packages";
+import Reviews from "../components/home/Reviews";
+import { GROUP_EVENTS, formatPrice } from "../data/packages";
+import { useCatalog } from "../lib/catalogStore";
 import { SITE } from "../site";
 
 export default function Packages() {
+    const { packages, addOnGroups } = useCatalog();
+
     return (
         <>
             <PageHero
@@ -19,7 +23,7 @@ export default function Packages() {
 
             <section className="wrap" aria-label="Party packages">
                 <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-                    {PARTY_PACKAGES.map((p) => (
+                    {packages.map((p) => (
                         <article
                             key={p.id}
                             id={p.id}
@@ -79,7 +83,7 @@ export default function Packages() {
                     lede="Stack any of these onto your party. Prices are per party unless noted."
                 />
                 <div className="mt-12 grid gap-5 md:grid-cols-2">
-                    {ADD_ON_GROUPS.map((group) => (
+                    {addOnGroups.map((group) => (
                         <div key={group.title} className="card p-7 sm:p-8">
                             <h3 className="font-display text-lg font-semibold text-white">{group.title}</h3>
                             <ul className="mt-5 divide-y divide-line">
@@ -99,6 +103,8 @@ export default function Packages() {
                     ))}
                 </div>
             </section>
+
+            <Reviews />
 
             <section className="wrap mt-28">
                 <div className="card relative overflow-hidden p-8 sm:p-12">

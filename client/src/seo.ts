@@ -1,6 +1,6 @@
 import { areaForPath } from "./data/areas";
 import { Faq, FAQS } from "./data/faq";
-import { PARTY_PACKAGES } from "./data/packages";
+import { getCatalog } from "./lib/catalogStore";
 import { PageMeta, SERVICE_AREAS, SITE, absoluteUrl } from "./site";
 
 const BUSINESS_ID = SITE.url + "/#business";
@@ -31,7 +31,7 @@ function businessSchema() {
         hasOfferCatalog: {
             "@type": "OfferCatalog",
             name: "Party packages",
-            itemListElement: PARTY_PACKAGES.map((p) => ({
+            itemListElement: getCatalog().packages.map((p) => ({
                 "@type": "Offer",
                 price: p.price,
                 priceCurrency: "USD",

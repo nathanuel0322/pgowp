@@ -1,11 +1,14 @@
-// Emails sent through Resend: the customer's confirmation, the owner's copy and managers' sign-in links. Every entered value
-// goes through escapeHtml before it reaches the HTML.
+// Emails sent through Resend: the customer's confirmation and day-before reminder, the team's copy of each booking and
+// managers' sign-in links. Every entered value goes through escapeHtml before it reaches the HTML.
 import { Resend } from "resend";
 import { describeWhen, dollars, escapeHtml } from "./shared.js";
 
 const OWNER = "tbnd@prestigiousgamingonwheelsplus.com";
 const FROM = `Prestigious Gaming on Wheels Plus <${OWNER}>`;
 const PHONE = "(718) 673-8529";
+
+// The business inbox plus every manager's email, without repeats.
+const teamRecipients = (team = []) => [...new Set([OWNER, ...team.map((e) => e.toLowerCase())])];
 
 function layout(title, bodyHtml) {
     return `<!DOCTYPE html>
@@ -65,7 +68,7 @@ function detailsTable(b, { forOwner }) {
     </table>`;
 }
 
-export async function sendBookingConfirmation(env, booking) {
+export async function sendBookingConfirmation(env, booking, team = []) {
     const resend = new Resend(env.RESEND_KEY);
     const firstName = booking.customer_name.split(" ")[0];
 
@@ -93,7 +96,7 @@ export async function sendBookingConfirmation(env, booking) {
         }),
         resend.emails.send({
             from: FROM,
-            to: OWNER,
+            to: teamRecipients(team),
             replyTo: booking.customer_email,
             subject: `New booking: ${booking.package_name}, ${describeWhen(booking)}`,
             html: ownerHtml,
@@ -102,6 +105,31 @@ export async function sendBookingConfirmation(env, booking) {
     for (const { error } of results) if (error) console.error("Booking email failed:", error);
     // Nothing went out: throw so the caller retries. If only one failed, retrying would duplicate the other.
     if (results.every((r) => r.error)) throw new Error("Both booking emails failed");
+}
+
+// The day before the party. Throws when it doesn't go out, so the caller can try again on the next run.
+export async function sendReminder(env, booking) {
+    if (env.NODE_ENV === "development") {
+        console.log(`Reminder for ${booking.customer_email}: ${booking.package_name}, ${describeWhen(booking)}`);
+        return;
+    }
+    const firstName = booking.customer_name.split(" ")[0];
+    const due = booking.total_cents - booking.paid_cents;
+    const { error } = await new Resend(env.RESEND_KEY).emails.send({
+        from: FROM,
+        to: booking.customer_email,
+        replyTo: OWNER,
+        subject: `Reminder: your ${booking.package_name} is tomorrow`,
+        html: layout(
+            "See you tomorrow!",
+            `<p style="margin:0 0 12px;">Hi ${escapeHtml(firstName)}, this is a reminder that your party is tomorrow. Here are the details we have:</p>
+            ${detailsTable(booking, { forOwner: false })}
+            <p style="margin:0 0 12px;">Please have at least 5 car lengths of parking ready for the trailer.</p>
+            ${due > 0 ? `<p style="margin:0 0 12px;">The amount due on the day is paid when we arrive. Extra children or add-ons not listed above are settled then too.</p>` : ""}
+            <p style="margin:0;">Running late, need to change something or have a question? Call or text ${PHONE}, or just reply to this email.</p>`
+        ),
+    });
+    if (error) throw new Error(`Resend: ${error.message ?? JSON.stringify(error)}`);
 }
 
 // A manager's one-time sign-in link for /admin. Failures are only logged: the sign-in form says the same thing either
@@ -129,11 +157,11 @@ export async function sendLoginLink(env, { to, name, url, minutes }) {
     }
 }
 
-export async function sendOwnerAlert(env, subject, message) {
+export async function sendOwnerAlert(env, team, subject, message) {
     try {
         const { error } = await new Resend(env.RESEND_KEY).emails.send({
             from: FROM,
-            to: OWNER,
+            to: teamRecipients(team),
             subject,
             html: layout(subject, `<p style="margin:0;">${escapeHtml(message)}</p>`),
         });

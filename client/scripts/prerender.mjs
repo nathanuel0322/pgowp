@@ -9,7 +9,7 @@ const dist = path.join(root, "dist");
 const serverDir = path.join(root, "dist-server");
 
 const template = fs.readFileSync(path.join(dist, "index.html"), "utf8");
-const { render, routes, appRoutes, siteUrl, notFoundHead } = await import(
+const { render, routes, appRoutes, siteUrl, notFoundHead, loadSiteData } = await import(
     pathToFileURL(path.join(serverDir, "entry-server.js")).href
 );
 
@@ -18,11 +18,13 @@ const ROOT = '<div id="root"><!--app-html--></div>';
 if (!SEO_BLOCK.test(template) || !template.includes(ROOT)) throw new Error("index.html placeholders missing");
 
 const page = (head, rootHtml) => template.replace(SEO_BLOCK, head).replace(ROOT, rootHtml);
+const { pageData, shellData, reviewCount } = await loadSiteData();
+console.log(`price list and ${reviewCount} reviews ready`);
 const fileFor = (route) => path.join(dist, route === "/" ? "index.html" : `${route.slice(1)}.html`);
 
 for (const route of routes) {
     const { html, head } = render(route);
-    fs.writeFileSync(fileFor(route), page(head, `<div id="root" data-prerendered="${route}">${html}</div>`));
+    fs.writeFileSync(fileFor(route), page(head + pageData, `<div id="root" data-prerendered="${route}">${html}</div>`));
     console.log(`prerendered ${route}`);
 }
 
@@ -31,7 +33,7 @@ for (const route of routes) {
 const shellHead = notFoundHead.replace(/<title>.*?<\/title>/, `<title>Prestigious Gaming on Wheels Plus</title>`);
 for (const route of appRoutes) {
     fs.mkdirSync(path.dirname(fileFor(route)), { recursive: true });
-    fs.writeFileSync(fileFor(route), page(shellHead, '<div id="root"></div>'));
+    fs.writeFileSync(fileFor(route), page(shellHead + shellData, '<div id="root"></div>'));
 }
 fs.writeFileSync(path.join(dist, "404.html"), page(notFoundHead, '<div id="root"></div>'));
 

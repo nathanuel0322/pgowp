@@ -3,10 +3,10 @@ import { MdContentCopy, MdLogout, MdOpenInNew, MdPhone, MdPlace, MdSms } from "r
 import { apilink, toastError, toastSuccess } from "../GlobalFunctions";
 import { field } from "../components/booking/field";
 import Turnstile, { TurnstileHandle } from "../components/Turnstile";
-import { PARTY_PACKAGES, formatPrice } from "../data/packages";
+import { formatPrice } from "../data/packages";
 import {
-    BOOKABLE_ADD_ON_GROUPS,
     TIME_ZONE,
+    bookableAddOnGroups,
     addDays,
     formatDate,
     formatTime,
@@ -15,9 +15,11 @@ import {
     type PricedLine,
 } from "../lib/booking";
 import { calendarLinks, subscribePageUrl } from "../lib/calendar";
+import { DEFAULT_CATALOG, describeMinutes, type Catalog } from "../lib/catalog";
+import { getCatalog, refreshCatalog, setCatalog, useCatalog } from "../lib/catalogStore";
 import { SITE } from "../site";
 
-// Bookings dashboard: bookings, manual bookings, hours, time off and the team's calendar links. The owner signs in
+// Bookings dashboard: bookings, manual bookings, prices, hours, time off and the team's calendar links. The owner signs in
 // with the ADMIN_PASSWORD set on Pages, managers with a one-time link emailed to them. The worker checks the signed
 // session token on every request.
 
@@ -121,7 +123,7 @@ function useApi(session: AdminSession) {
 export default function Admin() {
     const [saved, setSaved] = useState<SavedSession | null>(null);
     const [checking, setChecking] = useState(true);
-    const [tab, setTab] = useState<"bookings" | "add" | "settings" | "team">("bookings");
+    const [tab, setTab] = useState<"bookings" | "add" | "prices" | "settings" | "team">("bookings");
 
     const signedIn = useCallback((s: SavedSession) => {
         try {
@@ -201,6 +203,7 @@ export default function Admin() {
                     [
                         ["bookings", "Bookings"],
                         ["add", "Add a booking"],
+                        ["prices", "Prices & packages"],
                         ["settings", "Hours & time off"],
                         ["team", "Team & calendars"],
                     ] as const
@@ -220,6 +223,7 @@ export default function Admin() {
             <div className="mt-6">
                 {tab === "bookings" && <BookingList session={session} />}
                 {tab === "add" && <AddBooking session={session} onAdded={() => setTab("bookings")} />}
+                {tab === "prices" && <Prices session={session} />}
                 {tab === "settings" && <Settings session={session} />}
                 {tab === "team" && <Team session={session} />}
             </div>
@@ -579,8 +583,9 @@ function BookingCard({ booking: b, session, onChange }: { booking: Booking; sess
 
 function AddBooking({ session, onAdded }: { session: AdminSession; onAdded(): void }) {
     const api = useApi(session);
+    const catalog = useCatalog();
     const [form, setForm] = useState({
-        package: PARTY_PACKAGES[0].id,
+        package: catalog.packages[0].id,
         package_name: "",
         minutes: "120",
         date: "",
@@ -625,7 +630,7 @@ function AddBooking({ session, onAdded }: { session: AdminSession; onAdded(): vo
             <label className="grid gap-2 text-sm font-semibold text-white/85">
                 Party
                 <select value={form.package} onChange={(e) => set({ package: e.target.value })} className={field}>
-                    {PARTY_PACKAGES.map((p) => (
+                    {catalog.packages.map((p) => (
                         <option key={p.id} value={p.id}>
                             {p.name} ({formatPrice(p.price)})
                         </option>
@@ -675,7 +680,7 @@ function AddBooking({ session, onAdded }: { session: AdminSession; onAdded(): vo
                 <fieldset className="sm:col-span-2">
                     <legend className="text-sm font-semibold text-white/85">Add-ons</legend>
                     <div className="mt-2 flex flex-wrap gap-2">
-                        {BOOKABLE_ADD_ON_GROUPS.flatMap((g) => g.items).map((item) => {
+                        {bookableAddOnGroups(catalog).flatMap((g) => g.items).map((item) => {
                             const choice = addOns.find((a) => a.id === item.id);
                             return (
                                 <span key={item.id} className={`flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs ${choice ? "border-gold/60 text-gold" : "border-line text-fog"}`}>
@@ -726,6 +731,353 @@ function AddBooking({ session, onAdded }: { session: AdminSession; onAdded(): vo
                 {busy ? "Saving..." : "Add booking"}
             </button>
         </form>
+    );
+}
+
+// ---- Prices & packages ---------------------------------------------------------------------------------------
+// Edits the live price list (src/lib/catalog.ts). Numbers stay as typed text until saved; the worker checks
+// everything again and answers with the saved list.
+
+interface PackageForm {
+    id: string;
+    name: string;
+    price: string;
+    deposit: string;
+    minutes: string;
+    duration: string;
+    blurb: string;
+    features: string;
+    featured: boolean;
+}
+
+interface AddOnForm {
+    id: string;
+    name: string;
+    price: string;
+    note: string;
+    perChild: boolean;
+    minutes: string;
+}
+
+interface CatalogForm {
+    packages: PackageForm[];
+    addOnGroups: { title: string; items: AddOnForm[] }[];
+}
+
+const toForm = (c: Catalog): CatalogForm => ({
+    packages: c.packages.map((p) => ({
+        id: p.id,
+        name: p.name,
+        price: String(p.price),
+        deposit: String(p.deposit),
+        minutes: String(p.minutes),
+        duration: p.duration,
+        blurb: p.blurb,
+        features: p.features.join("\n"),
+        featured: !!p.featured,
+    })),
+    addOnGroups: c.addOnGroups.map((g) => ({
+        title: g.title,
+        items: g.items.map((a) => ({
+            id: a.id,
+            name: a.name,
+            price: a.price === null ? "" : String(a.price),
+            note: a.note ?? "",
+            perChild: !!a.perChild,
+            minutes: a.minutes ? String(a.minutes) : "",
+        })),
+    })),
+});
+
+const fromForm = (f: CatalogForm) => ({
+    packages: f.packages.map((p) => ({ ...p, features: p.features.split("\n") })),
+    addOnGroups: f.addOnGroups,
+});
+
+const newPackage = (): PackageForm => ({
+    id: "",
+    name: "",
+    price: "",
+    deposit: "",
+    minutes: "120",
+    duration: "2 hours",
+    blurb: "",
+    features: "",
+    featured: false,
+});
+
+const newAddOn = (): AddOnForm => ({ id: "", name: "", price: "", note: "", perChild: false, minutes: "" });
+
+function move<T>(list: T[], from: number, to: number) {
+    if (to < 0 || to >= list.length) return list;
+    const next = [...list];
+    const [item] = next.splice(from, 1);
+    next.splice(to, 0, item);
+    return next;
+}
+
+function Prices({ session }: { session: AdminSession }) {
+    const api = useApi(session);
+    const [form, setForm] = useState<CatalogForm | null>(null);
+    const [saving, setSaving] = useState(false);
+    const [changed, setChanged] = useState(false);
+
+    useEffect(() => {
+        refreshCatalog().then(() => setForm(toForm(getCatalog())));
+    }, []);
+
+    if (!form) return <p className="text-fog">Loading...</p>;
+
+    const update = (next: CatalogForm) => {
+        setForm(next);
+        setChanged(true);
+    };
+    const setPackage = (i: number, patch: Partial<PackageForm>) =>
+        update({ ...form, packages: form.packages.map((p, j) => (j === i ? { ...p, ...patch } : p)) });
+    const setGroup = (g: number, patch: Partial<CatalogForm["addOnGroups"][number]>) =>
+        update({ ...form, addOnGroups: form.addOnGroups.map((x, j) => (j === g ? { ...x, ...patch } : x)) });
+    const setAddOn = (g: number, i: number, patch: Partial<AddOnForm>) =>
+        setGroup(g, { items: form.addOnGroups[g].items.map((a, j) => (j === i ? { ...a, ...patch } : a)) });
+
+    const save = async () => {
+        setSaving(true);
+        try {
+            const { catalog } = await api<{ catalog: Catalog }>("/admin/catalog", {
+                method: "PUT",
+                body: JSON.stringify(fromForm(form)),
+            });
+            setCatalog(catalog);
+            setForm(toForm(catalog));
+            setChanged(false);
+            toastSuccess("Prices saved. The website and booking page show them now.");
+        } catch (error) {
+            toastError((error as Error).message);
+        } finally {
+            setSaving(false);
+        }
+    };
+
+    const restoreOriginal = () => {
+        if (window.confirm("Put every package, add-on and price back to how the website first launched? Nothing changes until you press Save."))
+            update(toForm(DEFAULT_CATALOG));
+    };
+
+    const label = "grid gap-1 text-xs font-semibold text-fog";
+    const iconButton = "rounded-full border border-line px-2.5 py-1 text-xs font-semibold text-fog hover:border-gold hover:text-white disabled:opacity-30";
+
+    return (
+        <div className="grid gap-6">
+            <p className="text-sm text-fog">
+                What customers see on the website and can book online. Customers pay the deposit online and the rest on the day.
+                Changes don&apos;t touch parties that are already booked.
+            </p>
+
+            <section className="grid gap-4">
+                <h2 className="font-display text-lg font-semibold text-white">Party packages</h2>
+                <p className="-mt-2 text-sm text-fog">The first three also show on the home page.</p>
+                {form.packages.map((p, i) => (
+                    <div key={i} className="card grid gap-4 p-5 sm:grid-cols-4 sm:p-6">
+                        <label className={`${label} sm:col-span-2`}>
+                            Name
+                            <input value={p.name} onChange={(e) => setPackage(i, { name: e.target.value })} className={small} />
+                        </label>
+                        <label className={label}>
+                            Price ($)
+                            <input inputMode="decimal" value={p.price} onChange={(e) => setPackage(i, { price: e.target.value })} className={small} />
+                        </label>
+                        <label className={label}>
+                            Deposit paid online ($)
+                            <input inputMode="decimal" value={p.deposit} onChange={(e) => setPackage(i, { deposit: e.target.value })} className={small} />
+                        </label>
+                        <label className={label}>
+                            Length (minutes)
+                            <input
+                                inputMode="numeric"
+                                value={p.minutes}
+                                onChange={(e) => {
+                                    const minutes = e.target.value.replace(/\D/g, "");
+                                    // Keep the wording in step while it's still the automatic "N hours".
+                                    const auto = p.duration === describeMinutes(Number(p.minutes)) || !p.duration;
+                                    setPackage(i, { minutes, ...(auto && minutes ? { duration: describeMinutes(Number(minutes)) } : {}) });
+                                }}
+                                className={small}
+                            />
+                        </label>
+                        <label className={label}>
+                            Length shown to customers
+                            <input value={p.duration} onChange={(e) => setPackage(i, { duration: e.target.value })} className={small} />
+                        </label>
+                        <label className={`${label} sm:col-span-2`}>
+                            Short description
+                            <input value={p.blurb} onChange={(e) => setPackage(i, { blurb: e.target.value })} className={small} />
+                        </label>
+                        <label className={`${label} sm:col-span-4`}>
+                            What&apos;s included (one per line)
+                            <textarea rows={4} value={p.features} onChange={(e) => setPackage(i, { features: e.target.value })} className={small} />
+                        </label>
+                        <div className="flex flex-wrap items-center gap-3 sm:col-span-4">
+                            <label className="flex items-center gap-2 text-sm text-white/90">
+                                <input type="checkbox" checked={p.featured} onChange={(e) => setPackage(i, { featured: e.target.checked })} className="accent-[#ffb02e]" />
+                                Highlight as most popular
+                            </label>
+                            <span className="ml-auto flex gap-2">
+                                <button type="button" className={iconButton} disabled={i === 0} onClick={() => update({ ...form, packages: move(form.packages, i, i - 1) })}>
+                                    Move up
+                                </button>
+                                <button
+                                    type="button"
+                                    className={iconButton}
+                                    disabled={i === form.packages.length - 1}
+                                    onClick={() => update({ ...form, packages: move(form.packages, i, i + 1) })}
+                                >
+                                    Move down
+                                </button>
+                                <button
+                                    type="button"
+                                    className={`${iconButton} hover:!border-red-400 hover:!text-red-300`}
+                                    disabled={form.packages.length === 1}
+                                    onClick={() => {
+                                        if (window.confirm(`Remove ${p.name || "this package"}? Customers won't be able to book it any more.`))
+                                            update({ ...form, packages: form.packages.filter((_, j) => j !== i) });
+                                    }}
+                                >
+                                    Remove
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                ))}
+                <button type="button" className="btn-ghost w-fit !px-4 !py-2" onClick={() => update({ ...form, packages: [...form.packages, newPackage()] })}>
+                    Add a package
+                </button>
+            </section>
+
+            <section className="grid gap-4">
+                <h2 className="font-display text-lg font-semibold text-white">Add-ons</h2>
+                <p className="-mt-2 text-sm text-fog">
+                    Leave the price blank for anything customers should call about: it shows on the packages page but can&apos;t be
+                    booked online.
+                </p>
+                {form.addOnGroups.map((group, g) => (
+                    <div key={g} className="card grid gap-4 p-5 sm:p-6">
+                        <div className="flex flex-wrap items-end gap-3">
+                            <label className={`${label} min-w-[200px] flex-1`}>
+                                Group title
+                                <input value={group.title} onChange={(e) => setGroup(g, { title: e.target.value })} className={small} />
+                            </label>
+                            <button
+                                type="button"
+                                className={`${iconButton} hover:!border-red-400 hover:!text-red-300`}
+                                onClick={() => {
+                                    if (window.confirm(`Remove the whole ${group.title || "group"} group and its add-ons?`))
+                                        update({ ...form, addOnGroups: form.addOnGroups.filter((_, j) => j !== g) });
+                                }}
+                            >
+                                Remove group
+                            </button>
+                        </div>
+                        <ul className="grid gap-3">
+                            {group.items.map((a, i) => (
+                                <li key={i} className="grid gap-3 rounded-2xl border border-line p-4 sm:grid-cols-[2fr_1fr_2fr]">
+                                    <label className={label}>
+                                        Name
+                                        <input value={a.name} onChange={(e) => setAddOn(g, i, { name: e.target.value })} className={small} />
+                                    </label>
+                                    <label className={label}>
+                                        Price ($)
+                                        <input
+                                            inputMode="decimal"
+                                            placeholder="Call for price"
+                                            value={a.price}
+                                            onChange={(e) => setAddOn(g, i, { price: e.target.value })}
+                                            className={small}
+                                        />
+                                    </label>
+                                    <label className={label}>
+                                        Note (optional)
+                                        <input value={a.note} onChange={(e) => setAddOn(g, i, { note: e.target.value })} className={small} />
+                                    </label>
+                                    <div className="flex flex-wrap items-center gap-4 sm:col-span-3">
+                                        <label className="flex items-center gap-2 text-sm text-white/90">
+                                            <input
+                                                type="checkbox"
+                                                checked={a.perChild}
+                                                onChange={(e) => setAddOn(g, i, { perChild: e.target.checked })}
+                                                className="accent-[#ffb02e]"
+                                            />
+                                            Priced per child
+                                        </label>
+                                        <label className="flex items-center gap-2 text-sm text-white/90">
+                                            Adds
+                                            <input
+                                                inputMode="numeric"
+                                                value={a.minutes}
+                                                placeholder="0"
+                                                onChange={(e) => setAddOn(g, i, { minutes: e.target.value.replace(/\D/g, "") })}
+                                                className={`${small} !w-20`}
+                                                aria-label={`Minutes ${a.name || "this add-on"} adds to the party`}
+                                            />
+                                            minutes to the party
+                                        </label>
+                                        <span className="ml-auto flex gap-2">
+                                            <button type="button" className={iconButton} disabled={i === 0} onClick={() => setGroup(g, { items: move(group.items, i, i - 1) })}>
+                                                Up
+                                            </button>
+                                            <button
+                                                type="button"
+                                                className={iconButton}
+                                                disabled={i === group.items.length - 1}
+                                                onClick={() => setGroup(g, { items: move(group.items, i, i + 1) })}
+                                            >
+                                                Down
+                                            </button>
+                                            <button
+                                                type="button"
+                                                className={`${iconButton} hover:!border-red-400 hover:!text-red-300`}
+                                                onClick={() => setGroup(g, { items: group.items.filter((_, j) => j !== i) })}
+                                            >
+                                                Remove
+                                            </button>
+                                        </span>
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
+                        <button type="button" className="btn-ghost w-fit !px-4 !py-2" onClick={() => setGroup(g, { items: [...group.items, newAddOn()] })}>
+                            Add an add-on
+                        </button>
+                    </div>
+                ))}
+                <button
+                    type="button"
+                    className="btn-ghost w-fit !px-4 !py-2"
+                    onClick={() => update({ ...form, addOnGroups: [...form.addOnGroups, { title: "", items: [newAddOn()] }] })}
+                >
+                    Add a group
+                </button>
+            </section>
+
+            <div className="sticky bottom-4 z-10 flex flex-wrap items-center gap-3 rounded-2xl border border-line bg-ink/95 p-4 backdrop-blur">
+                <button type="button" className="btn-gold" onClick={save} disabled={saving || !changed}>
+                    {saving ? "Saving..." : changed ? "Save prices" : "Saved"}
+                </button>
+                {changed && (
+                    <button
+                        type="button"
+                        className="btn-ghost !px-4 !py-2"
+                        onClick={() => {
+                            setForm(toForm(getCatalog()));
+                            setChanged(false);
+                        }}
+                    >
+                        Undo changes
+                    </button>
+                )}
+                <button type="button" className="ml-auto text-xs font-semibold text-fog hover:text-white" onClick={restoreOriginal}>
+                    Restore the original prices
+                </button>
+            </div>
+        </div>
     );
 }
 

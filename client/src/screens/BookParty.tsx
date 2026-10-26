@@ -4,10 +4,10 @@ import { MdAdd, MdCheck, MdLock, MdPhone, MdRemove } from "react-icons/md";
 import { apilink, toastError } from "../GlobalFunctions";
 import MonthCalendar from "../components/booking/MonthCalendar";
 import Turnstile, { TurnstileHandle } from "../components/Turnstile";
-import { PARTY_PACKAGES, formatPrice } from "../data/packages";
+import { formatPrice } from "../data/packages";
 import {
-    BOOKABLE_ADD_ON_GROUPS,
     BookingError,
+    bookableAddOnGroups,
     MAX_CHILDREN,
     TIME_ZONE,
     formatDate,
@@ -15,6 +15,7 @@ import {
     quoteBooking,
     type AddOnChoice,
 } from "../lib/booking";
+import { getCatalog, useCatalog } from "../lib/catalogStore";
 import { SITE } from "../site";
 import { field } from "../components/booking/field";
 
@@ -72,10 +73,12 @@ function Step({ n, title, children, muted }: { n: number; title: string; childre
 
 export default function BookParty() {
     const [params] = useSearchParams();
+    const catalog = useCatalog();
+    const addOnGroups = useMemo(() => bookableAddOnGroups(catalog), [catalog]);
     const [draft, setDraft] = useState<Draft>(() => {
         const d = loadDraft();
         const fromUrl = params.get("package");
-        return fromUrl && PARTY_PACKAGES.some((p) => p.id === fromUrl) && fromUrl !== d.packageId
+        return fromUrl && getCatalog().packages.some((p) => p.id === fromUrl) && fromUrl !== d.packageId
             ? { ...d, packageId: fromUrl, date: null, time: null }
             : d;
     });
@@ -120,16 +123,16 @@ export default function BookParty() {
     const quote = useMemo(() => {
         if (!draft.packageId) return null;
         try {
-            return quoteBooking(draft.packageId, draft.addOns);
+            return quoteBooking(draft.packageId, draft.addOns, catalog);
         } catch (error) {
             if (error instanceof BookingError) return null;
             throw error;
         }
-    }, [draft.packageId, draft.addOns]);
+    }, [draft.packageId, draft.addOns, catalog]);
 
     // Only add-ons that change the party length affect which times are open.
     const timingAddOns = draft.addOns
-        .filter((a) => BOOKABLE_ADD_ON_GROUPS.some((g) => g.items.some((i) => i.id === a.id && i.minutes)))
+        .filter((a) => addOnGroups.some((g) => g.items.some((i) => i.id === a.id && i.minutes)))
         .map((a) => `${a.id}:${a.qty}`)
         .join(",");
 
@@ -232,7 +235,7 @@ export default function BookParty() {
                     <div className="grid gap-6">
                         <Step n={1} title="Choose your party">
                             <div className="grid gap-3 sm:grid-cols-2">
-                                {PARTY_PACKAGES.map((p) => {
+                                {catalog.packages.map((p) => {
                                     const selected = draft.packageId === p.id;
                                     return (
                                         <label
@@ -273,7 +276,7 @@ export default function BookParty() {
                         <Step n={2} title="Add extras (optional)" muted={!quote}>
                             <p className="-mt-2 mb-5 text-sm text-fog">Add-ons are paid on the day, not today.</p>
                             <div className="grid gap-6">
-                                {BOOKABLE_ADD_ON_GROUPS.map((group) => (
+                                {addOnGroups.map((group) => (
                                     <fieldset key={group.title} disabled={!quote}>
                                         <legend className="text-xs font-semibold uppercase tracking-wider text-fog">{group.title}</legend>
                                         <ul className="mt-2 divide-y divide-line">

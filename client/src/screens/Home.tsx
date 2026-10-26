@@ -9,7 +9,8 @@ import LiteYouTube from "../components/home/LiteYouTube";
 import Reviews from "../components/home/Reviews";
 import FaqList from "../components/FaqList";
 import { GALLERY, photo } from "../data/photos";
-import { PARTY_PACKAGES, formatPrice } from "../data/packages";
+import { formatPrice } from "../data/packages";
+import { useCatalog } from "../lib/catalogStore";
 import { FAQS } from "../data/faq";
 import { AREAS } from "../data/areas";
 import { EVENT_TYPES, SERVICE_AREAS, SITE } from "../site";
@@ -85,7 +86,7 @@ const STEPS = [
 ];
 
 export default function Home() {
-    const featured = PARTY_PACKAGES.slice(0, 3);
+    const featured = useCatalog().packages.slice(0, 3);
 
     return (
         <>

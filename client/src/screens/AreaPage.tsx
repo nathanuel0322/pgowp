@@ -3,15 +3,18 @@ import { MdArrowForward, MdLocationOn, MdPhone } from "react-icons/md";
 import { BookButton } from "../components/global/Header";
 import { CtaBand, Img, PageHero, SectionHeading } from "../components/ui";
 import FaqList from "../components/FaqList";
+import Reviews from "../components/home/Reviews";
 import { Area, AREAS } from "../data/areas";
 import { FAQS } from "../data/faq";
-import { PARTY_PACKAGES, formatPrice } from "../data/packages";
+import { formatPrice } from "../data/packages";
+import { useCatalog } from "../lib/catalogStore";
 import { photo } from "../data/photos";
 import { SERVICE_AREAS, SITE } from "../site";
 
 export default function AreaPage({ area }: { area: Area }) {
     const others = AREAS.filter((a) => a.slug !== area.slug);
     const rain = FAQS.find((f) => /rain/.test(f.question));
+    const { packages } = useCatalog();
 
     return (
         <>
@@ -54,7 +57,7 @@ export default function AreaPage({ area }: { area: Area }) {
                     </Link>
                 </div>
                 <ul className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                    {PARTY_PACKAGES.map((p) => (
+                    {packages.map((p) => (
                         <li key={p.id} className="card flex items-baseline justify-between gap-4 p-6">
                             <span>
                                 <span className="block font-display font-semibold text-white">{p.name}</span>
@@ -65,6 +68,8 @@ export default function AreaPage({ area }: { area: Area }) {
                     ))}
                 </ul>
             </section>
+
+            <Reviews className="mt-24" />
 
             <section className="wrap mt-24">
                 <div className="card relative overflow-hidden p-8 sm:p-10">

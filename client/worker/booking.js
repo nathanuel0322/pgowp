@@ -1,5 +1,6 @@
-// Online booking: open time slots, Stripe Checkout for the deposit, confirmation, the team's calendar feeds and the
-// /admin API. Prices, deposits and slot rules come from src/lib/booking.ts, the same code the booking page runs.
+// Online booking: open time slots, Stripe Checkout for the deposit, confirmation, reminder emails, the team's calendar
+// feeds and the /admin API. Pricing and slot rules come from src/lib/booking.ts, the same code the booking page runs;
+// the prices themselves are the live price list managers edit on /admin (src/lib/catalog.ts).
 //
 // Storage is Cloudflare D1, bound to the Pages project as DB (schema in ../migrations). Times are stored as epoch
 // milliseconds and sent to the browser as ISO strings.
@@ -18,7 +19,8 @@ import {
     zonedParts,
     zonedToUtc,
 } from "../src/lib/booking.ts";
-import { sendBookingConfirmation, sendLoginLink, sendOwnerAlert } from "./emails.js";
+import { catalogFrom, parseCatalog } from "../src/lib/catalog.ts";
+import { sendBookingConfirmation, sendLoginLink, sendOwnerAlert, sendReminder } from "./emails.js";
 import { ALLOWED_ORIGINS, EMAIL_PATTERN, describeWhen, dollars, jsonResponse, verifyTurnstile } from "./shared.js";
 
 // Not imported from src/site.ts, which reads Vite-only import.meta.env.
@@ -66,12 +68,25 @@ function toApi(row) {
         blocked_until: iso(row.blocked_until),
         hold_expires_at: iso(row.hold_expires_at),
         confirmation_sent_at: iso(row.confirmation_sent_at),
+        reminder_sent_at: iso(row.reminder_sent_at),
     };
 }
 
 async function loadSettings(db) {
     const row = await db.prepare("SELECT data FROM booking_settings WHERE id = 1").first();
     return normalizeSettings(row ? JSON.parse(row.data) : null);
+}
+
+// The live price list. No row yet means the defaults in src/data/packages.ts.
+async function loadCatalog(db) {
+    const row = await db.prepare("SELECT data FROM catalog WHERE id = 1").first();
+    return catalogFrom(row ? JSON.parse(row.data) : null);
+}
+
+// Managers with an email get a copy of every new booking and booking problem, as well as the business inbox.
+async function teamEmails(db) {
+    const { results } = await db.prepare("SELECT email FROM staff WHERE role = 'manager' AND email != ''").all();
+    return results.map((r) => r.email);
 }
 
 // What makes time unavailable between two instants: live bookings (pending ones only while their hold lasts) and
@@ -143,9 +158,10 @@ async function handleAvailability(request, env) {
             return { id, qty: Number(qty ?? 1) };
         });
 
+    const catalog = await loadCatalog(env.DB);
     let quote;
     try {
-        quote = quoteBooking(url.searchParams.get("package") ?? "", addOns);
+        quote = quoteBooking(url.searchParams.get("package") ?? "", addOns, catalog);
     } catch (error) {
         if (error instanceof BookingError) return fail(error.message);
         throw error;
@@ -188,9 +204,10 @@ async function handleCheckout(request, env) {
         notes: text(body.notes, 2000),
     };
 
+    const catalog = await loadCatalog(env.DB);
     let quote;
     try {
-        quote = quoteBooking(text(body.package, 40), parseAddOns(body.addOns));
+        quote = quoteBooking(text(body.package, 40), parseAddOns(body.addOns), catalog);
     } catch (error) {
         if (error instanceof BookingError) return fail(error.message);
         throw error;
@@ -333,6 +350,7 @@ async function confirmFromSession(env, session) {
         if (!slotFits(confirmed.starts_at, confirmed.blocked_until, settings.capacity, others, blocked)) {
             await sendOwnerAlert(
                 env,
+                await teamEmails(db),
                 "Double booking: please check /admin",
                 `${confirmed.customer_name} paid a deposit for ${describeWhen(confirmed)}, but their hold had run out and the time now overlaps another booking. Please contact them at ${confirmed.customer_phone} or ${confirmed.customer_email}.`
             );
@@ -348,7 +366,7 @@ async function confirmFromSession(env, session) {
     );
     if (claimed) {
         try {
-            await sendBookingConfirmation(env, toApi(claimed));
+            await sendBookingConfirmation(env, toApi(claimed), await teamEmails(db));
         } catch (emailError) {
             console.error("Booking confirmed but emails failed:", emailError);
             // Give the claim back so the next webhook retry or confirmation page check tries again.
@@ -422,6 +440,43 @@ async function handleStripeWebhook(request, env) {
         await updateBooking(env.DB, session.metadata.booking_id, { status: "expired" }, "AND status = 'pending'");
     }
     return jsonResponse({ body: { received: true } });
+}
+
+// GET /api/booking/catalog: the live packages, add-ons and prices for the public pages and the booking page.
+async function handleCatalog(request, env) {
+    return jsonResponse({ body: { catalog: await loadCatalog(env.DB) } });
+}
+
+// POST /api/booking/send-reminders: emails customers the day before their party. The cron Worker in ../cron calls it
+// every morning. It needs no secret: each booking gets one reminder at most, only for a party tomorrow and only during
+// the day, so a second or stray call sends nothing extra.
+async function handleSendReminders(request, env) {
+    const now = new Date();
+    const { date: today, time } = zonedParts(now);
+    if (time < "08:00" || time >= "21:00") return jsonResponse({ body: { sent: 0, skipped: "outside 8 AM to 9 PM" } });
+    const tomorrow = addDays(today, 1);
+    const { results } = await env.DB.prepare(
+        `SELECT id FROM bookings
+         WHERE status = 'confirmed' AND reminder_sent_at IS NULL AND customer_email != ''
+           AND starts_at >= ?1 AND starts_at < ?2 AND created_at < ?3`
+    )
+        // Someone who booked in the last 12 hours just got their confirmation, so they don't need a reminder too.
+        .bind(zonedToUtc(tomorrow, "00:00").getTime(), zonedToUtc(addDays(tomorrow, 1), "00:00").getTime(), now.getTime() - 12 * 3600000)
+        .all();
+
+    let sent = 0;
+    for (const { id } of results) {
+        const claimed = await updateBooking(env.DB, id, { reminder_sent_at: Date.now() }, "AND reminder_sent_at IS NULL AND status = 'confirmed'");
+        if (!claimed) continue;
+        try {
+            await sendReminder(env, toApi(claimed));
+            sent++;
+        } catch (error) {
+            console.error(`Reminder for booking ${id} failed:`, error);
+            await updateBooking(env.DB, id, { reminder_sent_at: null });
+        }
+    }
+    return jsonResponse({ body: { sent } });
 }
 
 // ---- Secrets: admin sessions and the calendar feed -----------------------------------------------------------
@@ -660,11 +715,12 @@ async function handleAdminCreateBooking(request, env) {
     let minutes;
     let addOns = [];
     let totalCents = 0;
-    const pkg = findPackage(text(body.package, 40));
+    const catalog = await loadCatalog(env.DB);
+    const pkg = findPackage(text(body.package, 40), catalog);
     if (pkg) {
         let quote;
         try {
-            quote = quoteBooking(pkg.id, parseAddOns(body.addOns));
+            quote = quoteBooking(pkg.id, parseAddOns(body.addOns), catalog);
         } catch (error) {
             if (error instanceof BookingError) return fail(error.message);
             throw error;
@@ -765,6 +821,19 @@ async function handleAdminSaveSettings(request, env) {
         .bind(JSON.stringify(settings), Date.now())
         .run();
     return jsonResponse({ body: { settings } });
+}
+
+// PUT /api/admin/catalog { packages, addOnGroups }: saves the price list. The website and booking page use it straight
+// away; the prerendered pages pick it up on the next deploy and update in the browser until then.
+async function handleAdminSaveCatalog(request, env) {
+    const { catalog, error } = parseCatalog(await request.json().catch(() => null));
+    if (error) return fail(error);
+    await env.DB.prepare(
+        "INSERT INTO catalog (id, data, updated_at) VALUES (1, ?1, ?2) ON CONFLICT (id) DO UPDATE SET data = ?1, updated_at = ?2"
+    )
+        .bind(JSON.stringify(catalog), Date.now())
+        .run();
+    return jsonResponse({ body: { catalog } });
 }
 
 // Blocks whole days (New York time), from start_date through end_date.
@@ -889,6 +958,8 @@ export async function routeBooking(request, env, url) {
         if (path === "/api/booking/status" && method === "GET") return await handleStatus(request, env);
         if (path === "/api/booking/release" && method === "POST") return await handleRelease(request, env);
         if (path === "/api/booking/calendar.ics" && method === "GET") return await handleCalendarFeed(request, env);
+        if (path === "/api/booking/catalog" && method === "GET") return await handleCatalog(request, env);
+        if (path === "/api/booking/send-reminders" && method === "POST") return await handleSendReminders(request, env);
         if (path === "/api/stripe/webhook" && method === "POST") return await handleStripeWebhook(request, env);
         if (path === "/api/admin/login" && method === "POST") return await handleAdminLogin(request, env);
         if (path === "/api/admin/login-link" && method === "POST") return await handleAdminLoginLink(request, env);
@@ -908,6 +979,7 @@ export async function routeBooking(request, env, url) {
                 if (method === "GET") return await handleAdminGetSettings(request, env);
                 if (method === "PUT") return await handleAdminSaveSettings(request, env);
             }
+            if (resource === "catalog" && !id && method === "PUT") return await handleAdminSaveCatalog(request, env);
             if (resource === "blocked") {
                 if (!id && method === "POST") return await handleAdminAddBlocked(request, env);
                 if (id && method === "DELETE") return await handleAdminDeleteBlocked(request, env, id);

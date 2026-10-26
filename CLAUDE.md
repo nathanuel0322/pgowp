@@ -25,7 +25,7 @@ https://prestigiousgamingonwheelsplus.com. Phone (718) 673-8529.
 - `npm run build`: type check, client build, SSR build, then `scripts/prerender.mjs`. This writes one static HTML
   file per route in `PAGES`, plus `sitemap.xml`, `404.html` and the client-only shells for `APP_ROUTES` in
   `src/site.ts` (`/book`, `/book/confirmed`, `/admin`, `/e-invites`).
-- `npx vitest run`: unit tests (`src/lib/invite.test.ts`, `src/lib/booking.test.ts`).
+- `npx vitest run`: unit tests (`src/lib/invite.test.ts`, `src/lib/booking.test.ts`, `src/lib/catalog.test.ts`).
 
 Cloudflare Pages builds and deploys on every push to `master`.
 
@@ -35,8 +35,8 @@ Cloudflare Pages builds and deploys on every push to `master`.
   description, path). A route must be in `PAGES` to be prerendered and listed in the sitemap.
 - `src/seo.ts` builds the `<head>` tags and JSON-LD (business, breadcrumbs, FAQ) for each page. `Seo.tsx` keeps them
   in sync during client-side navigation.
-- `src/data/`: packages and prices, FAQs, photos and the service-area landing pages (`areas.ts`). Edit copy and prices
-  here, not in the screens.
+- `src/data/`: default packages and prices, FAQs, photos and the service-area landing pages (`areas.ts`). Edit copy
+  here, not in the screens. Live prices are edited on `/admin` (see Online booking).
 - Routes are in `src/components/global/Routing.tsx`. `BookButton` links to `/book` (with `?package=<id>` to preselect).
 
 ## Online booking (replaced 10to8 in Oct 2026)
@@ -44,7 +44,12 @@ Cloudflare Pages builds and deploys on every push to `master`.
 - `/book` (`BookParty.tsx`): package, add-ons, date and time, details. Only the package deposit is charged online, through
   Stripe Checkout. Add-ons and the balance are paid on the day, as they were on 10to8.
 - `src/lib/booking.ts` holds pricing, deposits, New York time zone maths and open-slot rules. Both the page and the
-  worker use it, and the worker recomputes every amount from ids. Prices and deposits come from `src/data/packages.ts`.
+  worker use it, and the worker recomputes every amount from ids.
+- Prices, deposits, packages and add-ons are the live price list (`src/lib/catalog.ts`): managers edit it on `/admin`
+  (Prices & packages), and it's saved in the D1 `catalog` table. `src/data/packages.ts` only holds the defaults used
+  until a list is saved. Pages read it through `useCatalog()`. The build bakes the live list into every page
+  (`loadSiteData` in `entry-server.tsx`) and browsers fetch `/api/booking/catalog` again, so a change shows straight away
+  and reaches the static HTML on the next deploy. Package and add-on ids are saved on bookings: never rename one.
 - Checkout inserts a `pending` booking that holds the slot for 35 minutes, then opens Stripe Checkout. The booking
   becomes `confirmed` from the `checkout.session.completed` webhook (`/api/stripe/webhook`) or from
   `/book/confirmed` asking `/api/booking/status`, whichever comes first. Confirmation emails are sent once.
@@ -57,6 +62,13 @@ Cloudflare Pages builds and deploys on every push to `master`.
   (`/api/booking/calendar.ics?token=`). The dashboard texts them a `/calendar?token=` page with Apple and Google
   Calendar buttons. Google refreshes subscribed calendars only every several hours; Apple is quicker.
 - The business never takes Thursday parties: Thursday is closed in `DEFAULT_SETTINGS` and in the saved settings.
+- Emails: every new online booking and booking problem goes to tbnd@ and every manager with an email. Customers get a
+  reminder the day before (`/api/booking/send-reminders`, at most once per booking, only 8 AM to 9 PM New York time).
+  The separate `pgowp-reminders` Worker (`cron/reminders.js`, `wrangler.cron.toml`) calls it every morning; deploy it
+  with `npx wrangler deploy -c wrangler.cron.toml`. In dev, reminders and sign-in links are logged instead of emailed.
+- Reviews come from the owner's Widgie widget (`src/lib/reviews.ts`, https://widgie.vip) and are baked into the pages at
+  build time. They need the `VITE_SUPABASE_WIDGIE_KEY` build variable on Pages (Widgie's public read-only key); without
+  it the reviews section just doesn't render.
 - `/bday-card` makes birthday e-invites fully in the browser (`src/lib/invite.ts`).
 
 ## Production environment (Cloudflare Pages)

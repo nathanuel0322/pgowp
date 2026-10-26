@@ -1,7 +1,8 @@
 // Booking rules shared by the booking page and the worker (public/_worker.js imports this file), so prices,
 // deposits and open time slots are worked out the same way in both places. The worker's answer is the one that
 // counts: it recomputes everything from ids and never trusts amounts sent by the browser.
-import { ADD_ON_GROUPS, PARTY_PACKAGES, type AddOn, type PartyPackage } from "../data/packages";
+import type { PartyPackage } from "../data/packages";
+import { DEFAULT_CATALOG, type Catalog } from "./catalog";
 
 // Every party date and time is in New York time, wherever the visitor (or the worker) happens to be.
 export const TIME_ZONE = "America/New_York";
@@ -71,34 +72,35 @@ export interface Quote {
     balance: number;
 }
 
-const ADD_ONS: AddOn[] = ADD_ON_GROUPS.flatMap((g) => g.items);
-
-export function findPackage(id: string) {
-    return PARTY_PACKAGES.find((p) => p.id === id);
+// Every lookup takes the price list in use: the live one managers edit on /admin, or the defaults.
+export function findPackage(id: string, catalog: Catalog = DEFAULT_CATALOG) {
+    return catalog.packages.find((p) => p.id === id);
 }
 
-export function findAddOn(id: string) {
-    return ADD_ONS.find((a) => a.id === id);
+export function findAddOn(id: string, catalog: Catalog = DEFAULT_CATALOG) {
+    return catalog.addOnGroups.flatMap((g) => g.items).find((a) => a.id === id);
 }
 
-export const BOOKABLE_ADD_ON_GROUPS = ADD_ON_GROUPS.map((g) => ({
-    ...g,
-    items: g.items.filter((a) => a.price !== null),
-})).filter((g) => g.items.length);
+// Add-ons with a price. The rest are "ask us" items, listed on the packages page only.
+export function bookableAddOnGroups(catalog: Catalog = DEFAULT_CATALOG) {
+    return catalog.addOnGroups
+        .map((g) => ({ ...g, items: g.items.filter((a) => a.price !== null) }))
+        .filter((g) => g.items.length);
+}
 
 export class BookingError extends Error {}
 
 // Online, only the package deposit is charged. Add-ons and the rest of the package are paid on the day,
 // the same way the old 10to8 booking page worked.
-export function quoteBooking(packageId: string, choices: AddOnChoice[]): Quote {
-    const pkg = findPackage(packageId);
+export function quoteBooking(packageId: string, choices: AddOnChoice[], catalog: Catalog = DEFAULT_CATALOG): Quote {
+    const pkg = findPackage(packageId, catalog);
     if (!pkg) throw new BookingError("Please pick a party package.");
 
     const seen = new Set<string>();
     const addOns: PricedLine[] = [];
     let minutes = pkg.minutes;
     for (const choice of choices) {
-        const addOn = findAddOn(choice.id);
+        const addOn = findAddOn(choice.id, catalog);
         if (!addOn || addOn.price === null) throw new BookingError("One of the add-ons isn't available online.");
         if (seen.has(addOn.id)) throw new BookingError("An add-on was listed twice.");
         seen.add(addOn.id);
