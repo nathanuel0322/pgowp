@@ -75,12 +75,12 @@ async function handleSendEmail(request, env) {
                 font-size: 75%;
             }
 
-            #memu-r1c1m0:checked ~ .menu-links {
+            #menu-r1c1m0:checked ~ .menu-links {
                 background-color: #000000 !important;
             }
 
-            #memu-r1c1m0:checked ~ .menu-links a,
-            #memu-r1c1m0:checked ~ .menu-links span {
+            #menu-r1c1m0:checked ~ .menu-links a,
+            #menu-r1c1m0:checked ~ .menu-links span {
                 color: #ffffff !important;
             }
 
