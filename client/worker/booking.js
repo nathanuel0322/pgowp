@@ -280,7 +280,7 @@ async function handleCheckout(request, env) {
                         unit_amount: toCents(quote.deposit),
                         product_data: {
                             name: `${quote.pkg.name} deposit`,
-                            description: `${when}. Holds your date. The remaining ${dollars(toCents(quote.balance))} is due when we arrive.`,
+                            description: `${when}. Holds your date. The remaining ${dollars(toCents(quote.balance))} is paid on the day of the party, preferably in cash.`,
                         },
                     },
                 },
