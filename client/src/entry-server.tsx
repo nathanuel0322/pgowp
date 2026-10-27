@@ -5,13 +5,12 @@ import { APP_ROUTES, PAGES, NOT_FOUND_META, SITE, metaForPath } from "./site.ts"
 import { renderHead } from "./seo.ts";
 import { catalogFrom } from "./lib/catalog.ts";
 import { getCatalog, setCatalog } from "./lib/catalogStore.ts";
-import { fetchReviews, getReviews, setReviews } from "./lib/reviews.ts";
 
 const inlineJson = (value: unknown) => JSON.stringify(value).replace(/</g, "\\u003c");
 
 // Called once by scripts/prerender.mjs before rendering: loads the live price list (the one managers edit on /admin)
-// and the latest reviews, so the HTML shows them. The script tags hand the same data to the browser, so its first
-// render matches the HTML. If the site or Widgie can't be reached, the build carries on with the defaults.
+// so the HTML shows it. The script tag hands the same list to the browser, so its first render matches the HTML. If
+// the site can't be reached, the build carries on with the defaults.
 export async function loadSiteData() {
     try {
         const res = await fetch(`${SITE.url}/api/booking/catalog`);
@@ -20,10 +19,7 @@ export async function loadSiteData() {
     } catch (error) {
         console.warn("Live price list unavailable, using src/data/packages.ts:", error);
     }
-    setReviews(await fetchReviews());
-    const catalog = `<script>window.__CATALOG__=${inlineJson(getCatalog())}</script>`;
-    const reviews = getReviews() ? `<script>window.__REVIEWS__=${inlineJson(getReviews())}</script>` : "";
-    return { pageData: catalog + reviews, shellData: catalog, reviewCount: getReviews()?.reviews.length ?? 0 };
+    return `<script>window.__CATALOG__=${inlineJson(getCatalog())}</script>`;
 }
 
 // Used only by scripts/prerender.mjs at build time.

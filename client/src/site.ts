@@ -13,6 +13,7 @@ export const SITE = {
     email: "tbnd@prestigiousgamingonwheelsplus.com",
     instagram: "https://www.instagram.com/prestigiousgamingonwheelsplus/",
     googleMaps: "https://maps.google.com/?cid=8635943149184468988",
+    yelpReview: "https://www.yelp.com/writeareview/biz/hk7BNtXuUG2YdkAIjehMjQ",
     sisterCompany: "https://www.tripleamobilegaming.com/",
     ogImage: "/og-image.jpg",
     geo: { latitude: 40.671612, longitude: -73.7834759 },

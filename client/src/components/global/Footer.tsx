@@ -3,6 +3,7 @@ import { FaInstagram, FaGoogle } from "react-icons/fa6";
 import { MdEmail, MdPhone } from "react-icons/md";
 import { NAV_LINKS, SERVICE_AREAS, SITE } from "../../site";
 import { AREAS } from "../../data/areas";
+import { WIDGIE_URL } from "../../lib/reviews";
 import Logo from "./Logo";
 import { BookButton } from "./Header";
 
@@ -101,6 +102,18 @@ export default function Footer() {
                 <div className="mt-14 flex flex-col gap-3 border-t border-line pt-8 text-xs text-fog/70 sm:flex-row sm:items-center sm:justify-between">
                     <p>
                         © {new Date().getFullYear()} {SITE.name}. Family-owned in Queens, NY.
+                        <span className="mt-1 block">
+                            Google and Yelp reviews by{" "}
+                            <a
+                                href={WIDGIE_URL}
+                                target="_blank"
+                                rel="noopener"
+                                title="widgie: free Google and Yelp review widget for your website"
+                                className="font-semibold text-fog underline-offset-4 hover:text-[#078efb] hover:underline"
+                            >
+                                widgie.vip
+                            </a>
+                        </span>
                     </p>
                     <p>
                         Party in New Jersey?{" "}

@@ -66,9 +66,9 @@ Cloudflare Pages builds and deploys on every push to `master`.
   reminder the day before (`/api/booking/send-reminders`, at most once per booking, only 8 AM to 9 PM New York time).
   The separate `pgowp-reminders` Worker (`cron/reminders.js`, `wrangler.cron.toml`) calls it every morning; deploy it
   with `npx wrangler deploy -c wrangler.cron.toml`. In dev, reminders and sign-in links are logged instead of emailed.
-- Reviews come from the owner's Widgie widget (`src/lib/reviews.ts`, https://widgie.vip) and are baked into the pages at
-  build time. They need the `VITE_SUPABASE_WIDGIE_KEY` build variable on Pages (Widgie's public read-only key); without
-  it the reviews section just doesn't render.
+- Reviews are the owner's Widgie widget (https://widgie.vip), embedded with its own script in `Reviews.tsx`. Its
+  stylesheet carries Tailwind's global reset, so it's imported into a cascade layer that the site's styles override.
+  The site promotes widgie on purpose (badge under the reviews, footer credit): keep those links.
 - `/bday-card` makes birthday e-invites fully in the browser (`src/lib/invite.ts`).
 
 ## Production environment (Cloudflare Pages)
