@@ -64,7 +64,7 @@ export default function MonthCalendar({
             </div>
             <div className={`mt-4 grid grid-cols-7 gap-1 text-center transition-opacity ${loading ? "opacity-40" : ""}`}>
                 {WEEKDAYS.map((d) => (
-                    <span key={d} className="pb-2 text-[11px] font-semibold uppercase tracking-wider text-fog">
+                    <span key={d} className="pb-2 text-[0.6875rem] font-semibold uppercase tracking-wider text-fog">
                         {d}
                     </span>
                 ))}

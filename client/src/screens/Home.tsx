@@ -181,7 +181,7 @@ export default function Home() {
                                 <f.icon size={22} aria-hidden />
                             </span>
                             <h3 className="mt-6 font-display text-lg font-semibold text-white">{f.title}</h3>
-                            <p className="mt-3 text-[15px] leading-relaxed text-fog">{f.text}</p>
+                            <p className="mt-3 text-[0.9375rem] leading-relaxed text-fog">{f.text}</p>
                         </div>
                     ))}
                 </div>
@@ -208,7 +208,7 @@ export default function Home() {
                                 }`}
                             >
                                 {p.featured && (
-                                    <span className="absolute -top-3 left-8 rounded-full bg-gold px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-ink">
+                                    <span className="absolute -top-3 left-8 rounded-full bg-gold px-3 py-1 text-[0.6875rem] font-bold uppercase tracking-wider text-ink">
                                         Most booked
                                     </span>
                                 )}
@@ -219,7 +219,7 @@ export default function Home() {
                                     </span>
                                     <span className="text-sm text-fog">/ {p.duration}</span>
                                 </p>
-                                <p className="mt-4 text-[15px] leading-relaxed text-fog">{p.blurb}</p>
+                                <p className="mt-4 text-[0.9375rem] leading-relaxed text-fog">{p.blurb}</p>
                                 <ul className="mt-6 space-y-3 border-t border-line pt-6 text-sm">
                                     {p.features.slice(0, 4).map((f) => (
                                         <li key={f} className="flex gap-3 text-white/85">
@@ -259,7 +259,7 @@ export default function Home() {
                             }
                             lede="Hi-tech arena-style equipment, inflatable bunkers, live on-screen scoring, music and play-by-play commentating. Book it as a stand-alone party or add it to any gaming package."
                         />
-                        <ul className="mt-8 grid gap-3 text-[15px] sm:grid-cols-2">
+                        <ul className="mt-8 grid gap-3 text-[0.9375rem] sm:grid-cols-2">
                             {[
                                 "Up to 20 players",
                                 "Live scoreboard",
@@ -291,7 +291,7 @@ export default function Home() {
                             </span>
                             <span className="font-display text-sm font-bold text-gold">Step {i + 1}</span>
                             <h3 className="mt-3 font-display text-xl font-semibold text-white">{s.title}</h3>
-                            <p className="mt-3 text-[15px] leading-relaxed text-fog">{s.text}</p>
+                            <p className="mt-3 text-[0.9375rem] leading-relaxed text-fog">{s.text}</p>
                         </li>
                     ))}
                 </ol>
@@ -329,7 +329,7 @@ export default function Home() {
                     <div className="card p-8 sm:p-10">
                         <GiPartyPopper className="text-gold" size={32} aria-hidden />
                         <h2 className="h-display mt-6 text-2xl sm:text-3xl">Every kind of celebration</h2>
-                        <p className="mt-3 text-[15px] text-fog">From backyard birthdays to full-campus fun days.</p>
+                        <p className="mt-3 text-[0.9375rem] text-fog">From backyard birthdays to full-campus fun days.</p>
                         <ul className="mt-7 flex flex-wrap gap-2">
                             {EVENT_TYPES.map((e) => (
                                 <li
@@ -345,7 +345,7 @@ export default function Home() {
                         <div aria-hidden className="glow-volt absolute -right-20 -top-20 h-72 w-72" />
                         <BsJoystick className="relative text-gold" size={30} aria-hidden />
                         <h2 className="h-display relative mt-6 text-2xl sm:text-3xl">Where we bring the party</h2>
-                        <p className="relative mt-3 text-[15px] text-fog">
+                        <p className="relative mt-3 text-[0.9375rem] text-fog">
                             Standard service area, no travel fee:
                         </p>
                         <ul className="relative mt-4 flex flex-wrap gap-2">
@@ -360,7 +360,7 @@ export default function Home() {
                                 </li>
                             ))}
                         </ul>
-                        <p className="relative mt-6 text-[15px] text-fog">Also available with a travel surcharge:</p>
+                        <p className="relative mt-6 text-[0.9375rem] text-fog">Also available with a travel surcharge:</p>
                         <ul className="relative mt-4 flex flex-wrap gap-2">
                             {SERVICE_AREAS.surcharge.map((a) => (
                                 <li

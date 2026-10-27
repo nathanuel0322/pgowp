@@ -59,7 +59,7 @@ interface Member {
     calendarUrl: string;
 }
 
-const small = field.replace("px-4 py-3.5 text-[15px]", "px-3 py-2.5 text-sm");
+const small = field.replace("px-4 py-3.5 text-[0.9375rem]", "px-3 py-2.5 text-sm");
 const DAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 const today = () => new Date().toLocaleDateString("en-CA", { timeZone: TIME_ZONE });
 
@@ -454,9 +454,9 @@ function BookingCard({ booking: b, session, onChange }: { booking: Booking; sess
                 </div>
                 <div className="flex items-center gap-2">
                     {b.source !== "website" && (
-                        <span className="rounded-full bg-white/5 px-2.5 py-1 text-[11px] font-semibold uppercase text-fog">{b.source}</span>
+                        <span className="rounded-full bg-white/5 px-2.5 py-1 text-[0.6875rem] font-semibold uppercase text-fog">{b.source}</span>
                     )}
-                    <span className={`rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase ${badge}`}>
+                    <span className={`rounded-full px-2.5 py-1 text-[0.6875rem] font-semibold uppercase ${badge}`}>
                         {b.status === "pending" ? "awaiting payment" : b.status}
                     </span>
                 </div>
@@ -1401,7 +1401,7 @@ function Team({ session }: { session: AdminSession }) {
                                         )}
                                     </div>
                                     <span
-                                        className={`rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase ${
+                                        className={`rounded-full px-2.5 py-1 text-[0.6875rem] font-semibold uppercase ${
                                             m.role === "manager" ? "bg-gold/15 text-gold" : "bg-white/10 text-fog"
                                         }`}
                                     >

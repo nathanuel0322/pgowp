@@ -8,7 +8,7 @@ import Turnstile, { TurnstileHandle } from "../components/Turnstile";
 import { SERVICE_AREAS, SITE } from "../site";
 
 const field =
-    "w-full rounded-xl border border-line bg-ink/60 px-4 py-3.5 text-[15px] text-white placeholder:text-fog/60 transition focus:border-gold/60 focus:outline-none focus:ring-2 focus:ring-gold/20";
+    "w-full rounded-xl border border-line bg-ink/60 px-4 py-3.5 text-[0.9375rem] text-white placeholder:text-fog/60 transition focus:border-gold/60 focus:outline-none focus:ring-2 focus:ring-gold/20";
 
 export default function Contact() {
     const [formfilled, setFormfilled] = useState(false);

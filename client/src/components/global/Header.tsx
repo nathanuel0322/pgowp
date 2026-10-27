@@ -41,19 +41,19 @@ const Header = ({
             >
                 Skip to content
             </a>
-            <div className="wrap flex h-16 items-center justify-between gap-4 lg:h-20">
+            <div className="wrap flex h-16 items-center justify-between gap-4 xl:h-20">
                 <Link to="/" aria-label={`${SITE.name} home`} onClick={() => setDrawerOpen(false)}>
                     <Logo />
                 </Link>
 
-                <nav aria-label="Main" className="hidden lg:block">
+                <nav aria-label="Main" className="hidden xl:block">
                     <ul className="flex items-center gap-1">
                         {NAV_LINKS.slice(1).map((link) => (
                             <li key={link.to}>
                                 <NavLink
                                     to={link.to}
                                     className={({ isActive }) =>
-                                        `rounded-full px-3.5 py-2 text-sm font-semibold transition-colors ${
+                                        `whitespace-nowrap rounded-full px-3.5 py-2 text-sm font-semibold transition-colors ${
                                             isActive ? "bg-white/10 text-white" : "text-fog hover:text-white"
                                         }`
                                     }
@@ -73,10 +73,10 @@ const Header = ({
                         <MdPhone className="text-gold" size={18} aria-hidden />
                         {SITE.phone}
                     </a>
-                    <BookButton className="btn-gold hidden !px-5 !py-2.5 sm:inline-flex" />
+                    <BookButton className="btn-gold hidden whitespace-nowrap !px-5 !py-2.5 sm:inline-flex" />
                     <button
                         type="button"
-                        className="relative grid h-11 w-11 place-items-center rounded-full border border-white/15 bg-white/[0.04] lg:hidden"
+                        className="relative grid h-11 w-11 place-items-center rounded-full border border-white/15 bg-white/[0.04] xl:hidden"
                         aria-label={drawerOpen ? "Close menu" : "Open menu"}
                         aria-expanded={drawerOpen}
                         aria-controls="mobile-menu"
@@ -103,7 +103,7 @@ const Header = ({
 
             <div
                 id="mobile-menu"
-                className={`overflow-hidden transition-[max-height,opacity] duration-300 lg:hidden ${
+                className={`overflow-hidden transition-[max-height,opacity] duration-300 xl:hidden ${
                     drawerOpen ? "max-h-[100dvh] opacity-100" : "pointer-events-none max-h-0 opacity-0"
                 }`}
             >

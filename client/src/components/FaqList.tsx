@@ -14,7 +14,7 @@ export default function FaqList({ faqs }: { faqs: Faq[] }) {
                             <AiOutlinePlus size={18} aria-hidden />
                         </span>
                     </summary>
-                    <div className="pb-6 pr-12 text-[15px] leading-relaxed text-fog">
+                    <div className="pb-6 pr-12 text-[0.9375rem] leading-relaxed text-fog">
                         <p>{faq.answer}</p>
                         {faq.link && (
                             <a

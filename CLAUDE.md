@@ -103,6 +103,9 @@ Cloudflare Pages builds and deploys on every push to `master`.
 
 ## Conventions
 
+- The root font size is 110% (`index.css`), so the whole site renders about like 110% browser zoom. That only works
+  because sizes are in rem: use Tailwind's scale or `text-[0.9375rem]`, never `text-[15px]` or other px font sizes.
+  Because of the larger size, the full desktop nav shows from `xl` (1280px); below that the header uses the menu button.
 - Files use CRLF line endings. Keep them CRLF. `sed -i` silently converts files to LF.
 - Contact form and booking input is escaped before it goes into email HTML. Keep it that way for any new fields.
 - Site copy should stay factual: don't invent claims about the business such as party counts, awards or exact travel

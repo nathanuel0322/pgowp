@@ -34,7 +34,7 @@ export default function Packages() {
                             }`}
                         >
                             {p.featured && (
-                                <span className="absolute -top-3 left-8 rounded-full bg-gold px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-ink">
+                                <span className="absolute -top-3 left-8 rounded-full bg-gold px-3 py-1 text-[0.6875rem] font-bold uppercase tracking-wider text-ink">
                                     Most booked
                                 </span>
                             )}
@@ -43,7 +43,7 @@ export default function Packages() {
                                 <span className="font-display text-[2.6rem] font-bold leading-none text-white xl:text-5xl">{formatPrice(p.price)}</span>
                                 <span className="text-sm text-fog">/ {p.duration}</span>
                             </p>
-                            <p className="mt-4 text-[15px] leading-relaxed text-fog">{p.blurb}</p>
+                            <p className="mt-4 text-[0.9375rem] leading-relaxed text-fog">{p.blurb}</p>
                             <ul className="mt-6 flex-1 space-y-3 border-t border-line pt-6 text-sm">
                                 {p.features.map((f) => (
                                     <li key={f} className="flex gap-3 text-white/85">
@@ -113,7 +113,7 @@ export default function Packages() {
                         <div>
                             <p className="eyebrow">Groups</p>
                             <h2 className="h-display mt-4 text-3xl">Schools, churches & corporate events</h2>
-                            <p className="mt-4 text-[15px] leading-relaxed text-fog">
+                            <p className="mt-4 text-[0.9375rem] leading-relaxed text-fog">
                                 Rotations for whole grades, fun days, fundraisers and team events. Pricing depends on
                                 hours and headcount, so give us a call for a custom quote.
                             </p>

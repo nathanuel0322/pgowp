@@ -28,7 +28,7 @@ export default function AreaPage({ area }: { area: Area }) {
                 <div className="grid items-center gap-10 lg:grid-cols-2">
                     <div>
                         {area.intro.map((p) => (
-                            <p key={p.slice(0, 24)} className="mb-5 text-[17px] leading-relaxed text-white/85">
+                            <p key={p.slice(0, 24)} className="mb-5 text-[1.0625rem] leading-relaxed text-white/85">
                                 {p}
                             </p>
                         ))}
@@ -85,7 +85,7 @@ export default function AreaPage({ area }: { area: Area }) {
                             </li>
                         ))}
                     </ul>
-                    <p className="relative mt-6 text-[15px] text-fog">{area.placesNote}</p>
+                    <p className="relative mt-6 text-[0.9375rem] text-fog">{area.placesNote}</p>
                 </div>
             </section>
 
@@ -95,7 +95,7 @@ export default function AreaPage({ area }: { area: Area }) {
                     {area.tips.map((t) => (
                         <div key={t.title} className="card p-7">
                             <h3 className="font-display text-lg font-semibold text-white">{t.title}</h3>
-                            <p className="mt-3 text-[15px] leading-relaxed text-fog">{t.text}</p>
+                            <p className="mt-3 text-[0.9375rem] leading-relaxed text-fog">{t.text}</p>
                         </div>
                     ))}
                 </div>
