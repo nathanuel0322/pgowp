@@ -2,6 +2,9 @@
 
 These catch typos and comma/grammar mistakes in the site's copy before it goes live. Both run from `client/`.
 
+The same checks for every repo in `~/SideWork`, with a pre-commit hook and a Claude skill, live in
+`~/SideWork/copycheck` (run `copycheck` anywhere). The scripts below stay so this repo works on its own.
+
 Grammarly isn't an option: it shut down its developer SDK and API in January 2024, and it never checked source files.
 
 ## Spelling: cspell
