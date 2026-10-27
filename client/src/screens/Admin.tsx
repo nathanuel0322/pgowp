@@ -1352,7 +1352,7 @@ function Team({ session }: { session: AdminSession }) {
                         <input required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className={small} />
                     </label>
                     <label className="grid gap-1 text-sm font-semibold text-white/85">
-                        Email {form.role === "worker" && <span className="text-xs font-normal text-fog">(optional for workers)</span>}
+                        Email {form.role === "worker" && <span className="text-xs font-normal text-fog">(optional for workers; anyone with one gets new-booking emails)</span>}
                         <input
                             type="email"
                             required={form.role === "manager"}

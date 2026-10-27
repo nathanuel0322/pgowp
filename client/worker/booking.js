@@ -83,9 +83,9 @@ async function loadCatalog(db) {
     return catalogFrom(row ? JSON.parse(row.data) : null);
 }
 
-// Managers with an email get a copy of every new booking and booking problem, as well as the business inbox.
+// Everyone on the team with an email gets a copy of every new booking and booking problem, as well as the business inbox.
 async function teamEmails(db) {
-    const { results } = await db.prepare("SELECT email FROM staff WHERE role = 'manager' AND email != ''").all();
+    const { results } = await db.prepare("SELECT email FROM staff WHERE email != ''").all();
     return results.map((r) => r.email);
 }
 

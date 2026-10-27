@@ -63,7 +63,7 @@ Cloudflare Pages builds and deploys on every push to `master`.
   (`/api/booking/calendar.ics?token=`). The dashboard texts them a `/calendar?token=` page with Apple and Google
   Calendar buttons. Google refreshes subscribed calendars only every several hours; Apple is quicker.
 - The business never takes Thursday parties: Thursday is closed in `DEFAULT_SETTINGS` and in the saved settings.
-- Emails: every new online booking and booking problem goes to tbnd@ and every manager with an email. Customers get a
+- Emails: every new online booking and booking problem goes to tbnd@ and everyone on the team with an email. Customers get a
   reminder the day before (`/api/booking/send-reminders`, at most once per booking, only 8 AM to 9 PM New York time).
   The separate `pgowp-reminders` Worker (`cron/reminders.js`, `wrangler.cron.toml`) calls it every morning; deploy it
   with `npx wrangler deploy -c wrangler.cron.toml`. In dev, reminders and sign-in links are logged instead of emailed.
