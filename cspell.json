@@ -1,0 +1,39 @@
+{
+    "version": "0.2",
+    "language": "en",
+    "ignoreRegExpList": [
+        "LiteYouTube id=\"[^\"]+\""
+    ],
+    "words": [
+        "actionbtn",
+        "atleast",
+        "bday",
+        "bdaycard",
+        "bdaydivs",
+        "booknowli",
+        "Canarsie",
+        "Cardto",
+        "Dyker",
+        "ellipsize",
+        "galleryli",
+        "Hicksville",
+        "jenga",
+        "José",
+        "linka",
+        "linkul",
+        "logoimg",
+        "Lynbrook",
+        "María",
+        "mobilel",
+        "mobilem",
+        "navli",
+        "otps",
+        "Rego",
+        "remoteip",
+        "srcsets",
+        "Starrett",
+        "Stuy",
+        "tbnd",
+        "unlayered"
+    ]
+}
