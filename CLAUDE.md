@@ -71,8 +71,10 @@ Cloudflare Pages builds and deploys on every push to `master`.
   stylesheet carries Tailwind's global reset, so it's imported into a cascade layer that the site's styles override,
   and `#widgie * { all: revert-layer }` in `index.css` hands the widget's own elements back to it. Its look (dark
   theme, gold accent, the site's font) is the `WIDGIE_LOOK` attributes in `src/lib/reviews.ts`; the widget's source is
-  the owner's `nathanuel0322/widgie` repo, which lists every attribute in `src/options.js`. The site promotes widgie
-  on purpose (badge under the reviews, footer credit): keep those links.
+  the owner's `nathanuel0322/widgie` repo, which lists every attribute in `src/options.js`. Pushing that repo's `main`
+  redeploys `widgie.pages.dev` within about a minute (it isn't in this Cloudflare account). The live widget ignores
+  attributes it doesn't know, so a new widget option has to be live there before this site uses it. The site promotes
+  widgie on purpose (badge under the reviews, footer credit): keep those links.
 - `/bday-card` makes birthday e-invites fully in the browser (`src/lib/invite.ts`).
 
 ## Production environment (Cloudflare Pages)
