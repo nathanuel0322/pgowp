@@ -61,7 +61,7 @@ export default function Contact() {
                         Let's plan your <span className="text-gradient">game truck party</span>
                     </>
                 }
-                lede="Call or send a message and we'll get back to you as soon as possible. Weekends fill up quickly, so reach out early."
+                lede="Call or send a message, and we'll get back to you as soon as possible. Weekends fill up quickly, so reach out early."
             />
 
             <section className="wrap">

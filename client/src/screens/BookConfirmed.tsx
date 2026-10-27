@@ -60,7 +60,7 @@ export default function BookConfirmed() {
                     {error ? (
                         <>
                             <h1 className="h-display text-3xl">Hmm, something's off</h1>
-                            <p className="lede mt-4">{error} If you were charged, don't worry: give us a call and we'll sort it out.</p>
+                            <p className="lede mt-4">{error} If you were charged, don't worry: give us a call, and we'll sort it out.</p>
                         </>
                     ) : !booking ? (
                         <>
@@ -72,7 +72,7 @@ export default function BookConfirmed() {
                             <MdCheckCircle className="mx-auto text-gold" size={64} aria-hidden />
                             <h1 className="h-display mt-4 text-3xl sm:text-4xl">Thanks, {booking.firstName}!</h1>
                             <p className="lede mt-4">
-                                Your {formatPrice(booking.paid)} deposit went through and your time is on hold. We'll look it over and
+                                Your {formatPrice(booking.paid)} deposit went through, and your time is on hold. We'll look it over and
                                 email {booking.email ? <strong className="text-white">{booking.email}</strong> : "you"} to confirm.
                             </p>
                             <dl className="mt-8 space-y-3 rounded-2xl border border-line bg-ink/40 p-5 text-left text-sm">

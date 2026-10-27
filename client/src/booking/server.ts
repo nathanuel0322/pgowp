@@ -810,7 +810,7 @@ export function customerEmail(b: BookingRow, kind: CustomerEmailKind, message = 
         requested: {
             subject: `We got your party request for ${when}`,
             heading: "Request received!",
-            intro: `Thanks ${first}! Your deposit of $${money(b.paid)} went through and your time is on hold. We'll look it over and send a confirmation shortly.`,
+            intro: `Thanks ${first}! Your deposit of $${money(b.paid)} went through, and your time is on hold. We'll look it over and send a confirmation shortly.`,
             footer: policy,
         },
         confirmed: {
@@ -828,7 +828,7 @@ export function customerEmail(b: BookingRow, kind: CustomerEmailKind, message = 
         declined: {
             subject: "About your party request",
             heading: "We can't take this booking",
-            intro: `Sorry ${first}, we aren't able to take your party at this time.${refunded ? ` Your $${money(refunded)} deposit has been refunded and should show up in 5 to 10 business days.` : ""} Give us a call and we'll help you find another date.`,
+            intro: `Sorry ${first}, we aren't able to take your party at this time.${refunded ? ` Your $${money(refunded)} deposit has been refunded and should show up in 5 to 10 business days.` : ""} Give us a call, and we'll help you find another date.`,
             footer: note,
         },
         cancelled: {

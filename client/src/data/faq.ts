@@ -39,7 +39,7 @@ export const FAQS: Faq[] = [
     },
     {
         question: "Do you need Wi-Fi?",
-        answer: "Usually not. In areas with weak cell service we may need to run a line to your router so online games work smoothly.",
+        answer: "Usually not. In areas with weak cell service we may need to run a line to your router, so online games work smoothly.",
     },
     {
         question: "Where do you travel?",

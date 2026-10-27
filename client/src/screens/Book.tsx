@@ -404,8 +404,8 @@ export default function Book() {
                                     Don't see a time that works?{" "}
                                     <a href={SITE.phoneHref} className="font-semibold text-gold hover:underline">
                                         Call {SITE.phone}
-                                    </a>{" "}
-                                    and we'll do our best to fit you in.
+                                    </a>
+                                    , and we'll do our best to fit you in.
                                 </p>
                             </Step>
                         </div>
