@@ -42,7 +42,8 @@ Cloudflare Pages builds and deploys on every push to `master`.
 ## Online booking (replaced 10to8 in Oct 2026)
 
 - `/book` (`BookParty.tsx`): package, add-ons, date and time, details. Only the package deposit is charged online, through
-  Stripe Checkout. Add-ons and the balance are paid on the day, as they were on 10to8.
+  Stripe Checkout. Add-ons and the balance are paid on the day, as they were on 10to8. The Stripe Checkout line item
+  (`handleCheckout` in `worker/booking.js`) tells customers the balance is preferably paid in cash.
 - `src/lib/booking.ts` holds pricing, deposits, New York time zone maths and open-slot rules. Both the page and the
   worker use it, and the worker recomputes every amount from ids.
 - Prices, deposits, packages and add-ons are the live price list (`src/lib/catalog.ts`): managers edit it on `/admin`
@@ -77,6 +78,13 @@ Cloudflare Pages builds and deploys on every push to `master`.
   booking and admin sign-in spam check), `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `BOOKING_SECRET` and
   `ADMIN_PASSWORD`. Create the Stripe client only inside the routes that use it: creating it up front once crashed
   every `/api` call when the key was missing. Booking routes return 503 if `DB` isn't bound.
+- `STRIPE_SECRET_KEY` must be the live secret key (`sk_live_…`, or a restricted `rk_live_…`). In Oct 2026 a non-Stripe
+  value was saved there, and every "Pay deposit" failed with a generic "We couldn't start checkout" toast.
+- Secret and variable changes only reach new deployments. After changing one, redeploy: "Retry deployment" on the
+  latest production deployment in the dashboard, or push a commit (an empty one is fine).
+- Live API errors: get the current deployment id from `npx wrangler pages deployment list --project-name pgowp`, then
+  stream its logs with `npx wrangler pages deployment tail <id> --project-name pgowp --format pretty` (the id is
+  required outside an interactive terminal). The booking page's error toasts don't always show the real cause.
 - The Turnstile site key is public and lives in `SITE.turnstileSiteKey`. Dev uses Cloudflare's always-pass test key.
 - Contact email goes from and to tbnd@prestigiousgamingonwheelsplus.com. The domain's mail is on Microsoft 365.
 - Live Stripe webhook: `website-booking-deposits` in Stripe Workbench, pointing at
