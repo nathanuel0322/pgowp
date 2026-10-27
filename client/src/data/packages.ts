@@ -131,6 +131,10 @@ export const PARTY_PACKAGES: PartyPackage[] = [
 ];
 
 // Extra party time is picked by the hour on the booking page, and lengthens the calendar block.
+// Shown on the booking page and in every customer email.
+export const CANCELLATION_POLICY =
+    "We have a 48-hour cancellation policy. If you miss your appointment or cancel with less than 48 hours' notice, your deposit is nonrefundable.";
+
 export const EXTRA_HOUR_PRICE = 150;
 export const MAX_EXTRA_HOURS = 3;
 

@@ -6,7 +6,7 @@
 // Talks to the D1 database, Stripe and Resend through small interfaces so the tests can swap in fakes.
 import { Resend } from "resend";
 import Stripe from "stripe";
-import { PARTY_PACKAGES } from "../data/packages";
+import { CANCELLATION_POLICY, PARTY_PACKAGES } from "../data/packages";
 import { d1Store, type D1Database } from "./d1";
 import { BOOKABLE_ADD_ONS, findPackage, quote, QuoteError, type Quote } from "./quote";
 import { BookingSettings, Busy, busyFor, fits, normalizeSettings, startTimes } from "./schedule";
@@ -797,9 +797,6 @@ ${footer}
 <p style="text-align:center;font-size:12px;color:#888;margin-top:16px">Questions? Call (718) 673-8529 or reply to this email.</p>
 </div></body></html>`;
 }
-
-const CANCELLATION_POLICY =
-    "We have a 48 hour cancellation policy. If you miss your appointment, or cancel with less than 48 hours notice, your deposit is non refundable.";
 
 type CustomerEmailKind = "requested" | "confirmed" | "declined" | "cancelled" | "moved";
 

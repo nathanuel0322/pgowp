@@ -5,15 +5,12 @@ import MonthCalendar, { shiftMonth } from "../components/booking/MonthCalendar";
 import Turnstile, { TurnstileHandle } from "../components/Turnstile";
 import { addOnsFor, findPackage, quote, QuoteError } from "../booking/quote";
 import { formatDate, formatTime, todayInZone } from "../booking/time";
-import { ADD_ON_GROUPS, EXTRA_HOUR_PRICE, MAX_EXTRA_HOURS, PARTY_PACKAGES, formatPrice } from "../data/packages";
+import { ADD_ON_GROUPS, CANCELLATION_POLICY, EXTRA_HOUR_PRICE, MAX_EXTRA_HOURS, PARTY_PACKAGES, formatPrice } from "../data/packages";
 import { apilink, toastError } from "../GlobalFunctions";
 import { SERVICE_AREAS, SITE } from "../site";
 
 const field =
     "w-full rounded-xl border border-line bg-ink/60 px-4 py-3.5 text-[15px] text-white placeholder:text-fog/60 transition focus:border-gold/60 focus:outline-hidden focus:ring-2 focus:ring-gold/20";
-
-const CANCELLATION_POLICY =
-    "We have a 48 hour cancellation policy. If you miss your appointment, or cancel with less than 48 hours notice, your deposit is non refundable.";
 
 const thisMonth = () => todayInZone(Date.now()).slice(0, 7);
 
