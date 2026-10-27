@@ -10,7 +10,8 @@
         "build": "tsc -b && vite build && vite build --ssr src/entry-server.tsx --outDir dist-server && node scripts/prerender.mjs",
         "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
         "preview": "vite preview",
-        "test": "vitest"
+        "test": "vitest",
+        "spellcheck": "cspell --no-progress"
     },
     "dependencies": {
         "@supabase/supabase-js": "^2.46.1",
@@ -27,6 +28,7 @@
         "@types/react": "^18.3.3",
         "@types/react-dom": "^18.3.0",
         "@vitejs/plugin-react-swc": "^4.3.3",
+        "cspell": "^10.4.0",
         "postcss": "^8.4.14",
         "sass": "^1.57.1",
         "tailwindcss": "^4.3.3",
