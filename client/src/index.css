@@ -96,3 +96,10 @@
         color: transparent;
     }
 }
+
+/* The Widgie review widget's stylesheet is imported into the `widgie` cascade layer (Reviews.tsx), so the site's reset
+   would otherwise win inside the widget, e.g. stripping the "Write a Review" button. This hands every element inside it
+   back to the widget's own styles. */
+#widgie * {
+    all: revert-layer;
+}

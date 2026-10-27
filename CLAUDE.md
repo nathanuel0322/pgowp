@@ -68,8 +68,11 @@ Cloudflare Pages builds and deploys on every push to `master`.
   The separate `pgowp-reminders` Worker (`cron/reminders.js`, `wrangler.cron.toml`) calls it every morning; deploy it
   with `npx wrangler deploy -c wrangler.cron.toml`. In dev, reminders and sign-in links are logged instead of emailed.
 - Reviews are the owner's Widgie widget (https://widgie.vip), embedded with its own script in `Reviews.tsx`. Its
-  stylesheet carries Tailwind's global reset, so it's imported into a cascade layer that the site's styles override.
-  The site promotes widgie on purpose (badge under the reviews, footer credit): keep those links.
+  stylesheet carries Tailwind's global reset, so it's imported into a cascade layer that the site's styles override,
+  and `#widgie * { all: revert-layer }` in `index.css` hands the widget's own elements back to it. Its look (dark
+  theme, gold accent, the site's font) is the `WIDGIE_LOOK` attributes in `src/lib/reviews.ts`; the widget's source is
+  the owner's `nathanuel0322/widgie` repo, which lists every attribute in `src/options.js`. The site promotes widgie
+  on purpose (badge under the reviews, footer credit): keep those links.
 - `/bday-card` makes birthday e-invites fully in the browser (`src/lib/invite.ts`).
 
 ## Production environment (Cloudflare Pages)

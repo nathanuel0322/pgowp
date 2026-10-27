@@ -5,6 +5,14 @@ export const WIDGIE_URL = "https://widgie.vip/?ref=pgowp";
 export const WIDGIE_WIDGET_ID = "88bfbcb1-5060-4dca-914c-33788e9850c2";
 export const WIDGIE_SCRIPT = "https://widgie.pages.dev/review-widget.umd.js";
 export const WIDGIE_STYLES = "https://widgie.pages.dev/style.css";
-// The site's gold scale (gold.soft, gold, gold.deep in tailwind.config.js). The widget's text is always dark, so its
-// background has to stay light.
-export const WIDGIE_BACKGROUND = "linear-gradient(135deg, #ffd27a 0%, #ffb02e 55%, #e88f00 100%)";
+// The widget's look, as attributes on <div id="widgie"> (widgie's src/options.js lists them all): the dark theme on the
+// site's raised-to-surface gradient, gold buttons, the site's font and the corners of its cards. heading="" hides the
+// widget's own heading, since the section already has one.
+export const WIDGIE_LOOK: Record<string, string> = {
+    "bg-color": "linear-gradient(180deg, #16161f 0%, #0f0f16 100%)",
+    theme: "dark",
+    "accent-color": "#ffb02e",
+    heading: "",
+    radius: "1.5rem",
+    font: "inherit",
+};

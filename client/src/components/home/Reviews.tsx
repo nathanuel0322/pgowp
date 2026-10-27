@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { SectionHeading } from "../ui";
 import { SITE } from "../../site";
-import { WIDGIE_BACKGROUND, WIDGIE_SCRIPT, WIDGIE_STYLES, WIDGIE_URL, WIDGIE_WIDGET_ID } from "../../lib/reviews";
+import { WIDGIE_LOOK, WIDGIE_SCRIPT, WIDGIE_STYLES, WIDGIE_URL, WIDGIE_WIDGET_ID } from "../../lib/reviews";
 
 // Containers the embed script has already been started for (React's dev double effects reuse the same element).
 const started = new WeakSet<HTMLElement>();
@@ -42,7 +42,7 @@ export default function Reviews({ className = "mt-28" }: { className?: string })
                     ref={container}
                     id="widgie"
                     widget-id={WIDGIE_WIDGET_ID}
-                    bg-color={WIDGIE_BACKGROUND}
+                    {...WIDGIE_LOOK}
                     className="mt-10 min-h-[26rem]"
                 />
                 <div className="mt-6 flex flex-wrap items-center justify-between gap-4 text-sm text-fog">
