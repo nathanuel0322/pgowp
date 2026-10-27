@@ -23,12 +23,14 @@ const DISABLED_RULES = [
     "PUNCTUATION_PARAGRAPH_END",
     "DASH_RULE",
     "EN_QUOTES",
+    "CONFUSION_DUE_DO",
 ];
 
 // Attributes whose strings are never shown as text.
 const CODE_ATTRS = new Set(["className", "id", "href", "src", "type", "name", "autoComplete", "inputMode", "rel", "target", "d", "viewBox", "key", "to", "role", "pattern"]);
-// Stands in for {expressions} and nested elements, so the sentence around them still reads as one.
-const PLACEHOLDER = "X";
+// Stands in for {expressions}, so the sentence around them still reads as one. "Z" because "X" makes LanguageTool
+// want "an" before it.
+const PLACEHOLDER = " Z ";
 
 function sourceFiles(dir) {
     return fs.readdirSync(dir, { withFileTypes: true }).flatMap((e) => {
@@ -38,7 +40,16 @@ function sourceFiles(dir) {
     });
 }
 
-const tidy = (s) => s.replace(/<[^>]+>/g, " ").replace(/&nbsp;/g, " ").replace(/&amp;/g, "&").replace(/\s+/g, " ").trim();
+const tidy = (s) =>
+    s
+        .replace(/<[^>]+>/g, " ")
+        .replace(/&nbsp;/g, " ")
+        .replace(/&amp;/g, "&")
+        .replace(/\s+/g, " ")
+        .replace(/\bZ( Z\b)+/g, "Z")
+        .replace(/\s+([.,!?;:)]|'s\b)/g, "$1")
+        .replace(/([$(])\s+/g, "$1")
+        .trim();
 
 function looksLikeProse(text) {
     const words = text.split(" ");
@@ -66,7 +77,7 @@ function insideCodeAttr(node) {
 
 function jsxText(node) {
     if (ts.isJsxText(node)) return node.text;
-    if (ts.isJsxSelfClosingElement(node)) return node.tagName.getText() === "br" ? " " : PLACEHOLDER;
+    if (ts.isJsxSelfClosingElement(node)) return " "; // icons, <br />, inputs
     if (ts.isJsxElement(node) || ts.isJsxFragment(node)) return node.children.map(jsxText).join("");
     if (ts.isJsxExpression(node)) {
         const e = node.expression;
