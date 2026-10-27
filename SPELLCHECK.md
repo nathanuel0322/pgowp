@@ -1,21 +1,49 @@
-# Spelling and grammar checks (planned, not set up yet)
+# Spelling and grammar checks
 
-Goal: catch typos and comma/grammar mistakes in the site's copy before it goes live.
+These catch typos and comma/grammar mistakes in the site's copy before it goes live. Both run from `client/`.
 
 Grammarly isn't an option: it shut down its developer SDK and API in January 2024, and it never checked source files.
 
-## Plan
+## Spelling: cspell
 
-1. **cspell for spelling.** Free, built for code. Install it as a dev dependency in `client/` and `management/`,
-   add a `cspell.json` with a word list for names it won't know (the business name, Turnstile, Supabase, Stripe…),
-   and an `npm run spellcheck` script covering `src/**/*.{ts,tsx}`. Optionally run it in a pre-commit hook or CI.
-   The "Code Spell Checker" VS Code extension shows the same errors while editing.
-2. **LanguageTool for grammar and commas.** cspell only checks spelling. LanguageTool is free and open source; run
-   it locally (Docker or Java) so there are no rate limits and the text stays on this machine. Write a small script
-   that pulls the visible text out of the screens and components (Home, About, Packages, Services, FAQ list, area
-   pages, etc.), sends it to the local LanguageTool server, and prints each issue with its file and line. Its free
-   rules catch common comma mistakes (after an introductory phrase, comma splices, around "which"); no tool catches
-   every comma choice, so treat its output as suggestions.
+```bash
+npm run spellcheck
+```
+
+Checks `src/**/*.{ts,tsx}`. When it flags a name or identifier that is spelled right, add it to `words` in
+`client/cspell.json`. The "Code Spell Checker" VS Code extension reads the same config and shows the errors while
+editing.
+
+## Grammar and commas: LanguageTool
+
+`client/scripts/grammar.mjs` pulls the visible text out of `src/` (JSX text, titles, ledes, package and FAQ copy, the
+email templates), sends each piece to a LanguageTool server on this machine, and prints every issue with its file and
+line. Text never leaves the machine and there are no rate limits. Start the server once (Docker; it keeps running
+until stopped):
+
+```bash
+docker run -d --name languagetool -p 8010:8010 erikvl87/languagetool
+```
+
+Then:
+
+```bash
+npm run grammar
+```
+
+- `npm run grammar -- src/screens/Home.tsx` checks one file.
+- `npm run grammar -- --list` prints the extracted text without checking it.
+- `LANGUAGETOOL_URL` points it at another server (default `http://localhost:8010`).
+
+Spelling rules are turned off (cspell covers spelling), along with a few rules that misfire on short UI labels.
+`{expressions}` inside text show up as `X`. Its rules catch common comma mistakes (after an introductory phrase,
+comma splices, around "which"), but no tool catches every comma choice, so treat the output as suggestions.
 
 Other options looked at: Harper (free, offline, fewer punctuation rules than LanguageTool) and Vale (style rules for
 Markdown docs, not useful for text inside components).
+
+## Not set up
+
+- `management/` has no spell check: it still signs in through the old Supabase project, which is gone, so it's no
+  longer used.
+- Neither check runs in a pre-commit hook or CI yet.

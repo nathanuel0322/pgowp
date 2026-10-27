@@ -11,7 +11,8 @@
         "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
         "preview": "vite preview",
         "test": "vitest",
-        "spellcheck": "cspell --no-progress"
+        "spellcheck": "cspell --no-progress",
+        "grammar": "node scripts/grammar.mjs"
     },
     "dependencies": {
         "@supabase/supabase-js": "^2.46.1",
