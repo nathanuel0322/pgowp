@@ -104,6 +104,10 @@ Cloudflare Pages builds and deploys on every push to `master`.
   call. Manual bookings on `/admin` don't use the picker. The key is "pgowp website - booking address lookup" in
   Google Cloud project `pgowp-513001` (Maps Platform > Keys & Credentials). That project started on a free trial:
   billing must be upgraded before the trial ends, or lookups stop and nobody can book online.
+  Cost (Oct 2026 prices): each picked address is one session (the suggestions while typing, then Place Details for
+  the pick), and the suggestions in it are free. Requesting `displayName` (to keep a venue's name) bills that as Place Details Pro,
+  $17 per 1,000 after 5,000 free a month; without it, it would be Essentials, $5 per 1,000 after 10,000 free.
+  Suggestions typed but never picked are billed per request, $2.83 per 1,000 after 10,000 free.
 - Contact email goes from and to tbnd@prestigiousgamingonwheelsplus.com. The domain's mail is on Microsoft 365.
 - Live Stripe webhook: `website-booking-deposits` in Stripe Workbench, pointing at
   `https://prestigiousgamingonwheelsplus.com/api/stripe/webhook` for `checkout.session.completed`,
