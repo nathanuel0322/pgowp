@@ -91,6 +91,12 @@ Cloudflare Pages builds and deploys on every push to `master`.
   stream its logs with `npx wrangler pages deployment tail <id> --project-name pgowp --format pretty` (the id is
   required outside an interactive terminal). The booking page's error toasts don't always show the real cause.
 - The Turnstile site key is public and lives in `SITE.turnstileSiteKey`. Dev uses Cloudflare's always-pass test key.
+- Party addresses on `/book` must be picked from Google Maps suggestions (`AddressPicker.tsx`, Places API (New)); the
+  Pay button stays disabled and the worker refuses checkout without a `place_id`. The browser key is the Pages build
+  variable `VITE_GOOGLE_MAPS_KEY` (locally, `client/.env.local`). A production build fails without it, so deploys stop
+  rather than ship a booking page nobody can finish. The key is public in the page: restrict it in Google Cloud to
+  the site's referrers and to Maps JavaScript API + Places API (New). If Google rejects it, `/book` tells customers to
+  call. Manual bookings on `/admin` don't use the picker.
 - Contact email goes from and to tbnd@prestigiousgamingonwheelsplus.com. The domain's mail is on Microsoft 365.
 - Live Stripe webhook: `website-booking-deposits` in Stripe Workbench, pointing at
   `https://prestigiousgamingonwheelsplus.com/api/stripe/webhook` for `checkout.session.completed`,

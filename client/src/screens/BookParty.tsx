@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { MdAdd, MdCheck, MdLock, MdPhone, MdRemove } from "react-icons/md";
 import { apilink, toastError } from "../GlobalFunctions";
+import AddressPicker from "../components/booking/AddressPicker";
 import MonthCalendar from "../components/booking/MonthCalendar";
 import Turnstile, { TurnstileHandle } from "../components/Turnstile";
 import { formatPrice } from "../data/packages";
@@ -30,6 +31,8 @@ interface Draft {
     email: string;
     phone: string;
     address: string;
+    // Google Maps place id of the picked address. Empty until the customer picks one from the suggestions.
+    placeId: string;
     notes: string;
 }
 
@@ -42,6 +45,7 @@ const emptyDraft: Draft = {
     email: "",
     phone: "",
     address: "",
+    placeId: "",
     notes: "",
 };
 
@@ -173,12 +177,13 @@ export default function BookParty() {
 
     const times = draft.date ? days[draft.date] ?? [] : [];
     const ready =
-        quote && draft.date && draft.time && draft.name.trim() && draft.email.trim() && draft.phone.trim() && draft.address.trim();
+        quote && draft.date && draft.time && draft.name.trim() && draft.email.trim() && draft.phone.trim() && draft.placeId;
 
     const submit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!quote) return toastError("Please pick a party package.");
         if (!draft.date || !draft.time) return toastError("Please pick a date and start time.");
+        if (!draft.placeId) return toastError("Please pick your party address from the Google Maps suggestions.");
         if (!agreed) return toastError("Please agree to the cancellation policy.");
         if (!token) return toastError("Please wait a moment for the spam check to finish, then try again.");
         setSubmitting(true);
@@ -195,6 +200,7 @@ export default function BookParty() {
                     email: draft.email,
                     phone: draft.phone,
                     address: draft.address,
+                    place_id: draft.placeId,
                     notes: draft.notes,
                     turnstile_token: token,
                 }),
@@ -407,13 +413,9 @@ export default function BookParty() {
                                 </label>
                                 <label className="grid gap-2 text-sm font-semibold text-white/85 sm:col-span-2">
                                     Party address *
-                                    <input
-                                        required
-                                        autoComplete="street-address"
-                                        placeholder="Street, city, ZIP"
-                                        value={draft.address}
-                                        onChange={(e) => update({ address: e.target.value })}
-                                        className={field}
+                                    <AddressPicker
+                                        value={{ address: draft.address, placeId: draft.placeId }}
+                                        onChange={(picked) => update(picked)}
                                     />
                                 </label>
                                 <label className="grid gap-2 text-sm font-semibold text-white/85 sm:col-span-2">

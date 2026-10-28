@@ -43,6 +43,8 @@ function getStripe(env) {
 const fail = (message, status = 400) => jsonResponse({ body: message, status });
 
 const text = (value, max) => (typeof value === "string" ? value.trim().slice(0, max) : "");
+// Google Maps place ids, e.g. ChIJN1t_tDeuEmsRUsoyG83frY4.
+const PLACE_ID_PATTERN = /^[\w-]{10,}$/;
 
 function siteOrigin(request) {
     const origin = request.headers.get("Origin");
@@ -217,6 +219,10 @@ async function handleCheckout(request, env) {
     if (!EMAIL_PATTERN.test(customer.customer_email)) return fail("Please enter a valid email address.");
     if (customer.customer_phone.replace(/\D/g, "").length < 10) return fail("Please enter a phone number we can reach you on.");
     if (customer.address.length < 8) return fail("Please enter the full party address.");
+    // The page only sends a place id once the address was picked from Google Maps' suggestions.
+    if (!PLACE_ID_PATTERN.test(text(body.place_id, 300))) {
+        return fail("Please pick your party address from the Google Maps suggestions. If you don't see them, refresh the page.");
+    }
     const token = text(body.turnstile_token, 2048);
     if (!token || !(await verifyTurnstile(token, request, env))) {
         return fail("The spam check didn't go through. Please try again.", 403);
