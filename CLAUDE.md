@@ -23,10 +23,11 @@ https://prestigiousgamingonwheelsplus.com. Phone (718) 673-8529.
 - `npm run start:worker`: `wrangler dev -c wrangler.dev.toml` on 127.0.0.1:8787 with a local D1 database. Secrets go
   in `.dev.vars` (copy `.dev.vars.example`). In dev, `apilink` in `src/GlobalFunctions.ts` points here, and the
   worker's CORS only allows `localhost:5173`.
+- `npm start`: runs both of the above together.
 - `npm run db:migrate:local`: apply `migrations/` to the local D1 database.
 - `npm run build`: type check, client build, SSR build, then `scripts/prerender.mjs`. This writes one static HTML
   file per route in `PAGES`, plus `sitemap.xml`, `404.html` and the client-only shells for `APP_ROUTES` in
-  `src/site.ts` (`/book`, `/book/confirmed`, `/admin`, `/e-invites`).
+  `src/site.ts` (`/book`, `/book/confirmed`, `/admin`, `/calendar`, `/e-invites`).
 - `npx vitest run`: unit tests (`src/lib/invite.test.ts`, `src/lib/booking.test.ts`, `src/lib/catalog.test.ts`).
 
 Cloudflare Pages builds and deploys on every push to `master`.
@@ -121,7 +122,7 @@ Cloudflare Pages builds and deploys on every push to `master`.
   machine in to Cloudflare with an OAuth token that renews itself, stored in `~/Library/Preferences/.wrangler/` on a
   Mac. D1, secrets, deployment list and log tail commands need it. Claude's commands use the same sign-in, so when one
   fails with "it's necessary to set a CLOUDFLARE_API_TOKEN environment variable", the machine isn't signed in: run
-  the login in a terminal tab rather than creating a token. This Mac mini was signed in on 2026-10-28.
+  the login in a terminal tab rather than creating a token. This Mac mini was signed in on 2026-10-27.
 - To check a deployment without wrangler, the Cloudflare Pages check on the pushed commit has the result and preview URL:
   `gh api repos/nathanuel0322/pgowp/commits/<sha>/check-runs`.
 - Local test settings live in `client/.dev.vars`, which is gitignored on purpose. The owner keeps its contents in a
