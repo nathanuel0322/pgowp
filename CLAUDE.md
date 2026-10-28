@@ -14,6 +14,8 @@ https://prestigiousgamingonwheelsplus.com. Phone (718) 673-8529.
 - `management/`: old internal admin app pointing at a Supabase project that no longer exists. Not deployed. The owner
   dashboard is `/admin` on the public site.
 - The READMEs in `client/` and `management/` are leftover Create React App boilerplate. Ignore them.
+- `master` is the live site. The `booking-setup` branch (local and on GitHub) is an earlier, never-deployed booking
+  system written on another machine (`client/src/booking/`, a `NOTIFY_EMAIL` setting). Don't merge, push or deploy it.
 
 ## Commands (run in `client/`)
 
@@ -57,14 +59,16 @@ Cloudflare Pages builds and deploys on every push to `master`.
 - `/admin` (`Admin.tsx`): bookings dashboard. Bookings, manual bookings (phone, school and corporate events), weekly
   hours, gap between parties, capacity, time off and the team. The owner signs in with `ADMIN_PASSWORD`. Managers
   (the `staff` table, e.g. Tricia, who runs day-to-day booking) sign in with a one-time link emailed through Resend,
-  and can do everything the owner can. Sessions and the owner's feed link are signed with `BOOKING_SECRET`, falling
-  back to the Pages project's existing `JWT_SECRET`.
+  and can do everything the owner can. Workers don't sign in: they get a calendar link and, if they have an email,
+  the booking emails. People are added and removed under Team & calendars. Sessions and the owner's feed link are
+  signed with `BOOKING_SECRET`, falling back to the Pages project's existing `JWT_SECRET`.
 - Calendars: everyone on the team (managers and workers) has their own random feed link
   (`/api/booking/calendar.ics?token=`). The dashboard texts them a `/calendar?token=` page with Apple and Google
   Calendar buttons. Google refreshes subscribed calendars only every several hours; Apple is quicker.
 - The business never takes Thursday parties: Thursday is closed in `DEFAULT_SETTINGS` and in the saved settings.
-- Emails: every new online booking and booking problem goes to tbnd@ and everyone on the team with an email. Customers get a
-  reminder the day before (`/api/booking/send-reminders`, at most once per booking, only 8 AM to 9 PM New York time).
+- Emails: every new online booking and booking problem goes to tbnd@ and everyone on the team with an email (managers
+  and workers). Nothing reads a `NOTIFY_EMAIL` variable: the team list decides. Customers get a reminder the day before
+  (`/api/booking/send-reminders`, at most once per booking, only 8 AM to 9 PM New York time).
   The separate `pgowp-reminders` Worker (`cron/reminders.js`, `wrangler.cron.toml`) calls it every morning; deploy it
   with `npx wrangler deploy -c wrangler.cron.toml`. In dev, reminders and sign-in links are logged instead of emailed.
 - Reviews are the owner's Widgie widget (https://widgie.vip), embedded with its own script in `Reviews.tsx`. Its
