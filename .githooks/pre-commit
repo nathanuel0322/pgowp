@@ -1,0 +1,3 @@
+#!/bin/sh
+# Spelling and grammar in the staged lines. Warns only; /grammar-check fixes them. (~/SideWork/copycheck)
+if command -v copycheck >/dev/null 2>&1; then copycheck --staged --warn; fi

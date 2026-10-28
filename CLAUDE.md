@@ -45,12 +45,12 @@ Cloudflare Pages builds and deploys on every push to `master`.
   Stripe Checkout. Add-ons and the balance are paid on the day, as they were on 10to8. The Stripe Checkout line item
   (`handleCheckout` in `worker/booking.js`) tells customers the balance is preferably paid in cash.
 - `src/lib/booking.ts` holds pricing, deposits, New York time zone maths and open-slot rules. Both the page and the
-  worker use it, and the worker recomputes every amount from ids.
+  worker use it, and the worker recomputes every amount from IDs.
 - Prices, deposits, packages and add-ons are the live price list (`src/lib/catalog.ts`): managers edit it on `/admin`
   (Prices & packages), and it's saved in the D1 `catalog` table. `src/data/packages.ts` only holds the defaults used
   until a list is saved. Pages read it through `useCatalog()`. The build bakes the live list into every page
   (`loadSiteData` in `entry-server.tsx`) and browsers fetch `/api/booking/catalog` again, so a change shows straight away
-  and reaches the static HTML on the next deploy. Package and add-on ids are saved on bookings: never rename one.
+  and reaches the static HTML on the next deploy. Package and add-on IDs are saved on bookings: never rename one.
 - Checkout inserts a `pending` booking that holds the slot for 35 minutes, then opens Stripe Checkout. The booking
   becomes `confirmed` from the `checkout.session.completed` webhook (`/api/stripe/webhook`) or from
   `/book/confirmed` asking `/api/booking/status`, whichever comes first. Confirmation emails are sent once.
@@ -87,8 +87,8 @@ Cloudflare Pages builds and deploys on every push to `master`.
   value was saved there, and every "Pay deposit" failed with a generic "We couldn't start checkout" toast.
 - Secret and variable changes only reach new deployments. After changing one, redeploy: "Retry deployment" on the
   latest production deployment in the dashboard, or push a commit (an empty one is fine).
-- Live API errors: get the current deployment id from `npx wrangler pages deployment list --project-name pgowp`, then
-  stream its logs with `npx wrangler pages deployment tail <id> --project-name pgowp --format pretty` (the id is
+- Live API errors: get the current deployment ID from `npx wrangler pages deployment list --project-name pgowp`, then
+  stream its logs with `npx wrangler pages deployment tail <id> --project-name pgowp --format pretty` (the ID is
   required outside an interactive terminal). The booking page's error toasts don't always show the real cause.
 - The Turnstile site key is public and lives in `SITE.turnstileSiteKey`. Dev uses Cloudflare's always-pass test key.
 - Party addresses on `/book` must be picked from Google Maps suggestions (`AddressPicker.tsx`, Places API (New)); the
@@ -118,14 +118,15 @@ Cloudflare Pages builds and deploys on every push to `master`.
   Mac. D1, secrets, deployment list and log tail commands need it. Claude's commands use the same sign-in, so when one
   fails with "it's necessary to set a CLOUDFLARE_API_TOKEN environment variable", the machine isn't signed in: run
   the login in a terminal tab rather than creating a token. This Mac mini was signed in on 2026-10-28.
-- To check a deploy without wrangler, the Cloudflare Pages check on the pushed commit has the result and preview URL:
+- To check a deployment without wrangler, the Cloudflare Pages check on the pushed commit has the result and preview URL:
   `gh api repos/nathanuel0322/pgowp/commits/<sha>/check-runs`.
 - Local test settings live in `client/.dev.vars`, which is gitignored on purpose. The owner keeps its contents in a
   password manager secure note and pastes it into the same file on each new machine. It holds test values only
   (`sk_test_…`), never the live Stripe key. `client/.dev.vars.example` lists every setting.
 - New machine setup: `git clone`, `npm install` in `client/`, create `client/.dev.vars` from the secure note,
   `npx wrangler login`, then `npm run db:migrate:local`. For the address picker to work locally, also put
-  `VITE_GOOGLE_MAPS_KEY=` with the Google key in `client/.env.local`.
+  `VITE_GOOGLE_MAPS_KEY=` with the Google key in `client/.env.local`. Run `git config core.hooksPath .githooks` so
+  the spelling and grammar hooks run.
 - Claude must not type or handle secret values. The owner enters keys and passwords themselves.
 
 ## Conventions
@@ -137,3 +138,8 @@ Cloudflare Pages builds and deploys on every push to `master`.
 - Contact form and booking input is escaped before it goes into email HTML. Keep it that way for any new fields.
 - Site copy should stay factual: don't invent claims about the business such as party counts, awards or exact travel
   fees.
+- Spelling and grammar: `.githooks/pre-commit` and `.githooks/pre-push` run `copycheck` (`~/SideWork/copycheck`) on
+  the staged lines and on the commits being pushed. Pushing master deploys, so the push check is the last one before
+  the live site. Both only warn. Before committing or pushing, Claude runs `/grammar-check`
+  (`.claude/skills/grammar-check`) and fixes real mistakes first. When a hook prints a suggestion anyway, Claude
+  fixes it or tells the user why it was left. Proper nouns go in `cspell.json`.

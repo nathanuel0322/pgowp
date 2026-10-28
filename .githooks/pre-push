@@ -1,0 +1,17 @@
+#!/bin/sh
+# Spelling and grammar in the commits being pushed. Pushing master deploys the site, so this is the last check
+# before customers see the text. Warns only; /grammar-check fixes them. (~/SideWork/copycheck)
+command -v copycheck >/dev/null 2>&1 || exit 0
+zero=0000000000000000000000000000000000000000
+while read -r local_ref local_sha remote_ref remote_sha; do
+    [ "$local_sha" = "$zero" ] && continue
+    if [ "$remote_sha" = "$zero" ]; then
+        base=$(git merge-base "$local_sha" origin/master 2>/dev/null) || continue
+    else
+        git cat-file -e "$remote_sha" 2>/dev/null || continue
+        base=$remote_sha
+    fi
+    echo "copycheck: checking text changed since $(git rev-parse --short "$base") for $remote_ref"
+    copycheck --since "$base" --warn </dev/null
+done
+exit 0
