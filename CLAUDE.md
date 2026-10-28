@@ -96,7 +96,9 @@ Cloudflare Pages builds and deploys on every push to `master`.
   variable `VITE_GOOGLE_MAPS_KEY` (locally, `client/.env.local`). A production build fails without it, so deploys stop
   rather than ship a booking page nobody can finish. The key is public in the page: restrict it in Google Cloud to
   the site's referrers and to Maps JavaScript API + Places API (New). If Google rejects it, `/book` tells customers to
-  call. Manual bookings on `/admin` don't use the picker.
+  call. Manual bookings on `/admin` don't use the picker. The key is "pgowp website - booking address lookup" in
+  Google Cloud project `pgowp-513001` (Maps Platform > Keys & Credentials). That project started on a free trial:
+  billing must be upgraded before the trial ends, or lookups stop and nobody can book online.
 - Contact email goes from and to tbnd@prestigiousgamingonwheelsplus.com. The domain's mail is on Microsoft 365.
 - Live Stripe webhook: `website-booking-deposits` in Stripe Workbench, pointing at
   `https://prestigiousgamingonwheelsplus.com/api/stripe/webhook` for `checkout.session.completed`,
@@ -111,13 +113,19 @@ Cloudflare Pages builds and deploys on every push to `master`.
   them, so nothing needs copying for production. Change them with
   `npx wrangler pages secret put NAME --project-name pgowp` or in the Cloudflare dashboard. Never commit secret
   values, including to this file.
-- On each computer, run `npx wrangler login` once. It signs that machine in to Cloudflare, which D1 and secrets
-  commands need.
+- On each computer, run `npx wrangler login` once, in a real terminal (it opens a browser to approve). It signs that
+  machine in to Cloudflare with an OAuth token that renews itself, stored in `~/Library/Preferences/.wrangler/` on a
+  Mac. D1, secrets, deployment list and log tail commands need it. Claude's commands use the same sign-in, so when one
+  fails with "it's necessary to set a CLOUDFLARE_API_TOKEN environment variable", the machine isn't signed in: run
+  the login in a terminal tab rather than creating a token. This Mac mini was signed in on 2026-10-28.
+- To check a deploy without wrangler, the Cloudflare Pages check on the pushed commit has the result and preview URL:
+  `gh api repos/nathanuel0322/pgowp/commits/<sha>/check-runs`.
 - Local test settings live in `client/.dev.vars`, which is gitignored on purpose. The owner keeps its contents in a
   password manager secure note and pastes it into the same file on each new machine. It holds test values only
   (`sk_test_…`), never the live Stripe key. `client/.dev.vars.example` lists every setting.
 - New machine setup: `git clone`, `npm install` in `client/`, create `client/.dev.vars` from the secure note,
-  `npx wrangler login`, then `npm run db:migrate:local`.
+  `npx wrangler login`, then `npm run db:migrate:local`. For the address picker to work locally, also put
+  `VITE_GOOGLE_MAPS_KEY=` with the Google key in `client/.env.local`.
 - Claude must not type or handle secret values. The owner enters keys and passwords themselves.
 
 ## Conventions
