@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
     BookingError,
+    CLOSED_WEEKDAY,
     DEFAULT_SETTINGS,
     addDays,
     normalizeSettings,
@@ -141,5 +142,23 @@ describe("normalizeSettings", () => {
         expect(s.buffer_minutes).toBe(DEFAULT_SETTINGS.buffer_minutes);
         expect(s.weekly_hours[1]).toBeNull();
         expect(normalizeSettings(null)).toEqual(DEFAULT_SETTINGS);
+    });
+
+    it("keeps Thursday closed even when saved hours open it", () => {
+        expect(CLOSED_WEEKDAY).toBe(4);
+        const open = { open: "12:00", close: "20:00" };
+        const s = normalizeSettings({ weekly_hours: [open, open, open, open, open, open, open] });
+        expect(s.weekly_hours[4]).toBeNull();
+        expect(s.weekly_hours.filter(Boolean)).toHaveLength(6);
+    });
+});
+
+describe("Thursdays", () => {
+    it("never have open start times, even with settings that skipped normalizeSettings", () => {
+        const open = { open: "12:00", close: "20:00" };
+        const raw = { ...settings, weekly_hours: [open, open, open, open, open, open, open] };
+        expect(weekdayOf("2026-11-12")).toBe(4);
+        expect(openStartTimes("2026-11-12", 120, raw, [], longAgo)).toEqual([]);
+        expect(openStartTimes("2026-11-11", 120, raw, [], longAgo)).not.toEqual([]);
     });
 });

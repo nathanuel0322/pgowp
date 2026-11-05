@@ -69,7 +69,9 @@ Cloudflare Pages builds and deploys on every push to `master`.
 - Calendars: everyone on the team (managers and workers) has their own random feed link
   (`/api/booking/calendar.ics?token=`). The dashboard texts them a `/calendar?token=` page with Apple and Google
   Calendar buttons. Google refreshes subscribed calendars only every several hours; Apple is quicker.
-- The business never takes Thursday parties: Thursday is closed in `DEFAULT_SETTINGS` and in the saved settings.
+- The business never takes Thursday parties. `CLOSED_WEEKDAY` in `src/lib/booking.ts` keeps Thursday closed whatever the
+  saved hours say: `normalizeSettings` drops Thursday hours and `openStartTimes` offers no Thursday slots. Its box on
+  `/admin` can't be ticked. Manual bookings on `/admin` skip the slot rules, so a Thursday can still be entered by hand.
 - Emails: every new online booking and booking problem goes to tbnd@ and everyone on the team with an email (managers
   and workers). Nothing reads a `NOTIFY_EMAIL` variable: the team list decides. Customers get a reminder the day before
   (`/api/booking/send-reminders`, at most once per booking, only 8 AM to 9 PM New York time).

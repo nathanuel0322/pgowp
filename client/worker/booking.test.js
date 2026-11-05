@@ -483,11 +483,12 @@ describe("Thursdays", () => {
         expect(fakes.createCalls).toHaveLength(0);
     });
 
-    it("stay closed when the owner saves hours on /admin", async () => {
+    it("stay closed when the owner tries to open them on /admin", async () => {
         const login = await call("/api/admin/login", { method: "POST", body: { password: "test-password", turnstile_token: "pass" } });
         expect(login.status).toBe(200);
         const weekly = DEFAULT_SETTINGS.weekly_hours.map((h) => h ?? null);
         weekly[1] = { open: "15:00", close: "21:00" };
+        weekly[4] = { open: "12:00", close: "22:00" };
         const saved = await call("/api/admin/settings", {
             method: "PUT",
             body: { ...DEFAULT_SETTINGS, weekly_hours: weekly },
@@ -497,6 +498,17 @@ describe("Thursdays", () => {
         expect(saved.body.settings.weekly_hours[4]).toBeNull();
         expect((await availability("2026-11")).days[THURSDAY]).toBeUndefined();
         expect((await availability("2026-11")).days["2026-11-16"]).toBeDefined();
+    });
+
+    it("stay closed when an older saved settings row opens them", async () => {
+        const open = { open: "12:00", close: "22:00" };
+        saveSettings({ weekly_hours: [open, open, open, open, open, open, open] });
+        const { days } = await availability("2026-11");
+        expect(days[THURSDAY]).toBeUndefined();
+        expect(days["2026-11-18"]).toBeDefined();
+        expect((await checkout({ date: THURSDAY, time: "14:00" })).status).toBe(409);
+        expect(bookings()).toHaveLength(0);
+        expect(fakes.createCalls).toHaveLength(0);
     });
 });
 

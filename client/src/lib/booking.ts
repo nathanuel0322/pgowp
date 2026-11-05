@@ -28,6 +28,9 @@ export interface BookingSettings {
     capacity: number;
 }
 
+// The business never takes Thursday parties, whatever the saved hours say. Index into WeeklyHours (0 is Sunday).
+export const CLOSED_WEEKDAY = 4;
+
 // Used when the booking_settings row is missing. Hours are the ones that were set in 10to8 when online booking
 // moved here (Oct 2026), except Thursday: the business never takes Thursday parties. The owner changes the real
 // values on /admin.
@@ -247,8 +250,9 @@ export function openStartTimes(
     now: Date,
     blocked: BusyRange[] = []
 ): string[] {
-    const hours = settings.weekly_hours[weekdayOf(date)];
-    if (!hours) return [];
+    const weekday = weekdayOf(date);
+    const hours = settings.weekly_hours[weekday];
+    if (!hours || weekday === CLOSED_WEEKDAY) return [];
     const earliest = now.getTime() + settings.min_notice_hours * 3600000;
     const latest = now.getTime() + settings.max_advance_days * 86400000;
     const step = Math.max(5, settings.slot_step_minutes);
@@ -270,8 +274,8 @@ export function normalizeSettings(row: Partial<BookingSettings> | null | undefin
     const s = { ...DEFAULT_SETTINGS, ...(row ?? {}) };
     const weekly = Array.isArray(s.weekly_hours) && s.weekly_hours.length === 7 ? s.weekly_hours : DEFAULT_SETTINGS.weekly_hours;
     return {
-        weekly_hours: weekly.map((h) =>
-            h && TIME_PATTERN.test(h.open) && TIME_PATTERN.test(h.close) && minutesOf(h.open) < minutesOf(h.close)
+        weekly_hours: weekly.map((h, day) =>
+            day !== CLOSED_WEEKDAY && h && TIME_PATTERN.test(h.open) && TIME_PATTERN.test(h.close) && minutesOf(h.open) < minutesOf(h.close)
                 ? { open: h.open, close: h.close }
                 : null
         ),
