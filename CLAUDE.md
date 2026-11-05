@@ -28,7 +28,10 @@ https://prestigiousgamingonwheelsplus.com. Phone (718) 673-8529.
 - `npm run build`: type check, client build, SSR build, then `scripts/prerender.mjs`. This writes one static HTML
   file per route in `PAGES`, plus `sitemap.xml`, `404.html` and the client-only shells for `APP_ROUTES` in
   `src/site.ts` (`/book`, `/book/confirmed`, `/admin`, `/calendar`, `/e-invites`).
-- `npx vitest run`: unit tests (`src/lib/invite.test.ts`, `src/lib/booking.test.ts`, `src/lib/catalog.test.ts`).
+- `npx vitest run`: unit tests (`src/lib/invite.test.ts`, `src/lib/booking.test.ts`, `src/lib/catalog.test.ts`,
+  `worker/booking.test.js`). The worker tests run `/api` requests through `public/_worker.js` against an in-memory
+  SQLite copy of D1 (better-sqlite3, built from `migrations/`), with Stripe Checkout, Resend and Turnstile faked. They
+  need no keys or network.
 
 Cloudflare Pages builds and deploys on every push to `master`.
 
