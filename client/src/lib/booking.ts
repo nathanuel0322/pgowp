@@ -28,11 +28,13 @@ export interface BookingSettings {
     capacity: number;
 }
 
-// The business never takes Thursday parties, whatever the saved hours say. Index into WeeklyHours (0 is Sunday).
-export const CLOSED_WEEKDAY = 4;
+// Thursday parties are only taken over the summer. From September through June (the school year) Thursdays can't be
+// booked online, whatever the saved hours say. In July and August they follow the saved hours.
+export const THURSDAY = 4;
+export const SUMMER_MONTHS = [7, 8];
 
 // Used when the booking_settings row is missing. Hours are the ones that were set in 10to8 when online booking
-// moved here (Oct 2026), except Thursday: the business never takes Thursday parties. The owner changes the real
+// moved here (Oct 2026), except Thursday, which starts closed (see THURSDAY above). The owner changes the real
 // values on /admin.
 export const DEFAULT_SETTINGS: BookingSettings = {
     weekly_hours: [
@@ -183,6 +185,11 @@ export function weekdayOf(date: string) {
     return new Date(Date.UTC(y, m - 1, d)).getUTCDay();
 }
 
+// A Thursday from September through June, which is never bookable online (see THURSDAY).
+export function isSchoolYearThursday(date: string) {
+    return weekdayOf(date) === THURSDAY && !SUMMER_MONTHS.includes(Number(date.slice(5, 7)));
+}
+
 export const minutesOf = (time: string) => {
     const [h, m] = time.split(":").map(Number);
     return h * 60 + m;
@@ -250,9 +257,8 @@ export function openStartTimes(
     now: Date,
     blocked: BusyRange[] = []
 ): string[] {
-    const weekday = weekdayOf(date);
-    const hours = settings.weekly_hours[weekday];
-    if (!hours || weekday === CLOSED_WEEKDAY) return [];
+    const hours = settings.weekly_hours[weekdayOf(date)];
+    if (!hours || isSchoolYearThursday(date)) return [];
     const earliest = now.getTime() + settings.min_notice_hours * 3600000;
     const latest = now.getTime() + settings.max_advance_days * 86400000;
     const step = Math.max(5, settings.slot_step_minutes);
@@ -274,8 +280,8 @@ export function normalizeSettings(row: Partial<BookingSettings> | null | undefin
     const s = { ...DEFAULT_SETTINGS, ...(row ?? {}) };
     const weekly = Array.isArray(s.weekly_hours) && s.weekly_hours.length === 7 ? s.weekly_hours : DEFAULT_SETTINGS.weekly_hours;
     return {
-        weekly_hours: weekly.map((h, day) =>
-            day !== CLOSED_WEEKDAY && h && TIME_PATTERN.test(h.open) && TIME_PATTERN.test(h.close) && minutesOf(h.open) < minutesOf(h.close)
+        weekly_hours: weekly.map((h) =>
+            h && TIME_PATTERN.test(h.open) && TIME_PATTERN.test(h.close) && minutesOf(h.open) < minutesOf(h.close)
                 ? { open: h.open, close: h.close }
                 : null
         ),

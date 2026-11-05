@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
 import {
     BookingError,
-    CLOSED_WEEKDAY,
     DEFAULT_SETTINGS,
     addDays,
+    isSchoolYearThursday,
     normalizeSettings,
     openStartTimes,
     quoteBooking,
@@ -144,21 +144,36 @@ describe("normalizeSettings", () => {
         expect(normalizeSettings(null)).toEqual(DEFAULT_SETTINGS);
     });
 
-    it("keeps Thursday closed even when saved hours open it", () => {
-        expect(CLOSED_WEEKDAY).toBe(4);
+    it("keeps saved Thursday hours, which are used in the summer", () => {
         const open = { open: "12:00", close: "20:00" };
         const s = normalizeSettings({ weekly_hours: [open, open, open, open, open, open, open] });
-        expect(s.weekly_hours[4]).toBeNull();
-        expect(s.weekly_hours.filter(Boolean)).toHaveLength(6);
+        expect(s.weekly_hours[4]).toEqual(open);
     });
 });
 
 describe("Thursdays", () => {
-    it("never have open start times, even with settings that skipped normalizeSettings", () => {
-        const open = { open: "12:00", close: "20:00" };
-        const raw = { ...settings, weekly_hours: [open, open, open, open, open, open, open] };
-        expect(weekdayOf("2026-11-12")).toBe(4);
-        expect(openStartTimes("2026-11-12", 120, raw, [], longAgo)).toEqual([]);
-        expect(openStartTimes("2026-11-11", 120, raw, [], longAgo)).not.toEqual([]);
+    const open = { open: "12:00", close: "20:00" };
+    const allWeek = { ...settings, weekly_hours: [open, open, open, open, open, open, open] };
+
+    it.each([
+        ["2026-11-12", false],
+        ["2027-06-24", false],
+        ["2027-07-01", true],
+        ["2027-07-15", true],
+        ["2027-08-26", true],
+        ["2027-09-02", false],
+    ])("%s is bookable: %s", (date, bookable) => {
+        expect(weekdayOf(date)).toBe(4);
+        expect(isSchoolYearThursday(date)).toBe(!bookable);
+        expect(openStartTimes(date, 120, allWeek, [], longAgo).length > 0).toBe(bookable);
+    });
+
+    it("only affect Thursdays", () => {
+        expect(isSchoolYearThursday("2026-11-11")).toBe(false);
+        expect(openStartTimes("2026-11-11", 120, allWeek, [], longAgo)).not.toEqual([]);
+    });
+
+    it("stay closed in the summer unless they have hours", () => {
+        expect(openStartTimes("2027-07-15", 120, { ...DEFAULT_SETTINGS, min_notice_hours: 0 }, [], longAgo)).toEqual([]);
     });
 });

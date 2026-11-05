@@ -5,7 +5,7 @@ import { field } from "../components/booking/field";
 import Turnstile, { TurnstileHandle } from "../components/Turnstile";
 import { formatPrice } from "../data/packages";
 import {
-    CLOSED_WEEKDAY,
+    THURSDAY,
     TIME_ZONE,
     bookableAddOnGroups,
     addDays,
@@ -1170,11 +1170,13 @@ function Settings({ session }: { session: AdminSession }) {
                                 <input
                                     type="checkbox"
                                     checked={!!h}
-                                    disabled={i === CLOSED_WEEKDAY}
                                     onChange={(e) => setDay(i, e.target.checked ? { open: "12:00", close: "21:00" } : null)}
                                     className="accent-[#ffb02e]"
                                 />
-                                {DAY_NAMES[i]}
+                                <span>
+                                    {DAY_NAMES[i]}
+                                    {i === THURSDAY && <span className="block text-xs font-normal text-fog">July and August only</span>}
+                                </span>
                             </label>
                             {h ? (
                                 <div className="flex items-center gap-2">
@@ -1183,7 +1185,7 @@ function Settings({ session }: { session: AdminSession }) {
                                     <input type="time" step={900} value={h.close} onChange={(e) => setDay(i, { ...h, close: e.target.value })} className={`${small} [color-scheme:dark]`} aria-label={`${DAY_NAMES[i]} closes`} />
                                 </div>
                             ) : (
-                                <span className="text-sm text-fog">{i === CLOSED_WEEKDAY ? "Closed (no Thursday parties)" : "Closed"}</span>
+                                <span className="text-sm text-fog">Closed</span>
                             )}
                         </div>
                     ))}

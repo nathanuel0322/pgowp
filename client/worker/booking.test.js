@@ -466,7 +466,7 @@ describe("overlap, capacity and the gap between parties", () => {
 });
 
 describe("Thursdays", () => {
-    it("are closed in the default and saved settings", async () => {
+    it("are closed in the default settings, even in the summer", async () => {
         expect(DEFAULT_SETTINGS.weekly_hours[4]).toBeNull();
         const { days } = await availability("2026-12");
         const weekdays = Object.keys(days).map((d) => new Date(`${d}T12:00:00Z`).getUTCDay());
@@ -474,6 +474,7 @@ describe("Thursdays", () => {
         expect(weekdays).not.toContain(4);
         // Only Friday, Saturday and Sunday are open by default.
         expect(new Set(weekdays)).toEqual(new Set([0, 5, 6]));
+        expect((await availability("2027-07")).days["2027-07-15"]).toBeUndefined();
     });
 
     it("can't be booked through checkout", async () => {
@@ -483,7 +484,7 @@ describe("Thursdays", () => {
         expect(fakes.createCalls).toHaveLength(0);
     });
 
-    it("stay closed when the owner tries to open them on /admin", async () => {
+    it("stay closed in the school year when the owner opens them on /admin, and open in the summer", async () => {
         const login = await call("/api/admin/login", { method: "POST", body: { password: "test-password", turnstile_token: "pass" } });
         expect(login.status).toBe(200);
         const weekly = DEFAULT_SETTINGS.weekly_hours.map((h) => h ?? null);
@@ -495,17 +496,27 @@ describe("Thursdays", () => {
             headers: { Authorization: `Bearer ${login.body.token}` },
         });
         expect(saved.status).toBe(200);
-        expect(saved.body.settings.weekly_hours[4]).toBeNull();
+        expect(saved.body.settings.weekly_hours[4]).toEqual({ open: "12:00", close: "22:00" });
         expect((await availability("2026-11")).days[THURSDAY]).toBeUndefined();
         expect((await availability("2026-11")).days["2026-11-16"]).toBeDefined();
+        expect((await checkout({ date: THURSDAY, time: "14:00" })).status).toBe(409);
+
+        const july = await availability("2027-07");
+        expect(july.days["2027-07-01"]).toContain("12:00");
+        expect(july.days["2027-07-15"]).toContain("14:00");
+        expect((await availability("2027-06")).days["2027-06-24"]).toBeUndefined();
+        expect((await availability("2027-09")).days["2027-09-02"]).toBeUndefined();
+        expect((await checkout({ date: "2027-07-15", time: "14:00" })).status).toBe(200);
+        expect((await checkout({ date: "2027-09-02", time: "14:00", email: "fall@example.com" })).status).toBe(409);
     });
 
-    it("stay closed when an older saved settings row opens them", async () => {
+    it("stay closed in the school year when a saved settings row opens them", async () => {
         const open = { open: "12:00", close: "22:00" };
         saveSettings({ weekly_hours: [open, open, open, open, open, open, open] });
         const { days } = await availability("2026-11");
         expect(days[THURSDAY]).toBeUndefined();
         expect(days["2026-11-18"]).toBeDefined();
+        expect((await availability("2027-08")).days["2027-08-12"]).toBeDefined();
         expect((await checkout({ date: THURSDAY, time: "14:00" })).status).toBe(409);
         expect(bookings()).toHaveLength(0);
         expect(fakes.createCalls).toHaveLength(0);
