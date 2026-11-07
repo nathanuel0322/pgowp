@@ -25,7 +25,7 @@ import { SITE } from "../site";
 
 interface Booking {
     id: string;
-    status: "pending" | "confirmed" | "cancelled" | "expired";
+    status: "pending" | "confirmed" | "postponed" | "cancelled" | "expired";
     source: "website" | "10to8" | "manual";
     package_id: string;
     package_name: string;
@@ -338,6 +338,8 @@ function SignIn({ onSignedIn }: { onSignedIn(session: SavedSession): void }) {
 
 const FILTERS = {
     upcoming: { label: "Upcoming", query: () => `from=${today()}&status=confirmed` },
+    // Every postponed party, whatever date it was first booked for, until it gets a new date or is cancelled.
+    postponed: { label: "Postponed", query: () => "status=postponed" },
     past: { label: "Past", query: () => `from=${addDays(today(), -120)}&to=${addDays(today(), -1)}&status=confirmed` },
     cancelled: { label: "Cancelled", query: () => `from=${addDays(today(), -120)}&status=cancelled` },
 } as const;
@@ -368,7 +370,14 @@ function BookingList({ session }: { session: AdminSession }) {
         return [...groups.entries()];
     }, [bookings]);
 
-    const replace = (updated: Booking) => setBookings((list) => list?.map((b) => (b.id === updated.id ? updated : b)) ?? null);
+    // A postponed party that gets its new date (or is cancelled) leaves the Postponed tab straight away.
+    const replace = (updated: Booking) =>
+        setBookings(
+            (list) =>
+                list
+                    ?.map((b) => (b.id === updated.id ? updated : b))
+                    .filter((b) => filter !== "postponed" || b.status === "postponed") ?? null
+        );
 
     return (
         <div>
@@ -394,7 +403,9 @@ function BookingList({ session }: { session: AdminSession }) {
                 <div className="mt-6 grid gap-8">
                     {byDate.map(([date, list]) => (
                         <section key={date}>
-                            <h2 className="font-display text-base font-semibold text-white">{formatDate(date)}</h2>
+                            <h2 className="font-display text-base font-semibold text-white">
+                                {filter === "postponed" ? `Was booked for ${formatDate(date)}` : formatDate(date)}
+                            </h2>
                             <div className="mt-3 grid gap-3">
                                 {list.map((b) => (
                                     <BookingCard key={b.id} booking={b} session={session} onChange={replace} />
@@ -441,7 +452,20 @@ function BookingCard({ booking: b, session, onChange }: { booking: Booking; sess
             ? "bg-emerald-500/15 text-emerald-300"
             : b.status === "pending"
             ? "bg-amber-500/15 text-amber-300"
+            : b.status === "postponed"
+            ? "bg-sky-500/15 text-sky-300"
             : "bg-white/10 text-fog";
+    const postponed = b.status === "postponed";
+    const moved = form.date !== start.date || form.time !== start.time;
+    const editBody = () => {
+        const body: Record<string, unknown> = {
+            admin_notes: form.admin_notes,
+            paid: Number(form.paid),
+            total: Number(form.total),
+        };
+        if (moved) Object.assign(body, { date: form.date, time: form.time });
+        return body;
+    };
 
     return (
         <article className={`card p-5 ${b.status === "cancelled" ? "opacity-60" : ""}`}>
@@ -521,22 +545,36 @@ function BookingCard({ booking: b, session, onChange }: { booking: Booking; sess
                         Team notes (in the team's calendars, never shown to the customer)
                         <textarea rows={2} value={form.admin_notes} onChange={(e) => setForm({ ...form, admin_notes: e.target.value })} className={small} />
                     </label>
+                    {postponed && (
+                        <p className="text-sm text-fog sm:col-span-4">
+                            Pick the new date and time, then press Book new date. The party goes back on the calendar and the
+                            customer gets their reminder the day before.
+                        </p>
+                    )}
                     <div className="flex flex-wrap gap-2 sm:col-span-4">
-                        <button
-                            type="button"
-                            className="btn-gold !px-4 !py-2"
-                            onClick={() => {
-                                const body: Record<string, unknown> = {
-                                    admin_notes: form.admin_notes,
-                                    paid: Number(form.paid),
-                                    total: Number(form.total),
-                                };
-                                if (form.date !== start.date || form.time !== start.time) Object.assign(body, { date: form.date, time: form.time });
-                                patch(body, "Booking updated.");
-                            }}
-                        >
-                            Save
-                        </button>
+                        {postponed ? (
+                            <>
+                                <button
+                                    type="button"
+                                    className="btn-gold !px-4 !py-2"
+                                    onClick={() =>
+                                        patch(
+                                            { ...editBody(), date: form.date, time: form.time, status: "confirmed" },
+                                            `Booked for ${formatDate(form.date)} at ${formatTime(form.time)}.`
+                                        )
+                                    }
+                                >
+                                    Book new date
+                                </button>
+                                <button type="button" className="btn-ghost !px-4 !py-2" onClick={() => patch(editBody(), "Saved. Still postponed.")}>
+                                    Save, still postponed
+                                </button>
+                            </>
+                        ) : (
+                            <button type="button" className="btn-gold !px-4 !py-2" onClick={() => patch(editBody(), "Booking updated.")}>
+                                Save
+                            </button>
+                        )}
                         <button type="button" className="btn-ghost !px-4 !py-2" onClick={() => setEditing(false)}>
                             Close
                         </button>
@@ -544,9 +582,29 @@ function BookingCard({ booking: b, session, onChange }: { booking: Booking; sess
                 </div>
             ) : (
                 <div className="mt-4 flex flex-wrap gap-2">
-                    <button type="button" className="btn-ghost !px-4 !py-2" onClick={() => setEditing(true)}>
-                        Edit / reschedule
+                    <button
+                        type="button"
+                        className={postponed ? "btn-gold !px-4 !py-2" : "btn-ghost !px-4 !py-2"}
+                        onClick={() => setEditing(true)}
+                    >
+                        {postponed ? "Pick new date" : "Edit / reschedule"}
                     </button>
+                    {b.status === "confirmed" && (
+                        <button
+                            type="button"
+                            className="btn-ghost !px-4 !py-2"
+                            onClick={() => {
+                                if (
+                                    window.confirm(
+                                        `Postpone ${b.customer_name}'s party? This frees the time slot and keeps what they've paid. It moves to the Postponed tab until you pick a new date.`
+                                    )
+                                )
+                                    patch({ status: "postponed" }, "Booking postponed. It's in the Postponed tab.");
+                            }}
+                        >
+                            Postpone
+                        </button>
+                    )}
                     {b.status === "cancelled" ? (
                         <button type="button" className="btn-ghost !px-4 !py-2" onClick={() => patch({ status: "confirmed" }, "Booking restored.")}>
                             Restore

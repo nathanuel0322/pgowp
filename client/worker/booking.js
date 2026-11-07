@@ -682,7 +682,7 @@ async function handleCalendarFeed(request, env) {
 
 // ---- Admin API -----------------------------------------------------------------------------------------------
 
-const STATUSES = ["pending", "confirmed", "cancelled", "expired"];
+const STATUSES = ["pending", "confirmed", "postponed", "cancelled", "expired"];
 
 async function handleAdminListBookings(request, env) {
     const url = new URL(request.url);
@@ -771,7 +771,8 @@ async function handleAdminCreateBooking(request, env) {
     return jsonResponse({ body: { booking: toApi(booking) }, status: 201 });
 }
 
-// Cancel, restore, reschedule, record payments or edit notes.
+// Cancel, postpone, restore, reschedule, record payments or edit notes. Postponed bookings keep their old date and
+// their payment, but free the slot and leave the calendars and reminders until they're confirmed on a new date.
 async function handleAdminUpdateBooking(request, env, id) {
     const body = await request.json().catch(() => null);
     if (!body) return fail("Nothing to change.");
@@ -780,7 +781,8 @@ async function handleAdminUpdateBooking(request, env, id) {
 
     const patch = {};
     if (body.status !== undefined) {
-        if (!["confirmed", "cancelled"].includes(body.status)) return fail("Bookings can only be confirmed or cancelled here.");
+        if (!["confirmed", "postponed", "cancelled"].includes(body.status))
+            return fail("Bookings can only be confirmed, postponed or cancelled here.");
         patch.status = body.status;
         if (body.status === "confirmed") patch.hold_expires_at = null;
     }
@@ -798,6 +800,8 @@ async function handleAdminUpdateBooking(request, env, id) {
         const minutes = Math.round((current.ends_at - current.starts_at) / 60000);
         const buffer = Math.round((current.blocked_until - current.ends_at) / 60000);
         Object.assign(patch, bookingTimes(date, time, minutes, buffer));
+        // Moved to another day: the customer gets a reminder the day before the new date.
+        if (zonedParts(new Date(current.starts_at)).date !== date) patch.reminder_sent_at = null;
     }
 
     const updated = await updateBooking(env.DB, id, patch);
