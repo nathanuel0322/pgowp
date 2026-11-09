@@ -61,6 +61,9 @@ function detailsTable(b, { forOwner }) {
         ${forOwner ? row("Customer", escapeHtml(b.customer_name)) : ""}
         ${forOwner ? row("Phone", escapeHtml(b.customer_phone)) : ""}
         ${forOwner ? row("Email", escapeHtml(b.customer_email)) : ""}
+        ${b.guest_name ? row("Guest of honor", escapeHtml(b.guest_name)) : ""}
+        ${b.guest_age ? row("Turning", escapeHtml(b.guest_age)) : ""}
+        ${b.shirt_size ? row("T-shirt size", escapeHtml(b.shirt_size)) : ""}
         ${b.notes ? row("Notes", escapeHtml(b.notes).replace(/\r?\n/g, "<br />")) : ""}
         ${row("Total", dollars(b.total_cents))}
         ${row("Deposit paid", dollars(b.paid_cents))}

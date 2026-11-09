@@ -204,6 +204,9 @@ async function handleCheckout(request, env) {
         customer_phone: text(body.phone, 30),
         address: text(body.address, 300).replace(/\s+/g, " "),
         notes: text(body.notes, 2000),
+        guest_name: text(body.guest_name, 100).replace(/\s+/g, " "),
+        guest_age: text(body.guest_age, 20),
+        shirt_size: text(body.shirt_size, 30),
     };
 
     const catalog = await loadCatalog(env.DB);
@@ -764,6 +767,9 @@ async function handleAdminCreateBooking(request, env) {
         address: text(body.address, 300),
         notes: text(body.notes, 2000),
         admin_notes: text(body.admin_notes, 2000),
+        guest_name: text(body.guest_name, 100),
+        guest_age: text(body.guest_age, 20),
+        shirt_size: text(body.shirt_size, 30),
         total_cents: totalCents,
         deposit_cents: paidCents,
         paid_cents: paidCents,
@@ -786,7 +792,7 @@ async function handleAdminUpdateBooking(request, env, id) {
         patch.status = body.status;
         if (body.status === "confirmed") patch.hold_expires_at = null;
     }
-    for (const key of ["admin_notes", "notes", "address", "customer_phone", "customer_name", "customer_email"]) {
+    for (const key of ["admin_notes", "notes", "address", "customer_phone", "customer_name", "customer_email", "guest_name", "guest_age", "shirt_size"]) {
         if (typeof body[key] === "string") patch[key] = text(body[key], key.endsWith("notes") ? 2000 : 300);
     }
     if (body.paid !== undefined) patch.paid_cents = toCents(Number(body.paid));

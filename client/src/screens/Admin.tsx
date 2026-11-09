@@ -38,6 +38,9 @@ interface Booking {
     address: string;
     notes: string;
     admin_notes: string;
+    guest_name: string;
+    guest_age: string;
+    shirt_size: string;
     total_cents: number;
     paid_cents: number;
     stripe_payment_intent: string | null;
@@ -341,6 +344,7 @@ const FILTERS = {
     // Every postponed party, whatever date it was first booked for, until it gets a new date or is cancelled.
     postponed: { label: "Postponed", query: () => "status=postponed" },
     past: { label: "Past", query: () => `from=${addDays(today(), -120)}&to=${addDays(today(), -1)}&status=confirmed` },
+    postponed: { label: "Postponed", query: () => "status=postponed" },
     cancelled: { label: "Cancelled", query: () => `from=${addDays(today(), -120)}&status=cancelled` },
 } as const;
 
@@ -450,7 +454,7 @@ function BookingCard({ booking: b, session, onChange }: { booking: Booking; sess
     const badge =
         b.status === "confirmed"
             ? "bg-emerald-500/15 text-emerald-300"
-            : b.status === "pending"
+            : b.status === "pending" || b.status === "postponed"
             ? "bg-amber-500/15 text-amber-300"
             : b.status === "postponed"
             ? "bg-sky-500/15 text-sky-300"
@@ -511,6 +515,12 @@ function BookingCard({ booking: b, session, onChange }: { booking: Booking; sess
                 <p className="mt-3 text-sm text-white/85">
                     <span className="text-fog">Add-ons: </span>
                     {b.add_ons.map((a) => (a.qty > 1 ? `${a.name} × ${a.qty}` : a.name)).join(", ")}
+                </p>
+            )}
+            {(b.guest_name || b.guest_age || b.shirt_size) && (
+                <p className="mt-2 text-sm text-white/85">
+                    <span className="text-fog">Guest of honor: </span>
+                    {[b.guest_name, b.guest_age && `turning ${b.guest_age}`, b.shirt_size && `shirt ${b.shirt_size}`].filter(Boolean).join(" · ")}
                 </p>
             )}
             {b.notes && <p className="mt-2 whitespace-pre-wrap text-sm text-white/85"><span className="text-fog">Customer notes: </span>{b.notes}</p>}

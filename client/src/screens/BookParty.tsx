@@ -34,6 +34,9 @@ interface Draft {
     // Google Maps place id of the picked address. Empty until the customer picks one from the suggestions.
     placeId: string;
     notes: string;
+    guestName: string;
+    guestAge: string;
+    shirtSize: string;
 }
 
 const emptyDraft: Draft = {
@@ -47,6 +50,9 @@ const emptyDraft: Draft = {
     address: "",
     placeId: "",
     notes: "",
+    guestName: "",
+    guestAge: "",
+    shirtSize: "",
 };
 
 function loadDraft(): Draft {
@@ -202,6 +208,9 @@ export default function BookParty() {
                     address: draft.address,
                     place_id: draft.placeId,
                     notes: draft.notes,
+                    guest_name: draft.guestName,
+                    guest_age: draft.guestAge,
+                    shirt_size: draft.shirtSize,
                     turnstile_token: token,
                 }),
             });
@@ -418,11 +427,53 @@ export default function BookParty() {
                                         onChange={(picked) => update(picked)}
                                     />
                                 </label>
+                                <div className="grid gap-4 rounded-xl border border-line bg-white/[0.03] p-4 sm:col-span-2 sm:grid-cols-3">
+                                    <p className="text-sm text-white/85 sm:col-span-3">
+                                        Thanks so much for choosing us. Please send us the birthday child or guest of honor's name, the age
+                                        they are turning if it's a birthday, and their t-shirt size.
+                                    </p>
+                                    <label className="grid gap-2 text-sm font-semibold text-white/85">
+                                        Guest of honor's name
+                                        <input
+                                            maxLength={100}
+                                            autoComplete="off"
+                                            value={draft.guestName}
+                                            onChange={(e) => update({ guestName: e.target.value })}
+                                            className={field}
+                                        />
+                                    </label>
+                                    <label className="grid gap-2 text-sm font-semibold text-white/85">
+                                        Age turning (if a birthday)
+                                        <input
+                                            maxLength={20}
+                                            inputMode="numeric"
+                                            autoComplete="off"
+                                            value={draft.guestAge}
+                                            onChange={(e) => update({ guestAge: e.target.value })}
+                                            className={field}
+                                        />
+                                    </label>
+                                    <label className="grid gap-2 text-sm font-semibold text-white/85">
+                                        T-shirt size
+                                        <input
+                                            maxLength={30}
+                                            autoComplete="off"
+                                            placeholder="e.g. Youth M, Adult L"
+                                            value={draft.shirtSize}
+                                            onChange={(e) => update({ shirtSize: e.target.value })}
+                                            className={field}
+                                        />
+                                    </label>
+                                    <p className="text-sm text-fog sm:col-span-3">
+                                        Please remember your balance is due on arrival. It's the second half of your deposit, preferably in
+                                        cash. Please save 5 car spaces for parking.
+                                    </p>
+                                </div>
                                 <label className="grid gap-2 text-sm font-semibold text-white/85 sm:col-span-2">
                                     Anything we should know?
                                     <textarea
                                         rows={3}
-                                        placeholder="Guest of honor, age, number of kids, parking notes..."
+                                        placeholder="Number of kids, parking notes..."
                                         value={draft.notes}
                                         onChange={(e) => update({ notes: e.target.value })}
                                         className={`${field} resize-y`}
@@ -430,7 +481,7 @@ export default function BookParty() {
                                 </label>
                             </div>
                             <ul className="mt-6 space-y-2 text-sm text-fog">
-                                <li>Please have at least 5 car lengths of parking for the trailer.</li>
+                                <li>Please save 5 car spaces for parking.</li>
                                 <li>
                                     Parties outside Queens, Brooklyn and Nassau County have a travel surcharge. Holidays and
                                     holiday weekends cost extra.
