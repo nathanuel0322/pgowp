@@ -67,6 +67,16 @@ Cloudflare Pages builds and deploys on every push to `master`.
   (`/api/booking/calendar.ics?token=`). The dashboard texts them a `/calendar?token=` page with Apple and Google
   Calendar buttons. Google refreshes subscribed calendars only every several hours; Apple is quicker.
 - The business never takes Thursday parties: Thursday is closed in `DEFAULT_SETTINGS` and in the saved settings.
+- Postponed parties (added Nov 2026): a booking can be `postponed` from the Postpone button on `/admin`. It keeps its
+  old date and what's been paid, frees the slot and leaves the calendars and reminders (everything filters on
+  `status = 'confirmed'`). The Postponed tab lists them; "Pick new date" confirms one on a new date and clears
+  `reminder_sent_at` so the customer gets a reminder before it.
+- New migrations must be applied to the live database before the code that uses them is pushed, or booking inserts
+  fail: `npx wrangler d1 migrations apply pgowp-bookings --remote -c wrangler.dev.toml` (in `client/`; that config
+  names the live database too). `migrations list` with the same flags shows what's pending. SQLite can't change a
+  CHECK constraint, so a new status means rebuilding the table (see `0004_postponed.sql`). Applied on the live
+  database so far: 0001 to 0003, `0004_postponed.sql` and `0004_postponed_guest.sql` (both numbered 0004; wrangler
+  tracks them by file name).
 - Emails: every new online booking and booking problem goes to tbnd@ and everyone on the team with an email (managers
   and workers). Nothing reads a `NOTIFY_EMAIL` variable: the team list decides. Customers get a reminder the day before
   (`/api/booking/send-reminders`, at most once per booking, only 8 AM to 9 PM New York time).
